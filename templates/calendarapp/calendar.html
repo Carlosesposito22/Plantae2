@@ -1,6 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
-{% block title %}Event Calendar{% endblock title %}
+{% block title %}Canlendário{% endblock title %}
 
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
@@ -8,13 +8,8 @@
 
 {% block breadcrumb %}
   <div>
-      <h1><i class="fa fa-calendar"></i> Calendar</h1>
-      <p>Event Calendar</p>
+      <h1><i class="fa fa-calendar"></i> Calendário</h1>
   </div>
-  <ul class="app-breadcrumb breadcrumb">
-      <li class="breadcrumb-item"><i class="fa fa-home fa-lg"></i></li>
-      <li class="breadcrumb-item"><a href="#">Calendar</a></li>
-  </ul>
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -147,7 +142,7 @@
           right: 'dayGridMonth,timeGridWeek,timeGridDay,list'
         },
         initialDate: today,
-        navLinks: true, // can click day/week names to navigate views
+        navLinks: true,
         selectable: true,
         selectMirror: true,
         select: function(arg) {
@@ -202,7 +197,7 @@
           modal.style.display = 'block';
         },
         editable: true,
-        dayMaxEvents: true, // allow "more" link when too many events
+        dayMaxEvents: true,
         events: {{ events|safe }},
         // events: [
         //   {
