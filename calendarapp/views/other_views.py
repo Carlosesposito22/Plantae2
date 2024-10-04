@@ -1,5 +1,3 @@
-# cal/views.py
-
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.views import generic
@@ -11,7 +9,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
-
 from calendarapp.models import EventMember, Event
 from calendarapp.utils import Calendar
 from calendarapp.forms import EventForm, AddMemberForm
@@ -120,7 +117,6 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
         events = Event.objects.get_all_events(user=request.user)
         events_month = Event.objects.get_running_events(user=request.user)
         event_list = []
-        # start: '2020-09-16T16:00:00'
         for event in events:
             event_list.append(
                 {   "id": event.id,
