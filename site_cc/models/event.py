@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.db import models
 from django.urls import reverse
-from calendarapp.models import EventAbstract
+from site_cc.models import EventAbstract
 from accounts.models import User
 
 
@@ -37,9 +37,9 @@ class Event(EventAbstract):
         return self.title
 
     def get_absolute_url(self):
-        return reverse("calendarapp:event-detail", args=(self.id,))
+        return reverse("site_cc:event-detail", args=(self.id,))
 
     @property
     def get_html_url(self):
-        url = reverse("calendarapp:event-detail", args=(self.id,))
+        url = reverse("site_cc:event-detail", args=(self.id,))
         return f'<a href="{url}"> {self.title} </a>'

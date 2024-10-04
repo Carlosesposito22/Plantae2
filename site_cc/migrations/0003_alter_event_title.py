@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('calendarapp', '0002_auto_20210717_1606'),
+        ('site_cc', '0002_auto_20210717_1606'),
     ]
 
     operations = [
