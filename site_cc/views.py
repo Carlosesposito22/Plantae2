@@ -1,9 +1,10 @@
+from django.views.generic import ListView
+from site_cc.models import Event
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
-import calendar
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
@@ -12,6 +13,28 @@ from django.shortcuts import get_object_or_404
 from site_cc.models import EventMember, Event
 from site_cc.utils import Calendar
 from site_cc.forms import EventForm, AddMemberForm
+import calendar
+import requests
+
+class AllEventsListView(ListView):
+    """ All event list views """
+
+    template_name = "site_cc/events_list.html"
+    model = Event
+
+    def get_queryset(self):
+        return Event.objects.get_all_events(user=self.request.user)
+
+
+class RunningEventsListView(ListView):
+    """ Running events list view """
+
+    template_name = "site_cc/events_list.html"
+    model = Event
+
+    def get_queryset(self):
+        return Event.objects.get_running_events(user=self.request.user)
+
 
 
 def get_date(req_day):
@@ -175,3 +198,59 @@ def next_day(request, event_id):
         return JsonResponse({'message': 'Sucess!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
+    
+def tempo(request):
+    API_KEY = "ae959f54e6804eb49fd210633242409"
+    cidade = "Carpina"
+    
+    link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"
+    
+    try:
+        requisicao_forecast = requests.get(link_forecast)
+        requisicao_forecast.raise_for_status()
+        requisicao_forecast_dic = requisicao_forecast.json()
+
+        if "forecast" not in requisicao_forecast_dic or "current" not in requisicao_forecast_dic:
+            contexto = {'erro': 'Não foi possível obter a previsão do tempo.'}
+        else:
+            previsao = []
+            cidade_info = {
+                'nome': requisicao_forecast_dic['location']['name'],
+            }
+
+            today = datetime.now().date().strftime("%Y-%m-%d")
+            temperatura_atual = requisicao_forecast_dic['current']['temp_c'] 
+
+            for item in requisicao_forecast_dic['forecast']['forecastday']:
+
+                is_critical = (
+                    item['day']['maxtemp_c'] > 35 or
+                    item['day']['mintemp_c'] < 5 or
+                    item['day']['maxwind_kph'] > 50 or
+                    item['day']['totalprecip_mm'] > 50 
+                )
+                
+                previsao.append({
+                    'data': item['date'],
+                    'descricao': item['day']['condition']['text'],
+                    'temperatura_max': item['day']['maxtemp_c'],
+                    'temperatura_min': item['day']['mintemp_c'],
+                    'umidade': item['day']['avghumidity'],
+                    'precipitacao': item['day']['totalprecip_mm'],
+                    'vento_velocidade': item['day']['maxwind_kph'],
+                    'is_critical': is_critical
+                })
+
+            contexto = {
+                'cidade': cidade_info,
+                'previsao': previsao,
+                'today': today,
+                'temperatura_atual': temperatura_atual  
+            }
+
+    except requests.exceptions.RequestException as e:
+        contexto = {
+            'erro': f"Erro ao fazer a requisição: {e}"
+        }
+    
+    return render(request, 'site_cc/tempo.html', contexto)
