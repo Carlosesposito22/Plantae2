@@ -31,7 +31,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = "eventcalendar.urls"
+ROOT_URLCONF = "Plantae.urls"
 
 TEMPLATES = [
     {
@@ -49,7 +49,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "eventcalendar.wsgi.application"
+WSGI_APPLICATION = "Plantae.wsgi.application"
 
 DATABASES = {
     "default": {
