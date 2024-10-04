@@ -67,7 +67,7 @@ def create_event(request):
             start_time=start_time,
             end_time=end_time,
         )
-        return HttpResponseRedirect(reverse("calendarapp:calendar"))
+        return HttpResponseRedirect(reverse("site_cc:calendar"))
     return render(request, "event.html", {"form": form})
 
 
@@ -95,7 +95,7 @@ def add_eventmember(request, event_id):
             if member.count() <= 9:
                 user = forms.cleaned_data["user"]
                 EventMember.objects.create(event=event, user=user)
-                return redirect("calendarapp:calendar")
+                return redirect("site_cc:calendar")
             else:
                 print("--------------User limit exceed!-----------------")
     context = {"form": forms}
@@ -105,11 +105,11 @@ def add_eventmember(request, event_id):
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
     template_name = "event_delete.html"
-    success_url = reverse_lazy("calendarapp:calendar")
+    success_url = reverse_lazy("site_cc:calendar")
 
 class CalendarViewNew(LoginRequiredMixin, generic.View):
     login_url = "accounts:signin"
-    template_name = "calendarapp/calendar.html"
+    template_name = "site_cc/calendar.html"
     form_class = EventForm
 
     def get(self, request, *args, **kwargs):
@@ -137,7 +137,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
             form = forms.save(commit=False)
             form.user = request.user
             form.save()
-            return redirect("calendarapp:calendar")
+            return redirect("site_cc:calendar")
         context = {"form": forms}
         return render(request, self.template_name, context)
 
