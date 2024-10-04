@@ -1,0 +1,70 @@
+.weather-table {
+    width: 100%;
+    margin-top: 2rem;
+    border-collapse: collapse;
+    font-family: 'Arial', sans-serif;
+}
+
+.weather-table thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.weather-table th,
+.weather-table td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+.weather-table tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.weather-table tbody tr:hover {
+    background-color: #ddd;
+}
+
+.weather-table th {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.weather-table tbody td {
+    font-size: 16px;
+}
+
+.weather-table tbody tr td:first-child {
+    font-weight: bold;
+}
+
+.weather-table-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.clima-critico {
+    color: red;
+    font-weight: bold;
+}
+
+.caixa-temperatura {
+    position: absolute;
+    top: 135px;
+    right: 180px;
+    border: 2px solid;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+}    
+
+
+@media (max-width: 768px) {
+
+    .weather-table th,
+    .weather-table td {
+        padding: 8px;
+        font-size: 14px;
+    }
+}

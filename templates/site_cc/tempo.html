@@ -1,0 +1,69 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+  <div>
+      <h1><i class="fa fa-calendar"></i> Tempo</h1>
+  </div>
+{% endblock breadcrumb %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/tempo.css' %}">
+{% endblock extracss %}
+
+
+{% block content %}
+
+<div class="weather-table-container">
+    <h2 class="mt-5">Previsão do Tempo para {{ cidade.nome }}</h2>
+
+    {% if erro %}
+        <p>Erro: {{ erro }}</p>
+    {% else %}
+        <div class="caixa-temperatura">
+            <p>Temperatura Atual:</p>
+            <strong>{{ temperatura_atual }}°C</strong>
+        </div>
+
+        <p>Data de Hoje: {{ today }}</p>
+
+        {% for item in previsao %}
+            {% if item.data == today %}
+                {% if temperatura_atual > 25 or temperatura_atual < 20 %}
+                    <p style="color: red; font-weight: bold;">
+                        Atenção: Temperatura fora do ideal (20-25ºC)
+                    </p>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+
+        <table class="weather-table">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Descrição</th>
+                    <th>Temperatura Máxima (ºC)</th>
+                    <th>Temperatura Mínima (ºC)</th>
+                    <th>Umidade (%)</th>
+                    <th>Precipitação (mm)</th>
+                    <th>Velocidade do Vento (km/h)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in previsao %}
+                <tr>
+                    <td>{{ item.data }}</td>
+                    <td>{{ item.descricao }}</td>
+                    <td>{{ item.temperatura_max }}</td>
+                    <td>{{ item.temperatura_min }}</td>
+                    <td>{{ item.umidade }}</td>
+                    <td>{{ item.precipitacao }}</td>
+                    <td>{{ item.vento_velocidade }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+{% endblock %}
