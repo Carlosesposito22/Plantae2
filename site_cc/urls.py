@@ -17,6 +17,7 @@ urlpatterns = [
     path("all-event-list/", views.AllEventsListView.as_view(), name="all_events"),    
     path("running-event-list/", views.RunningEventsListView.as_view(), name="running_events"), 
     path('tempo/', views.tempo, name='tempo'),
+    path('recomendacao/', views.recomendacao, name='recomendacao'),
     
 ]
 
