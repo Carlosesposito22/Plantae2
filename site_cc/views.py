@@ -306,7 +306,7 @@ def recomendacao(request):
             'Não posso responder sobre esse tema, fui treinado apenas para práticas agrícolas.'
             """
 
-            prompt_geracao = f"Escreva um texto de 2 linhas onde fala sobre {planta}, incluindo informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas}"
+            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de nao serem compativeis, caso as plantas compitam por mesmos nutrientes informe quais sao e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais facil de encontrar, de preferencia encontrados em casa"
 
             try:
                 model = genai.GenerativeModel('gemini-pro')
