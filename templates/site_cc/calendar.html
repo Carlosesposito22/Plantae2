@@ -24,11 +24,11 @@
                           <h3>{{ event.title }}</h3>
                           <p>{{ event.description }}</p>
                           <p>{{event.id}}</p>
-                          <p>From: {{ event.start_time }}</p>
-                          <p>To: {{ event.end_time }}</p>
+                          <p>Início: {{ event.start_time }}</p>
+                          <p>Fim: {{ event.end_time }}</p>
                       </div>
                     {% empty %}
-                      <p>No Running Events Found</p>
+                      <p>Nenhuma cultura em andamento</p>
                     {% endfor %}
                 </div>
             </div>
@@ -40,7 +40,7 @@
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
                         <div class="modal-header bg-primary">
-                            <h5 class="modal-title text-white" id="exampleModalLongTitle">Add New Event</h5>
+                            <h5 class="modal-title text-white" id="exampleModalLongTitle">Adicionar Plantação</h5>
                             <button id="modalClose1" type="button" class="close" data-dismiss="modal" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
                             </button>
@@ -49,25 +49,26 @@
                             {% csrf_token %}
                             <div class="modal-body">
                                 <div class="form-group">
-                                    <label for="recipient-name" class="col-form-label">Event Title:</label>
+                                    <label for="recipient-name" class="col-form-label">Cultura:</label>
                                     {{ form.title }}
                                 </div>
                                 <div class="form-group">
                                     <label for="message-text" class="col-form-label">Description:</label>
                                     {{ form.description }}
                                 </div>
+                                
                                 <div class="form-group">
-                                    <label for="message-text" class="col-form-label">Start Date:</label>
+                                    <label for="message-text" class="col-form-label">Início:</label>
                                     {{ form.start_time }}
                                 </div>
                                 <div class="form-group">
-                                    <label for="message-text" class="col-form-label">End Date:</label>
+                                    <label for="message-text" class="col-form-label">Fim:</label>
                                     {{ form.end_time }}
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button id="modalClose2" type="button" class="btn btn-danger">Close</button>
-                                <button type="submit" class="btn btn-primary">Save</button>
+                                <button id="modalClose2" type="button" class="btn btn-danger">Fechar</button>
+                                <button type="submit" class="btn btn-primary">Salvar</button>
                             </div>
                         </form>
                     </div>
@@ -87,25 +88,22 @@
                           <div class="modal-body">
                               
                               <div class="form-group">
-                                  <label for="message-text" class="col-form-label">Description:</label>
+                                  <label for="message-text" class="col-form-label">Descrição:</label>
                                   <p id = "description_event_detail">
 
                                   </p>
                               </div>
                               <div class="form-group">
-                                  <label for="message-text" class="col-form-label">Start:</label>
+                                  <label for="message-text" class="col-form-label">Início:</label>
                                   <p id = "start_event_detail">
                               </div>
                               <div class="form-group">
-                                  <label for="message-text" class="col-form-label">End:</label>
+                                  <label for="message-text" class="col-form-label">Fim:</label>
                                   <p id = "end_event_detail">
                               </div>
                           </div>
                           <div class="modal-footer">
-                              <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Delete</button>
-                              <button id="add-to-next-week" data-event-id-week="" type="button" class="btn btn-success">Next Week</button>
-                              <button id="add-to-next-day" data-event-id-day="" type="button" class="btn btn-primary">Next Day</button>
-
+                              <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
                           </div>
                       </form>
                   </div>
@@ -180,12 +178,8 @@
           var modalEnd = document.getElementById('end_event_detail'); 
           var modalDescripition = document.getElementById('description_event_detail'); 
           var deleteButton = document.getElementById("delete-event-button");
-          var nextWeek = document.getElementById("add-to-next-week");
-          var nextDay = document.getElementById("add-to-next-day");
 
-          deleteButton.setAttribute("data-event-id", id);
-          nextWeek.setAttribute("data-event-id-week", id);
-          nextDay.setAttribute("data-event-id-day", id);
+          deleteButton.setAttribute("data-event-id", id);;
           modal.style.display = 'block' 
           
           modalTitle.textContent = title;
@@ -263,46 +257,6 @@
           
           });
       }});
-      
-      document.getElementById('add-to-next-week').addEventListener('click', function() {
-          const eventId = this.getAttribute('data-event-id-week');
-          if (confirm('Are you sure you want add this event to next week?')) {
-              $.ajax({
-                url: `/next_week/${eventId}/`,
-                  type: 'POST',
-                  data: {
-                      csrfmiddlewaretoken: '{{ csrf_token }}',
-                  },
-                  success: function(response) {
-                      alert(response.message);
-                      window.location.reload();
-                  },
-                  error: function(xhr, status, error) {
-                      alert('Error!');
-                  }
-              });
-          }
-  });
-
-  document.getElementById('add-to-next-day').addEventListener('click', function() {
-    const eventId = this.getAttribute('data-event-id-day');
-    if (confirm('Are you sure you want add this event to next day?')) {
-        $.ajax({
-          url: `/next_day/${eventId}/`,
-            type: 'POST',
-            data: {
-                csrfmiddlewaretoken: '{{ csrf_token }}',
-            },
-            success: function(response) {
-                alert(response.message);
-                window.location.reload();
-            },
-            error: function(xhr, status, error) {
-                alert('Error!');
-            }
-        });
-    }
-});
 
 </script>
 {% endblock extrascripts %}
