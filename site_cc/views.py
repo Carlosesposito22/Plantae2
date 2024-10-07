@@ -15,6 +15,38 @@ from site_cc.utils import Calendar
 from site_cc.forms import EventForm, AddMemberForm
 import calendar
 import requests
+import google.generativeai as genai
+
+API_KEY = 'AIzaSyC4AVfey0X8ONDz9f_vdw6Sq9yDdhHFowk'
+genai.configure(api_key=API_KEY)
+
+plantas = {
+    'Tomate': {
+        'se_da_bem': ['Cenoura', 'Alface'],
+        'nao_se_da_bem': ['Batata'],
+        'indiferente': ['Rúcula'],
+    },
+    'Cenoura': {
+        'se_da_bem': ['Alface', 'Rúcula'],
+        'nao_se_da_bem': ['Batata'],
+        'indiferente': ['Tomate'],
+    },
+    'Alface': {
+        'se_da_bem': ['Cenoura', 'Rúcula'],
+        'nao_se_da_bem': ['Batata'],
+        'indiferente': ['Tomate'],
+    },
+    'Batata': {
+        'se_da_bem': ['Rúcula'],
+        'nao_se_da_bem': ['Tomate', 'Cenoura'],
+        'indiferente': ['Alface'],
+    },
+    'Rúcula': {
+        'se_da_bem': ['Cenoura', 'Alface'],
+        'nao_se_da_bem': ['Batata'],
+        'indiferente': ['Tomate'],
+    },
+}
 
 class AllEventsListView(ListView):
     """ All event list views """
@@ -254,3 +286,44 @@ def tempo(request):
         }
     
     return render(request, 'site_cc/tempo.html', contexto)
+
+def recomendacao(request):
+    resultado = None
+    texto_gerado = None
+    planta = request.GET.get('planta')
+
+    print(f"Planta selecionada: {planta}")
+
+    if planta:
+        planta = planta.capitalize()
+        if planta in plantas:
+            resultado = plantas[planta]
+
+            prompt_fixo = """
+            Você só pode falar sobre agronomia, sustentabilidade, práticas agrícolas, tipos de solo e plantio. 
+            Não quero que fuja para temas paralelos, como sugestões de vídeos ou coisas do tipo. Quero que tudo que for sugerir ou responder envolva apenas texto.
+            Se a pergunta não tiver nada sobre agricultura ou algo relacionado, responda com: 
+            'Não posso responder sobre esse tema, fui treinado apenas para práticas agrícolas.'
+            """
+
+            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de nao serem compativeis, caso as plantas compitam por mesmos nutrientes informe quais sao e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais facil de encontrar, de preferencia encontrados em casa"
+
+            try:
+                model = genai.GenerativeModel('gemini-pro')
+                response = model.generate_content(prompt_geracao)
+                texto_gerado = response.text.strip()
+
+                if 'Não posso responder' in texto_gerado:
+                    texto_gerado = "Nenhuma informação válida gerada sobre a planta."
+            except Exception as e:
+                print(f"Erro ao gerar texto: {e}")
+
+    contexto = {
+        'plantas': plantas.keys(),
+        'planta': planta,
+        'resultado': resultado,
+        'texto_gerado': texto_gerado if texto_gerado else "Nenhum texto gerado pela IA.",
+    }
+
+    return render(request, 'site_cc/recomendacao.html', contexto)
+
