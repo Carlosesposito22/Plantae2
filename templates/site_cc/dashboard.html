@@ -1,7 +1,7 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block title %}Event Dashboard{% endblock title %}
+{% block title %}Painel de Eventos{% endblock title %}
 
 {% block breadcrumb %}
     <div>
@@ -13,18 +13,18 @@
 <div class="row">
     <div class="col-md-6 col-lg-3">
         <div class="widget-small primary coloured-icon">
-            <i class="icon fa fa-files-o fa-3x"></i>
+            <i class="icon fa fa-leaf fa-3x"></i>
             <div class="info">
-                <h4>Total Completed Events</h4>
+                <h4>Plantações Concluídas</h4>
                 <p><b>{{ total_event }}</b></p>
             </div>
         </div>
     </div>
     <div class="col-md-6 col-lg-3">
         <div class="widget-small info coloured-icon">
-            <i class="icon fa fa-thumbs-o-up fa-3x"></i>
+            <i class="icon fa fa fa-spinner fa-3x"></i>
             <div class="info">
-                <h4>Total Running Events</h4>
+                <h4>Plantações em Andamento</h4>
                 <p><b>{{ running_events.count }}</b></p>
             </div>
         </div>
@@ -39,10 +39,10 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 261.641px;">SL</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 417.312px;">Event Name</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 189.281px;">Start Time</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 102.141px;">End Time</th>
+                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Nome: ative para classificar a coluna em ordem decrescente" style="width: 261.641px;">SL</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Nome do Evento: ative para classificar a coluna em ordem crescente" style="width: 417.312px;">Nome do Evento</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Início: ative para classificar a coluna em ordem crescente" style="width: 189.281px;">Hora de Início</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Fim: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Hora de Fim</th>
                                         </tr>
                                     </thead>
                                     <tbody>
