@@ -219,7 +219,7 @@ def next_day(request, event_id):
         return JsonResponse({'message': 'Error!'}, status=400)
 
 def tempo(request):
-    API_KEY = "ae959f54e6804eb49fd210633242409"
+    API_KEY = "61e7d91b7e2f42feba2154249240810"
     cidade = "Carpina"
     
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"

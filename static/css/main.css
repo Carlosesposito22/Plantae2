@@ -162,13 +162,13 @@ sup {
 }
 
 a {
-  color: #009688;
+  color: #0c954e;
   text-decoration: none;
   background-color: transparent;
 }
 
 a:hover {
-  color: #004a43;
+  color: #005228;
   text-decoration: underline;
 }
 
@@ -2046,7 +2046,7 @@ pre code {
 .form-control:focus {
   color: #495057;
   background-color: #FFF;
-  border-color: #009688;
+  border-color: #27ff8f;
   outline: 0;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -2619,8 +2619,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
+  background-color: #27ff8f;
+  border-color: #27ff8f;
 }
 
 .btn-primary:hover {
@@ -2636,8 +2636,8 @@ fieldset:disabled a.btn {
 
 .btn-primary.disabled, .btn-primary:disabled {
   color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
+  background-color: #27ff8f;
+  border-color: #27ff8f;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
@@ -2906,14 +2906,14 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary {
-  color: #009688;
-  border-color: #009688;
+  color: #27ff8f;
+  border-color: #27ff8f;
 }
 
 .btn-outline-primary:hover {
   color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
+  background-color: #27ff8f;
+  border-color: #27ff8f;
 }
 
 .btn-outline-primary:focus, .btn-outline-primary.focus {
@@ -2922,15 +2922,15 @@ fieldset:disabled a.btn {
 }
 
 .btn-outline-primary.disabled, .btn-outline-primary:disabled {
-  color: #009688;
+  color: #27ff8f;
   background-color: transparent;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active, .btn-outline-primary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-primary.dropdown-toggle {
   color: #FFF;
-  background-color: #009688;
-  border-color: #009688;
+  background-color: #27ff8f;
+  border-color: #27ff8f;
 }
 
 .btn-outline-primary:not(:disabled):not(.disabled):active:focus, .btn-outline-primary:not(:disabled):not(.disabled).active:focus,
@@ -3179,12 +3179,12 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: #009688;
+  color: #27ff8f;
   text-decoration: none;
 }
 
 .btn-link:hover {
-  color: #004a43;
+  color: #006c61;
   text-decoration: underline;
 }
 
@@ -3497,7 +3497,7 @@ input[type="button"].btn-block {
 .dropdown-item.active, .dropdown-item:active {
   color: #FFF;
   text-decoration: none;
-  background-color: #009688;
+  background-color: #27ff8f;
 }
 
 .dropdown-item.disabled, .dropdown-item:disabled {
@@ -3885,8 +3885,8 @@ input[type="button"].btn-block {
 
 .custom-control-input:checked ~ .custom-control-label::before {
   color: #FFF;
-  border-color: #009688;
-  background-color: #009688;
+  border-color: #27ff8f;
+  background-color: #27ff8f;
 }
 
 .custom-control-input:focus ~ .custom-control-label::before {
@@ -3895,7 +3895,7 @@ input[type="button"].btn-block {
 }
 
 .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
-  border-color: #009688;
+  border-color: #27ff8f;
 }
 
 .custom-control-input:not(:disabled):active ~ .custom-control-label::before {
@@ -14922,7 +14922,7 @@ be a descendant of the grid when it is being dragged.
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background-color: #009688;
+  background-color: #27ff8f;
   z-index: 1030;
   padding-right: 15px;
 }
@@ -14959,7 +14959,7 @@ be a descendant of the grid when it is being dragged.
             flex: 0 0 auto;
     display: block;
     width: 230px;
-    background-color: #007d71;
+    background-color: #27ff8f;
   }
 }
 
@@ -15163,9 +15163,12 @@ be a descendant of the grid when it is being dragged.
   background-color: #222d32;
   -webkit-box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
           box-shadow: 0px 8px 17px rgba(0, 0, 0, 0.2);
-  -webkit-transition: left 0.3s ease, width 0.3s ease;
-  -o-transition: left 0.3s ease, width 0.3s ease;
-  transition: left 0.3s ease, width 0.3s ease;
+  -webkit-transition: left 0.3s ease,
+ width 0.3s ease;
+  -o-transition: left 0.3s ease,
+ width 0.3s ease;
+  transition: left 0.3s ease,
+ width 0.3s ease;
 }
 
 .app-sidebar::-webkit-scrollbar {
@@ -15242,9 +15245,12 @@ be a descendant of the grid when it is being dragged.
   padding: 12px 15px;
   font-size: 1.08em;
   border-left: 3px solid transparent;
-  -webkit-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  -o-transition: border-left-color 0.3s ease, background-color 0.3s ease;
-  transition: border-left-color 0.3s ease, background-color 0.3s ease;
+  -webkit-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  -o-transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
+  transition: border-left-color 0.3s ease,
+ background-color 0.3s ease;
   color: #fff;
 }
 

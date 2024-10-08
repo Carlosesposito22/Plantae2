@@ -18,7 +18,7 @@
   --white: #fff;
   --gray: #6c757d;
   --gray-dark: #343a40;
-  --primary: #007bff;
+  --primary: #27ff8f;
   --secondary: #6c757d;
   --success: #AFE507;
   --info: #17a2b8;
@@ -133,7 +133,7 @@ sup {
   top: -.5em; }
 
 a {
-  color: #007bff;
+  color: #007438;
   text-decoration: none;
   background-color: transparent; }
   a:hover {
@@ -2459,7 +2459,7 @@ fieldset:disabled a.btn {
   color: #007bff;
   text-decoration: none; }
   .btn-link:hover {
-    color: #0056b3;
+    color: #13ba64;
     text-decoration: underline; }
   .btn-link:focus, .btn-link.focus {
     text-decoration: underline;
