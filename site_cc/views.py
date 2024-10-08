@@ -108,6 +108,7 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
 
 
 @login_required(login_url="signup")
+@login_required(login_url="signup")
 def create_event(request):
     form = EventForm(request.POST or None)
     if request.POST and form.is_valid():
@@ -115,15 +116,18 @@ def create_event(request):
         description = form.cleaned_data["description"]
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
+        cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
         Event.objects.get_or_create(
             user=request.user,
             title=title,
             description=description,
             start_time=start_time,
             end_time=end_time,
+            cultura=cultura,  # Inclua o campo cultura
         )
         return HttpResponseRedirect(reverse("site_cc:calendar"))
     return render(request, "event.html", {"form": form})
+
 
 
 class EventEdit(generic.UpdateView):
@@ -177,6 +181,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                 {   "id": event.id,
                     "title": event.title,
                     "type": event.type,
+                    "cultura":event.cultura,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,

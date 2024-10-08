@@ -9,15 +9,28 @@ class EventForm(ModelForm):
         ('Preparo', 'Preparo'),
         ('Outros', 'Outros'),
     ]
+    CULTURA_CHOICES = [
+        ('tomate', 'Tomate'),
+        ('cenoura', 'Cenoura'),
+        ('rucula', 'Rúcula'),
+        ('alface', 'Alface'),
+        ('batata', 'Batata'),
+    ]
 
     type = forms.ChoiceField(
         choices=TYPE_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
     )
+    cultura = forms.ChoiceField(
+        choices=CULTURA_CHOICES,
+        widget=forms.Select(attrs={"class": "form-control"})
+        
+       
+    )
 
     class Meta:
         model = Event
-        fields = ["title", "type", "description", "start_time", "end_time"]
+        fields = ["title", "type", "description", "start_time", "end_time","cultura"]
         widgets = {
             "title": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Enter event title"}
