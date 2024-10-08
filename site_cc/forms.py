@@ -1,6 +1,6 @@
+from django import forms
 from django.forms import ModelForm, DateInput, ChoiceField
 from site_cc.models import Event, EventMember
-from django import forms
 
 class EventForm(ModelForm):
     TYPE_CHOICES = [
@@ -24,13 +24,11 @@ class EventForm(ModelForm):
     cultura = forms.ChoiceField(
         choices=CULTURA_CHOICES,
         widget=forms.Select(attrs={"class": "form-control"})
-        
-       
     )
 
     class Meta:
         model = Event
-        fields = ["title", "type", "description", "start_time", "end_time","cultura"]
+        fields = ["title", "type", "description", "start_time", "end_time", "cultura","duration_readable"]
         widgets = {
             "title": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Enter event title"}
@@ -57,9 +55,21 @@ class EventForm(ModelForm):
         self.fields["start_time"].input_formats = ("%Y-%m-%dT%H:%M",)
         self.fields["end_time"].input_formats = ("%Y-%m-%dT%H:%M",)
 
+    def clean(self):
+        cleaned_data = super().clean()
+        start_time = cleaned_data.get("start_time")
+        end_time = cleaned_data.get("end_time")
+
+        if start_time and end_time and start_time >= end_time:
+            raise forms.ValidationError("A data de término deve ser posterior à data de início.")
+
+        return cleaned_data
 
 
 class AddMemberForm(forms.ModelForm):
     class Meta:
         model = EventMember
         fields = ["user"]
+        widgets = {
+            "user": forms.Select(attrs={"class": "form-control"})
+        }
