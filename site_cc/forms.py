@@ -28,7 +28,7 @@ class EventForm(ModelForm):
 
     class Meta:
         model = Event
-        fields = ["title", "type", "description", "start_time", "end_time", "cultura","duration_readable"]
+        fields = ["title", "type", "description", "start_time", "end_time", "cultura","duration_readable","local"]
         widgets = {
             "title": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Nome do evento"}

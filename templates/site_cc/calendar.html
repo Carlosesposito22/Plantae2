@@ -73,6 +73,7 @@
               <h4>{{ event.title }}</h4>
               <p><strong>Tipo: </strong>{{ event.type }}</p>
               <p><strong>Cultura: </strong>{{ event.cultura }}</p>  {# Exibindo o campo cultura aqui #}
+              <p><strong>Local: </strong>{{ event.local }}</p>
               <p><strong>Descrição: </strong>{{ event.description }}</p>
               <p><strong>Data Início: </strong>{{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
               <p><strong>Data Fim: </strong>{{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
@@ -112,6 +113,10 @@
                             {{ form.cultura }}
                         </div>
                         <div class="form-group">
+                            <label>Local:</label>
+                            {{ form.local }}  {# Isso agora renderiza como um select #}
+                        </div>
+                        <div class="form-group">
                             <label>Descrição:</label>
                             {{ form.description }}
                         </div>
@@ -147,6 +152,7 @@
                 <div class="modal-body">
                     <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
                     <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p> {# Nova linha para Cultura #}
+                    <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
                     <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
                     <p><strong>Data Início:</strong> <span id="start_event_detail"></span></p>
                     <p><strong>Data Fim:</strong> <span id="end_event_detail"></span></p>
@@ -193,6 +199,7 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
             document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
             document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
+            document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
             document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
             document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível'; 
 

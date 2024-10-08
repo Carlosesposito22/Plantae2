@@ -25,6 +25,7 @@ class Event(EventAbstract):
     
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
     title = models.CharField(max_length=200)
+    local = models.CharField(max_length=200, default='')
     type = models.CharField(max_length=50, default='') 
     cultura = models.CharField(max_length=50, default='') 
     description = models.TextField()

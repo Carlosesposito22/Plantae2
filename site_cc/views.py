@@ -106,6 +106,7 @@ def create_event(request):
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
         cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
+        local = form.cleaned_data["local"]
         duration_readable = form.cleaned_data["duration_readable"]
         Event.objects.get_or_create(
             user=request.user,
@@ -120,7 +121,7 @@ def create_event(request):
 
 class EventEdit(generic.UpdateView):
     model = Event
-    fields = ["title", "description", "start_time", "end_time", "cultura"]  # Adicione o campo cultura
+    fields = ["title", "description", "start_time", "end_time", "cultura","local"]  # Adicione o campo cultura
     template_name = "event.html"
 
 @login_required(login_url="signup")
@@ -167,6 +168,7 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                     "title": event.title,
                     "type": event.type,
                     "cultura": event.cultura,
+                    "local": event.local,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
