@@ -10,11 +10,11 @@ class EventForm(ModelForm):
         ('Outros', 'Outros'),
     ]
     CULTURA_CHOICES = [
-        ('tomate', 'Tomate'),
-        ('cenoura', 'Cenoura'),
-        ('rucula', 'Rúcula'),
-        ('alface', 'Alface'),
-        ('batata', 'Batata'),
+        ('Tomate', 'Tomate'),
+        ('Cenoura', 'Cenoura'),
+        ('Rúcula', 'Rúcula'),
+        ('Alface', 'Alface'),
+        ('Batata', 'Batata'),
     ]
 
     type = forms.ChoiceField(
