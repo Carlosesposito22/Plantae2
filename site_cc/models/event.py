@@ -4,7 +4,6 @@ from django.urls import reverse
 from site_cc.models import EventAbstract
 from accounts.models import User
 
-
 class EventManager(models.Manager):
     """ Event manager """
 
@@ -23,18 +22,17 @@ class EventManager(models.Manager):
 
 
 class Event(EventAbstract):
-    """ Event model """
-
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="events")
     title = models.CharField(max_length=200)
-    type = models.CharField(max_length=200, default='')
+    type = models.CharField(max_length=50, default='')  
     description = models.TextField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
 
     objects = EventManager()
 
-    def __str__(self):
+    def _str_(self):
         return self.title
 
     def get_absolute_url(self):

@@ -49,7 +49,7 @@
                         </div>
                         <div class="form-group">
                             <label>Type:</label>
-                            {{ form.type }}
+                            {{ form.type }}  {# Isso agora renderiza como um select #}
                         </div>
                         <div class="form-group">
                             <label>Descrição:</label>
@@ -83,10 +83,10 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p><strong>Type:</strong> <span id="type_event_detail"></span></p>
                     <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
                     <p><strong>Início:</strong> <span id="start_event_detail"></span></p>
                     <p><strong>Fim:</strong> <span id="end_event_detail"></span></p>
+                    <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p> <!-- Nova linha para Tipo -->
                 </div>
                 <div class="modal-footer">
                     <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
@@ -115,10 +115,11 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         eventClick: function(arg) {
             document.getElementById('title_event_detail').textContent = arg.event.title;
-            document.getElementById('type_event_detail').textContent = arg.event.type;
             document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
             document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
             document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
+            document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo'; // Adicionei esta linha
+
             document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
             $('#detailModal').modal('show');
         },
