@@ -76,6 +76,7 @@
               <p>{{ event.description }}</p>
               <p>Início: {{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
               <p>Fim: {{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
+              <p>Duração: {{ event.duration }}</p> {# Exibindo a duração aqui #}
           </div>
         {% empty %}
           <p>Nenhuma cultura em andamento</p>
@@ -122,6 +123,7 @@
                             <label>Fim:</label>
                             {{ form.end_time }}
                         </div>
+                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
@@ -148,6 +150,7 @@
                     <p><strong>Fim:</strong> <span id="end_event_detail"></span></p>
                     <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
                     <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p> {# Nova linha para Cultura #}
+                    <p><strong>Duração:</strong> <span id="duration_event_detail"></span></p> {# Nova linha para Cultura #}
                 </div>
                 <div class="modal-footer">
                     <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
@@ -191,6 +194,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
             document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
             document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
+            document.getElementById('duration_event_detail').textContent = arg.event.duration_readable || 'Duração não disponível';
+
 
             document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
             $('#detailModal').modal('show');

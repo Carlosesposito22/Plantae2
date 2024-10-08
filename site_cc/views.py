@@ -1,16 +1,13 @@
 from django.views.generic import ListView
-from site_cc.models import Event
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from site_cc.models import Event, EventMember
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, JsonResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from site_cc.models import EventMember, Event
 from site_cc.utils import Calendar
 from site_cc.forms import EventForm, AddMemberForm
 import calendar
@@ -57,7 +54,6 @@ class AllEventsListView(ListView):
     def get_queryset(self):
         return Event.objects.get_all_events(user=self.request.user)
 
-
 class RunningEventsListView(ListView):
     """ Running events list view """
 
@@ -67,14 +63,11 @@ class RunningEventsListView(ListView):
     def get_queryset(self):
         return Event.objects.get_running_events(user=self.request.user)
 
-
-
 def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split("-"))
         return date(year, month, day=1)
     return datetime.today()
-
 
 def prev_month(d):
     first = d.replace(day=1)
@@ -82,14 +75,12 @@ def prev_month(d):
     month = "month=" + str(prev_month.year) + "-" + str(prev_month.month)
     return month
 
-
 def next_month(d):
     days_in_month = calendar.monthrange(d.year, d.month)[1]
     last = d.replace(day=days_in_month)
     next_month = last + timedelta(days=1)
     month = "month=" + str(next_month.year) + "-" + str(next_month.month)
     return month
-
 
 class CalendarView(LoginRequiredMixin, generic.ListView):
     login_url = "accounts:signin"
@@ -106,8 +97,6 @@ class CalendarView(LoginRequiredMixin, generic.ListView):
         context["next_month"] = next_month(d)
         return context
 
-
-@login_required(login_url="signup")
 @login_required(login_url="signup")
 def create_event(request):
     form = EventForm(request.POST or None)
@@ -128,21 +117,17 @@ def create_event(request):
         return HttpResponseRedirect(reverse("site_cc:calendar"))
     return render(request, "event.html", {"form": form})
 
-
-
 class EventEdit(generic.UpdateView):
     model = Event
-    fields = ["title", "description", "start_time", "end_time"]
+    fields = ["title", "description", "start_time", "end_time", "cultura"]  # Adicione o campo cultura
     template_name = "event.html"
-
 
 @login_required(login_url="signup")
 def event_details(request, event_id):
-    event = Event.objects.get(id=event_id)
+    event = get_object_or_404(Event, id=event_id)
     eventmember = EventMember.objects.filter(event=event)
     context = {"event": event, "eventmember": eventmember}
     return render(request, "event-details.html", context)
-
 
 def add_eventmember(request, event_id):
     forms = AddMemberForm()
@@ -150,16 +135,15 @@ def add_eventmember(request, event_id):
         forms = AddMemberForm(request.POST)
         if forms.is_valid():
             member = EventMember.objects.filter(event=event_id)
-            event = Event.objects.get(id=event_id)
-            if member.count() <= 9:
+            event = get_object_or_404(Event, id=event_id)
+            if member.count() < 10:  # Corrigido para 10 membros
                 user = forms.cleaned_data["user"]
                 EventMember.objects.create(event=event, user=user)
                 return redirect("site_cc:calendar")
             else:
-                print("--------------User limit exceed!-----------------")
+                print("--------------User limit exceeded!-----------------")
     context = {"form": forms}
     return render(request, "add_member.html", context)
-
 
 class EventMemberDeleteView(generic.DeleteView):
     model = EventMember
@@ -181,15 +165,15 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
                 {   "id": event.id,
                     "title": event.title,
                     "type": event.type,
-                    "cultura":event.cultura,
+                    "cultura": event.cultura,
                     "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
                     "description": event.description,
+                    "duration_readable": event.duration_readable,
                 }
             )
         
-        context = {"form": forms, "events": event_list,
-                   "events_month": events_month}
+        context = {"form": forms, "events": event_list, "events_month": events_month}
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
@@ -202,41 +186,38 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
         context = {"form": forms}
         return render(request, self.template_name, context)
 
-
-
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
         event.delete()
-        return JsonResponse({'message': 'Event sucess delete.'})
+        return JsonResponse({'message': 'Event successfully deleted.'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
 
 def next_week(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        next = event
-        next.id = None
-        next.start_time += timedelta(days=7)
-        next.end_time += timedelta(days=7)
-        next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        next_event = event
+        next_event.id = None
+        next_event.start_time += timedelta(days=7)
+        next_event.end_time += timedelta(days=7)
+        next_event.save()
+        return JsonResponse({'message': 'Success!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
 
 def next_day(request, event_id):
-
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        next = event
-        next.id = None
-        next.start_time += timedelta(days=1)
-        next.end_time += timedelta(days=1)
-        next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        next_event = event
+        next_event.id = None
+        next_event.start_time += timedelta(days=1)
+        next_event.end_time += timedelta(days=1)
+        next_event.save()
+        return JsonResponse({'message': 'Success!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
-    
+
 def tempo(request):
     API_KEY = "61e7d91b7e2f42feba2154249240810"
     cidade = "Carpina"
@@ -260,7 +241,6 @@ def tempo(request):
             temperatura_atual = requisicao_forecast_dic['current']['temp_c'] 
 
             for item in requisicao_forecast_dic['forecast']['forecastday']:
-
                 is_critical = (
                     item['day']['maxtemp_c'] > 35 or
                     item['day']['mintemp_c'] < 5 or
@@ -312,7 +292,7 @@ def recomendacao(request):
             'Não posso responder sobre esse tema, fui treinado apenas para práticas agrícolas.'
             """
 
-            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de nao serem compativeis, caso as plantas compitam por mesmos nutrientes informe quais sao e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais facil de encontrar, de preferencia encontrados em casa"
+            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de não serem compatíveis, caso as plantas compitam por mesmos nutrientes informe quais são e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais fáceis de encontrar, de preferência encontrados em casa."
 
             try:
                 model = genai.GenerativeModel('gemini-pro')
@@ -332,4 +312,3 @@ def recomendacao(request):
     }
 
     return render(request, 'site_cc/recomendacao.html', contexto)
-
