@@ -4,6 +4,60 @@
 
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+
+<style>
+    #calendar {
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.fc-event {
+    background-color: #009688;
+    color: white;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 5px 0;
+    transition: transform 0.2s;
+}
+
+.fc-event:hover {
+    transform: scale(1.05);
+}
+
+.fc-event h5 {
+    font-size: 1.2em;
+    margin: 0;
+}
+
+.fc-event p {
+    margin: 5px 0;
+}
+
+.col-md-3 {
+    background-color: #F2F7F2;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.modal-header {
+    background-color: #009688;
+}
+
+.modal-title {
+    font-weight: bold;
+}
+
+.btn-primary {
+    background-color: #009688;
+    border-color: #007bff;
+}
+
+.btn-primary:hover {
+    background-color: #009688;
+}
+</style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
@@ -13,15 +67,14 @@
 {% block content %}
 <div class="row">
     <div class="col-md-3">
-        <h4 class="mb-4">Running Events</h4>
+        <h4 class="mb-4">Culturas em andamento</h4>
         {% for event in events_month %}
           <div class="fc-event">
               <h5>{{ event.title }}</h5>
               <p>{{ event.type }}</p>
               <p>{{ event.description }}</p>
-              <p>ID: {{event.id}}</p>
-              <p>Início: {{ event.start_time }}</p>
-              <p>Fim: {{ event.end_time }}</p>
+              <p>Início: {{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
+              <p>Fim: {{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
           </div>
         {% empty %}
           <p>Nenhuma cultura em andamento</p>
@@ -31,10 +84,11 @@
         <div id="calendar"></div>
     </div>
 
+    <!-- Modal para Adicionar Plantação -->
     <div class="modal fade" id="eventModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-primary">
+                <div class="modal-header">
                     <h5 class="modal-title text-white">Adicionar Plantação</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
@@ -73,10 +127,11 @@
         </div>
     </div>
 
+    <!-- Modal para Detalhes do Evento -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
-                <div class="modal-header bg-primary">
+                <div class="modal-header">
                     <h5 class="modal-title text-white" id="title_event_detail"></h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
@@ -103,7 +158,17 @@
 document.addEventListener('DOMContentLoaded', function() {
     var calendarEl = document.getElementById('calendar');
     var calendar = new FullCalendar.Calendar(calendarEl, {
-        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek,timeGridDay,list' },
+        locale: 'pt-br',
+        headerToolbar: { 
+            left: 'prev,next today', 
+            center: 'title', 
+            right: 'dayGridMonth,list' 
+        },
+        buttonText: {
+            today: 'Hoje',
+            month: 'Mês',
+            list: 'Tarefas do dia'
+        },
         initialDate: new Date(),
         navLinks: true,
         selectable: true,
@@ -126,6 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
         dayMaxEvents: true,
         events: {{ events|safe }},
     });
+
     calendar.render();
 });
 
