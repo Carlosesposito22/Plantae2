@@ -17,6 +17,7 @@
         {% for event in events_month %}
           <div class="fc-event">
               <h5>{{ event.title }}</h5>
+              <p>{{ event.type }}</p>
               <p>{{ event.description }}</p>
               <p>ID: {{event.id}}</p>
               <p>Início: {{ event.start_time }}</p>
@@ -43,8 +44,12 @@
                     {% csrf_token %}
                     <div class="modal-body">
                         <div class="form-group">
-                            <label>Cultura:</label>
+                            <label>Event:</label>
                             {{ form.title }}
+                        </div>
+                        <div class="form-group">
+                            <label>Type:</label>
+                            {{ form.type }}
                         </div>
                         <div class="form-group">
                             <label>Descrição:</label>
@@ -78,6 +83,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <p><strong>Type:</strong> <span id="type_event_detail"></span></p>
                     <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
                     <p><strong>Início:</strong> <span id="start_event_detail"></span></p>
                     <p><strong>Fim:</strong> <span id="end_event_detail"></span></p>
@@ -109,6 +115,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         eventClick: function(arg) {
             document.getElementById('title_event_detail').textContent = arg.event.title;
+            document.getElementById('type_event_detail').textContent = arg.event.type;
             document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
             document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
             document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);

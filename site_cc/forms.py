@@ -6,10 +6,13 @@ from django import forms
 class EventForm(ModelForm):
     class Meta:
         model = Event
-        fields = ["title", "description", "start_time", "end_time"]
+        fields = ["title", "type","description", "start_time", "end_time"]
         widgets = {
             "title": forms.TextInput(
                 attrs={"class": "form-control", "placeholder": "Enter event title"}
+            ),
+            "type": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Enter event type"}
             ),
             "description": forms.Textarea(
                 attrs={
