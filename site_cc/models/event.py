@@ -30,7 +30,7 @@ class Event(EventAbstract):
     description = models.TextField()
     start_time = models.DateTimeField()
     end_time = models.DateTimeField()
-    duration_readable = models.CharField(max_length=50, default="0 dias, 0 horas")  # Apenas este campo agora
+    duration_readable = models.CharField(max_length=200, null=True, blank=True) 
     
     objects = EventManager()
 

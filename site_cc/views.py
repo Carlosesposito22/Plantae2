@@ -106,6 +106,7 @@ def create_event(request):
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
         cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
+        duration_readable = form.cleaned_data["duration_readable"]
         Event.objects.get_or_create(
             user=request.user,
             title=title,
