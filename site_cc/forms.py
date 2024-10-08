@@ -31,12 +31,15 @@ class EventForm(ModelForm):
         fields = ["title", "type", "description", "start_time", "end_time", "cultura","duration_readable"]
         widgets = {
             "title": forms.TextInput(
-                attrs={"class": "form-control", "placeholder": "Enter event title"}
+                attrs={"class": "form-control", "placeholder": "Nome do evento"}
+            ),
+            "type": forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Selecione o tipo"}
             ),
             "description": forms.Textarea(
                 attrs={
                     "class": "form-control",
-                    "placeholder": "Enter event description",
+                    "placeholder": "Descreva a atividade e coloque aqui todo material necessário",
                 }
             ),
             "start_time": DateInput(
