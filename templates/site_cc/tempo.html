@@ -37,6 +37,22 @@
             {% endif %}
         {% endfor %}
 
+        {% for item in previsao %}
+          {% if item.data == today %}
+            {% if item.temperatura_max > 25 or item.temperatura_min < 20 %}
+              <p style="color: yellow; font-weight: bold;">
+                Atenção: Possível temperatura crítica.
+                {% if item.temperatura_max > 25 %}
+                    Temperatura máxima está alta: {{ item.temperatura_max }}°C.
+                {% endif %}
+                {% if item.temperatura_min < 20 %}
+                    Temperatura mínima está baixa: {{ item.temperatura_min }}°C.
+                {% endif %}
+              </p>
+           {% endif %}
+        {% endif %}
+    {% endfor %}
+
         <table class="weather-table">
             <thead>
                 <tr>
