@@ -158,13 +158,20 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
     form_class = EventForm
 
     def get(self, request, *args, **kwargs):
+        event_id = kwargs.get('event_id')  # Pegue o ID do evento da URL
         forms = self.form_class()
+
+        if event_id:  # Se um ID de evento for fornecido, preencha o formulário com os dados do evento
+            event = get_object_or_404(Event, id=event_id, user=request.user)
+            forms = self.form_class(instance=event)
+
         events = Event.objects.get_all_events(user=request.user)
         events_month = Event.objects.get_running_events(user=request.user)
         event_list = []
         for event in events:
             event_list.append(
-                {   "id": event.id,
+                {   
+                    "id": event.id,
                     "title": event.title,
                     "type": event.type,
                     "cultura": event.cultura,
@@ -180,14 +187,23 @@ class CalendarViewNew(LoginRequiredMixin, generic.View):
         return render(request, self.template_name, context)
 
     def post(self, request, *args, **kwargs):
-        forms = self.form_class(request.POST)
+        event_id = request.POST.get('event_id')
+        if event_id:  # Se estamos editando um evento existente
+            event = Event.objects.get(pk=event_id)
+            forms = self.form_class(request.POST, instance=event)  # Passa a instância do evento existente
+        else:  # Se estamos criando um novo evento
+            forms = self.form_class(request.POST)
+
         if forms.is_valid():
             form = forms.save(commit=False)
-            form.user = request.user
+            form.user = request.user  # Se necessário, mantenha a atribuição do usuário
             form.save()
             return redirect("site_cc:calendar")
+
         context = {"form": forms}
         return render(request, self.template_name, context)
+
+
 
 def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)

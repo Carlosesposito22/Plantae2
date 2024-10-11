@@ -99,8 +99,9 @@
                         <span>&times;</span>
                     </button>
                 </div>
-                <form method="post">
+                <form method="post" id="eventForm">
                     {% csrf_token %}
+                    <input type="hidden" id="id_event_id" name="event_id">
                     <div class="modal-body">
                         <div class="form-group">
                             <label>Evento:</label>
@@ -108,15 +109,15 @@
                         </div>
                         <div class="form-group">
                             <label>Tipo:</label>
-                            {{ form.type }}  {# Isso agora renderiza como um select #}
+                            {{ form.type }}
                         </div>
                         <div class="form-group">
-                            <label>Cultura:</label> {# Campo cultura adicionado #}
+                            <label>Cultura:</label>
                             {{ form.cultura }}
                         </div>
                         <div class="form-group">
                             <label>Local:</label>
-                            {{ form.local }}  {# Isso agora renderiza como um select #}
+                            {{ form.local }}
                         </div>
                         <div class="form-group">
                             <label>Descrição:</label>
@@ -130,7 +131,6 @@
                             <label>Fim:</label>
                             {{ form.end_time }}
                         </div>
-                        
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
@@ -141,7 +141,7 @@
         </div>
     </div>
 
-    <!-- Modal para Detalhes do Evento -->
+        <!-- Modal para Detalhes do Evento -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -153,14 +153,15 @@
                 </div>
                 <div class="modal-body">
                     <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
-                    <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p> {# Nova linha para Cultura #}
+                    <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p>
                     <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
                     <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
                     <p><strong>Data Início:</strong> <span id="start_event_detail"></span></p>
                     <p><strong>Data Fim:</strong> <span id="end_event_detail"></span></p>
-                    <p><strong>Duração:</strong> <span id="duration_readable_event_detail"></span></p> {# Nova linha para Cultura #}
+                    <p><strong>Duração:</strong> <span id="duration_readable_event_detail"></span></p>
                 </div>
                 <div class="modal-footer">
+                    <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
                     <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
                 </div>
             </div>
@@ -172,67 +173,93 @@
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    var calendarEl = document.getElementById('calendar');
-    var calendar = new FullCalendar.Calendar(calendarEl, {
-        locale: 'pt-br',
-        headerToolbar: { 
-            left: 'prev,next today', 
-            center: 'title', 
-            right: 'dayGridMonth,list' 
-        },
-        buttonText: {
-            today: 'Hoje',
-            month: 'Mês',
-            list: 'Tarefas do dia'
-        },
-        initialDate: new Date(),
-        navLinks: true,
-        selectable: true,
-        select: function(arg) {
-            document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
-            document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
+    document.addEventListener('DOMContentLoaded', function() {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            locale: 'pt-br',
+            headerToolbar: { 
+                left: 'prev,next today', 
+                center: 'title', 
+                right: 'dayGridMonth,list' 
+            },
+            buttonText: {
+                today: 'Hoje',
+                month: 'Mês',
+                list: 'Tarefas do dia'
+            },
+            initialDate: new Date(),
+            navLinks: true,
+            selectable: true,
+            select: function(arg) {
+                document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
+                document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
+                $('#eventModal').modal('show');
+                calendar.unselect();
+            },
+            eventClick: function(arg) {
+                document.getElementById('title_event_detail').textContent = arg.event.title;
+                document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
+                document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
+                document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
+                document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
+                document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
+                document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
+                document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível'; 
+    
+                // Definir o ID do evento no botão de editar
+                document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
+                $('#detailModal').modal('show');
+            },
+            editable: true,
+            dayMaxEvents: true,
+            events: {{ events|safe }}
+        });
+    
+        calendar.render();
+    
+        // Adicionando a funcionalidade de edição
+        document.getElementById('edit-event-button').addEventListener('click', function() {
+            const eventId = this.getAttribute('data-event-id');
+    
+            // Preencher o formulário de adicionar/editar
+            document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
+            document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
+            document.getElementById('id_cultura').value = document.getElementById('cultura_event_detail').textContent;
+            document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
+            document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
+            document.getElementById('id_start_time').value = converterDataParaDjangoFormat(new Date(document.getElementById('start_event_detail').textContent));
+            document.getElementById('id_end_time').value = converterDataParaDjangoFormat(new Date(document.getElementById('end_event_detail').textContent));
+    
+            // Adicionar o ID do evento ao formulário para edição
+            document.getElementById('id_event_id').value = eventId;
+    
+            // Fechar o modal de detalhes antes de abrir o modal de edição
+            $('#detailModal').modal('hide');
+    
+            // Mostrar o modal de adição/edição
             $('#eventModal').modal('show');
-            calendar.unselect();
-        },
-        eventClick: function(arg) {
-            document.getElementById('title_event_detail').textContent = arg.event.title;
-            document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
-            document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
-            document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
-            document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
-            document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
-            document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
-            document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível'; 
-
-            document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
-            $('#detailModal').modal('show');
-        },
-        editable: true,
-        dayMaxEvents: true,
-        events: {{ events|safe }}
+        });
     });
-
-    calendar.render();
-});
-
-function formatDateTime(dateTime) {
-    return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
-}
-
-function converterDataParaDjangoFormat(data) {
-    const dataJS = new Date(data);
-    return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')} ` +
-           `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
-}
-
-document.getElementById('delete-event-button').addEventListener('click', function() {
-    const eventId = this.getAttribute('data-event-id');
-    if (confirm('Tem certeza que deseja apagar este evento?')) {
-        $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
-          .done(function(response) { alert(response.message); window.location.reload(); })
-          .fail(function() { alert('Erro ao apagar!'); });
+    
+    // Formatação de data e hora
+    function formatDateTime(dateTime) {
+        return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
     }
-});
-</script>
+    
+    function converterDataParaDjangoFormat(data) {
+        const dataJS = new Date(data);
+        return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')} ` +
+               `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
+    }
+    
+    document.getElementById('delete-event-button').addEventListener('click', function() {
+        const eventId = this.getAttribute('data-event-id');
+        if (confirm('Tem certeza que deseja apagar este evento?')) {
+            $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
+              .done(function(response) { alert(response.message); window.location.reload(); })
+              .fail(function() { alert('Erro ao apagar!'); });
+        }
+    });
+    </script>
+    
 {% endblock extrascripts %}
