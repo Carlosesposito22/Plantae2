@@ -16,6 +16,13 @@ from site_cc.forms import EventForm, AddMemberForm
 import calendar
 import requests
 import google.generativeai as genai
+from .forms import EventForm
+
+
+
+
+from .models import Event, EventMember
+from .forms import EventForm  
 
 API_KEY = 'AIzaSyC4AVfey0X8ONDz9f_vdw6Sq9yDdhHFowk'
 genai.configure(api_key=API_KEY)
@@ -48,24 +55,7 @@ plantas = {
     },
 }
 
-class AllEventsListView(ListView):
-    """ All event list views """
 
-    template_name = "site_cc/events_list.html"
-    model = Event
-
-    def get_queryset(self):
-        return Event.objects.get_all_events(user=self.request.user)
-
-
-class RunningEventsListView(ListView):
-    """ Running events list view """
-
-    template_name = "site_cc/events_list.html"
-    model = Event
-
-    def get_queryset(self):
-        return Event.objects.get_running_events(user=self.request.user)
 
 
 
@@ -91,20 +81,6 @@ def next_month(d):
     return month
 
 
-class CalendarView(LoginRequiredMixin, generic.ListView):
-    login_url = "accounts:signin"
-    model = Event
-    template_name = "calendar.html"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        d = get_date(self.request.GET.get("month", None))
-        cal = Calendar(d.year, d.month)
-        html_cal = cal.formatmonth(withyear=True)
-        context["calendar"] = mark_safe(html_cal)
-        context["prev_month"] = prev_month(d)
-        context["next_month"] = next_month(d)
-        return context
 
 
 @login_required(login_url="signup")
@@ -116,24 +92,21 @@ def create_event(request):
         description = form.cleaned_data["description"]
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
-        cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
+        cultura = form.cleaned_data["cultura"]  
         Event.objects.get_or_create(
             user=request.user,
             title=title,
             description=description,
             start_time=start_time,
             end_time=end_time,
-            cultura=cultura,  # Inclua o campo cultura
+            cultura=cultura,  
         )
         return HttpResponseRedirect(reverse("site_cc:calendar"))
     return render(request, "event.html", {"form": form})
 
 
 
-class EventEdit(generic.UpdateView):
-    model = Event
-    fields = ["title", "description", "start_time", "end_time"]
-    template_name = "event.html"
+
 
 
 @login_required(login_url="signup")
@@ -161,38 +134,8 @@ def add_eventmember(request, event_id):
     return render(request, "add_member.html", context)
 
 
-class EventMemberDeleteView(generic.DeleteView):
-    model = EventMember
-    template_name = "event_delete.html"
-    success_url = reverse_lazy("site_cc:calendar")
 
-class CalendarViewNew(LoginRequiredMixin, generic.View):
-    login_url = "accounts:signin"
-    template_name = "site_cc/calendar.html"
-    form_class = EventForm
-
-    def get(self, request, *args, **kwargs):
-        forms = self.form_class()
-        events = Event.objects.get_all_events(user=request.user)
-        events_month = Event.objects.get_running_events(user=request.user)
-        event_list = []
-        for event in events:
-            event_list.append(
-                {   "id": event.id,
-                    "title": event.title,
-                    "type": event.type,
-                    "cultura":event.cultura,
-                    "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
-                    "description": event.description,
-                }
-            )
-        
-        context = {"form": forms, "events": event_list,
-                   "events_month": events_month}
-        return render(request, self.template_name, context)
-
-    def post(self, request, *args, **kwargs):
+def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
         if forms.is_valid():
             form = forms.save(commit=False)
@@ -333,3 +276,84 @@ def recomendacao(request):
 
     return render(request, 'site_cc/recomendacao.html', contexto)
 
+
+def all_events_list(request):
+    events = Event.objects.get_all_events(user=request.user)
+    return render(request, "site_cc/events_list.html", {'events': events})
+
+def running_events_list(request):
+    events = Event.objects.get_running_events(user=request.user)
+    return render(request, "site_cc/events_list.html", {'events': events})
+
+def calendar_view(request):
+    login_url = "accounts:signin"
+    if not request.user.is_authenticated:
+        return redirect(login_url)
+
+    d = get_date(request.GET.get("month", None))
+    cal = Calendar(d.year, d.month)
+    html_cal = cal.formatmonth(withyear=True)
+
+    context = {
+        "calendar": mark_safe(html_cal),
+        "prev_month": prev_month(d),
+        "next_month": next_month(d),
+    }
+    return render(request, "calendar.html", context)
+
+def event_edit(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    
+    if request.method == "POST":
+        form = EventForm(request.POST, instance=event)
+        if form.is_valid():
+            form.save()
+            return redirect('site_cc:calendar')  
+    else:
+        form = EventForm(instance=event)
+    
+    return render(request, "event.html", {'form': form})
+
+def event_member_delete(request, event_member_id):
+    event_member = get_object_or_404(EventMember, id=event_member_id)
+    event_member.delete()
+    return redirect(reverse_lazy("site_cc:calendar"))
+
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from .forms import EventForm
+from .models import Event
+
+def calendar_view_new(request):
+    login_url = "accounts:signin"
+    if not request.user.is_authenticated:
+        return redirect(login_url)
+
+    if request.method == "POST":
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user 
+            event.save()
+            return redirect('site_cc:calendar')  
+
+    else:  
+        form = EventForm()
+
+    events = Event.objects.get_all_events(user=request.user)
+    events_month = Event.objects.get_running_events(user=request.user)
+
+    event_list = []
+    for event in events:
+        event_list.append({
+            "id": event.id,
+            "title": event.title,
+            "type": event.type,
+            "cultura": event.cultura,
+            "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
+            "description": event.description,
+        })
+    
+    context = {"form": form, "events": event_list, "events_month": events_month}
+    return render(request, "site_cc/calendar.html", context)
