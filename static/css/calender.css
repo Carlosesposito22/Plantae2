@@ -34,7 +34,7 @@
   }
 
   a {
-    color: #17a2b8;
+    color: #00622f;
   }
 
   .left {
@@ -62,7 +62,7 @@
 
   .form input, .form select, .form textarea {
     border-radius: 5px;
-    border: 1px solid #17a2b8;
+    border: 1px solid #27ff8f;
     outline: none;
     background: none;
     padding: 5px;

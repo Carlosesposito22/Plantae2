@@ -1,16 +1,13 @@
 from django.views.generic import ListView
-from site_cc.models import Event
-from django.shortcuts import render, redirect
-from django.http import HttpResponseRedirect
+from site_cc.models import Event, EventMember
+from django.shortcuts import render, redirect, get_object_or_404
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
-from django.http import JsonResponse
-from django.shortcuts import get_object_or_404
-from site_cc.models import EventMember, Event
 from site_cc.utils import Calendar
 from site_cc.forms import EventForm, AddMemberForm
 import calendar
@@ -57,21 +54,17 @@ plantas = {
 
 
 
-
-
 def get_date(req_day):
     if req_day:
         year, month = (int(x) for x in req_day.split("-"))
         return date(year, month, day=1)
     return datetime.today()
 
-
 def prev_month(d):
     first = d.replace(day=1)
     prev_month = first - timedelta(days=1)
     month = "month=" + str(prev_month.year) + "-" + str(prev_month.month)
     return month
-
 
 def next_month(d):
     days_in_month = calendar.monthrange(d.year, d.month)[1]
@@ -81,9 +74,6 @@ def next_month(d):
     return month
 
 
-
-
-@login_required(login_url="signup")
 @login_required(login_url="signup")
 def create_event(request):
     form = EventForm(request.POST or None)
@@ -92,7 +82,9 @@ def create_event(request):
         description = form.cleaned_data["description"]
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
-        cultura = form.cleaned_data["cultura"]  
+        cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
+        local = form.cleaned_data["local"]
+        duration_readable = form.cleaned_data["duration_readable"]
         Event.objects.get_or_create(
             user=request.user,
             title=title,
@@ -108,14 +100,12 @@ def create_event(request):
 
 
 
-
 @login_required(login_url="signup")
 def event_details(request, event_id):
-    event = Event.objects.get(id=event_id)
+    event = get_object_or_404(Event, id=event_id)
     eventmember = EventMember.objects.filter(event=event)
     context = {"event": event, "eventmember": eventmember}
     return render(request, "event-details.html", context)
-
 
 def add_eventmember(request, event_id):
     forms = AddMemberForm()
@@ -123,13 +113,13 @@ def add_eventmember(request, event_id):
         forms = AddMemberForm(request.POST)
         if forms.is_valid():
             member = EventMember.objects.filter(event=event_id)
-            event = Event.objects.get(id=event_id)
-            if member.count() <= 9:
+            event = get_object_or_404(Event, id=event_id)
+            if member.count() < 10:  # Corrigido para 10 membros
                 user = forms.cleaned_data["user"]
                 EventMember.objects.create(event=event, user=user)
                 return redirect("site_cc:calendar")
             else:
-                print("--------------User limit exceed!-----------------")
+                print("--------------User limit exceeded!-----------------")
     context = {"form": forms}
     return render(request, "add_member.html", context)
 
@@ -139,9 +129,10 @@ def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
         if forms.is_valid():
             form = forms.save(commit=False)
-            form.user = request.user
+            form.user = request.user  # Se necessário, mantenha a atribuição do usuário
             form.save()
             return redirect("site_cc:calendar")
+
         context = {"form": forms}
         return render(request, self.template_name, context)
 
@@ -151,37 +142,36 @@ def delete_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
         event.delete()
-        return JsonResponse({'message': 'Event sucess delete.'})
+        return JsonResponse({'message': 'Event successfully deleted.'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
 
 def next_week(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        next = event
-        next.id = None
-        next.start_time += timedelta(days=7)
-        next.end_time += timedelta(days=7)
-        next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        next_event = event
+        next_event.id = None
+        next_event.start_time += timedelta(days=7)
+        next_event.end_time += timedelta(days=7)
+        next_event.save()
+        return JsonResponse({'message': 'Success!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
 
 def next_day(request, event_id):
-
     event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        next = event
-        next.id = None
-        next.start_time += timedelta(days=1)
-        next.end_time += timedelta(days=1)
-        next.save()
-        return JsonResponse({'message': 'Sucess!'})
+        next_event = event
+        next_event.id = None
+        next_event.start_time += timedelta(days=1)
+        next_event.end_time += timedelta(days=1)
+        next_event.save()
+        return JsonResponse({'message': 'Success!'})
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
-    
+
 def tempo(request):
-    API_KEY = "ae959f54e6804eb49fd210633242409"
+    API_KEY = "61e7d91b7e2f42feba2154249240810"
     cidade = "Carpina"
     
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"
@@ -203,7 +193,6 @@ def tempo(request):
             temperatura_atual = requisicao_forecast_dic['current']['temp_c'] 
 
             for item in requisicao_forecast_dic['forecast']['forecastday']:
-
                 is_critical = (
                     item['day']['maxtemp_c'] > 35 or
                     item['day']['mintemp_c'] < 5 or
@@ -255,7 +244,7 @@ def recomendacao(request):
             'Não posso responder sobre esse tema, fui treinado apenas para práticas agrícolas.'
             """
 
-            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de nao serem compativeis, caso as plantas compitam por mesmos nutrientes informe quais sao e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais facil de encontrar, de preferencia encontrados em casa"
+            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de não serem compatíveis, caso as plantas compitam por mesmos nutrientes informe quais são e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais fáceis de encontrar, de preferência encontrados em casa."
 
             try:
                 model = genai.GenerativeModel('gemini-pro')
@@ -319,41 +308,52 @@ def event_member_delete(request, event_member_id):
     event_member.delete()
     return redirect(reverse_lazy("site_cc:calendar"))
 
-from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from .forms import EventForm
-from .models import Event
 
-def calendar_view_new(request):
-    login_url = "accounts:signin"
-    if not request.user.is_authenticated:
-        return redirect(login_url)
 
+
+@login_required(login_url="accounts:signin")
+def calendar_view_new(request, event_id=None):
     if request.method == "POST":
-        form = EventForm(request.POST)
+        event_id = request.POST.get('event_id')
+        if event_id:  
+            event = get_object_or_404(Event, pk=event_id, user=request.user)
+            form = EventForm(request.POST, instance=event) 
+        else:  
+            form = EventForm(request.POST)
+
         if form.is_valid():
-            event = form.save(commit=False)
-            event.user = request.user 
-            event.save()
-            return redirect('site_cc:calendar')  
+            new_event = form.save(commit=False)
+            new_event.user = request.user 
+            new_event.save()
+            return redirect("site_cc:calendar") 
 
-    else:  
+    else:  # Método GET
         form = EventForm()
+        if event_id: 
+            event = get_object_or_404(Event, id=event_id, user=request.user)
+            form = EventForm(instance=event)
 
+    # Obtenha todos os eventos e eventos do mês
     events = Event.objects.get_all_events(user=request.user)
     events_month = Event.objects.get_running_events(user=request.user)
-
     event_list = []
+
     for event in events:
         event_list.append({
             "id": event.id,
             "title": event.title,
             "type": event.type,
             "cultura": event.cultura,
+            "local": event.local,
             "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "description": event.description,
+            "duration_readable": event.duration_readable,
         })
-    
-    context = {"form": form, "events": event_list, "events_month": events_month}
+
+    context = {
+        "form": form,
+        "events": event_list,
+        "events_month": events_month
+    }
     return render(request, "site_cc/calendar.html", context)

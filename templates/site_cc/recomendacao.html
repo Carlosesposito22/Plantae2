@@ -14,31 +14,35 @@
 
 {% block content %}
 
-<h2>Compatibilidade entre Plantas</h2>
+<div class="superholder">
+    <h2>Compatibilidade entre Plantas</h2>
 
-<form method="GET" action="">
-    <label for="planta">Selecione uma planta:</label>
-    <select name="planta" id="planta">
-        <option value="">Escolha uma opção</option>
-        {% for planta in plantas %}
-            <option value="{{ planta }}" {% if planta == planta %}selected{% endif %}>
-                {{ planta }}
-            </option>
-        {% endfor %}
-    </select>
-    <button type="submit">Buscar</button>
-</form>
+    <form method="GET" action="">
+        <label for="planta">Selecione uma planta:</label>
+        <select name="planta" id="planta">
+            <option value="">Escolha uma opção</option>
+            {% for planta in plantas %}
+                <option value="{{ planta }}" {% if planta == planta %}selected{% endif %}>
+                    {{ planta }}
+                </option>
+            {% endfor %}
+        </select>
+        <button class="btn btn-primary" type="submit">Buscar</button>
+    </form>
 
-{% if resultado %}
-    <h3>Resultados para "{{ planta }}":</h3>
-    <p><strong>Se dá bem com:</strong> {{ resultado.se_da_bem|join:', ' }}</p>
-    <p><strong>Não se dá bem com:</strong> {{ resultado.nao_se_da_bem|join:', ' }}</p>
-    <p><strong>Indiferente:</strong> {{ resultado.indiferente|join:', ' }}</p>
-{% elif planta %}
-    <p>Nenhum resultado encontrado para "{{ planta }}".</p>
-{% endif %}
+    {% if resultado %}
+        <h3>Resultados para "{{ planta }}":</h3>
+        <p><strong>Se dá bem com:</strong> {{ resultado.se_da_bem|join:', ' }}</p>
+        <p><strong>Não se dá bem com:</strong> {{ resultado.nao_se_da_bem|join:', ' }}</p>
+        <p><strong>Indiferente:</strong> {{ resultado.indiferente|join:', ' }}</p>
+    {% elif planta %}
+        <p>Nenhum resultado encontrado para "{{ planta }}".</p>
+    {% endif %}
 
-<h3>Texto gerado pela IA:</h3>
-<p>{{ texto_gerado }}</p>
+    <h3>Texto gerado pela IA:</h3>
+    <p>{{ texto_gerado }}</p>
+</div>
+
+
 
 {% endblock %}
