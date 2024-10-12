@@ -213,6 +213,15 @@
             editable: true,
             dayMaxEvents: true,
             events: {{ events|safe }}
+            eventDidMount: function(info) {
+                //O CSS geral tá sobrependo esses das cores dos eventos
+                //Mamede disse que ia ver isso, mas lógica tá funcioando ps: Carlos
+                var eventType = info.event.extendedProps.type;
+
+                if (eventType) {
+                    info.el.classList.add(eventType);
+                }
+            }
         });
     
         calendar.render();

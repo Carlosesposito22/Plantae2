@@ -68,3 +68,27 @@
     padding: 5px;
     width: 100%;
   }
+
+  .fc-event a {
+    color: white !important;
+  }
+
+  .fc .fc-event.plantio {
+    background-color: #4CAF50 !important; /* verde */
+    color: white !important;
+  }
+
+  .fc .fc-event.colheita {
+      background-color: #FF9800 !important; /* laranja */
+      color: white !important;
+  }
+
+  .fc .fc-event.preparo {
+      background-color: #2196F3 !important; /* azul */
+      color: white !important;
+  }
+
+  .fc .fc-event a {
+    color: white !important;  /* Forçar branco para links dentro dos eventos */
+    text-decoration: none !important; /* Remover sublinhado */
+  }
