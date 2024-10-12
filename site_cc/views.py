@@ -14,6 +14,7 @@ import calendar
 import requests
 import google.generativeai as genai
 from .forms import EventForm
+from .models import Event
 
 
 
@@ -137,14 +138,15 @@ def post(self, request, *args, **kwargs):
         return render(request, self.template_name, context)
 
 
-
 def delete_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        event.delete()
-        return JsonResponse({'message': 'Event successfully deleted.'})
-    else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        try:
+            event = Event.objects.get(id=event_id)
+            event.delete()
+            return JsonResponse({'message': 'Evento excluído com sucesso!'})
+        except Event.DoesNotExist:
+            return JsonResponse({'message': 'Evento não encontrado!'}, status=404)
+    return JsonResponse({'message': 'Método não permitido!'}, status=405)
 
 def next_week(request, event_id):
     event = get_object_or_404(Event, id=event_id)

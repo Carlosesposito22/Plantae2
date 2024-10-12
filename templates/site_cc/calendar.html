@@ -208,6 +208,7 @@
     
                 // Definir o ID do evento no botão de editar
                 document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
+                document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id); // Adicionei isso aqui
                 $('#detailModal').modal('show');
             },
             editable: true,
@@ -239,6 +240,22 @@
             // Mostrar o modal de adição/edição
             $('#eventModal').modal('show');
         });
+
+        // Exclusão de evento
+        document.getElementById('delete-event-button').addEventListener('click', function() {
+            const eventId = this.getAttribute('data-event-id');
+            console.log(`Tentando excluir o evento com ID: ${eventId}`);  // Corrigido
+            if (confirm('Tem certeza que deseja apagar este evento?')) {
+                $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
+                  .done(function(response) { 
+                      alert(response.message); 
+                      window.location.reload(); 
+                  })
+                  .fail(function(jqXHR) { 
+                      alert('Erro ao apagar: ' + jqXHR.responseText); 
+                  });
+            }
+        });
     });
     
     // Formatação de data e hora
@@ -251,15 +268,6 @@
         return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')} ` +
                `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
     }
-    
-    document.getElementById('delete-event-button').addEventListener('click', function() {
-        const eventId = this.getAttribute('data-event-id');
-        if (confirm('Tem certeza que deseja apagar este evento?')) {
-            $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
-              .done(function(response) { alert(response.message); window.location.reload(); })
-              .fail(function() { alert('Erro ao apagar!'); });
-        }
-    });
-    </script>
-    
+</script>
 {% endblock extrascripts %}
+
