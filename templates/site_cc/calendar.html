@@ -71,7 +71,7 @@
     <div class="coluna-ongoing col-md-3">
         <h4 class="mb-4">Culturas em andamento</h4>
         {% for event in events_month %}
-          <div class="fc-event">
+          <div class="fc-event" data-event-id="{{ event.id }}">
               <h4>{{ event.title }}</h4>
               <p><strong>Tipo: </strong>{{ event.type }}</p>
               <p><strong>Cultura: </strong>{{ event.cultura }}</p>  {# Exibindo o campo cultura aqui #}
@@ -220,9 +220,32 @@
                 }
             }
         });
-    
+
         calendar.render();
-    
+
+        // Evento de clique nos cards da coluna "Culturas em andamento"
+        document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
+            if (event.target.closest('.fc-event')) {
+                const eventElement = event.target.closest('.fc-event');
+                const eventId = eventElement.getAttribute('data-event-id');
+                const eventData = calendar.getEventById(eventId);
+
+                if (eventData) {
+                    document.getElementById('title_event_detail').textContent = eventData.title;
+                    document.getElementById('description_event_detail').textContent = eventData.extendedProps.description || '';
+                    document.getElementById('start_event_detail').textContent = formatDateTime(eventData.start);
+                    document.getElementById('end_event_detail').textContent = formatDateTime(eventData.end);
+                    document.getElementById('type_event_detail').textContent = eventData.extendedProps.type || 'Sem tipo';
+                    document.getElementById('local_event_detail').textContent = eventData.extendedProps.local || 'Sem local';
+                    document.getElementById('cultura_event_detail').textContent = eventData.extendedProps.cultura || 'Sem cultura';
+                    document.getElementById('duration_readable_event_detail').textContent = eventData.extendedProps.duration_readable || 'Duração não disponível';
+                    document.getElementById('edit-event-button').setAttribute("data-event-id", eventId);
+                    document.getElementById('delete-event-button').setAttribute("data-event-id", eventId);
+                    $('#detailModal').modal('show');
+                }
+            }
+        });
+
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
 
@@ -311,6 +334,6 @@
                `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
     }
 </script>
-
 {% endblock extrascripts %}
+
 
