@@ -49,9 +49,9 @@
         }
 
         .highlights {
-            display: grid; /* Mudado para grid */
-            grid-template-columns: repeat(3, 1fr); /* 3 colunas */
-            gap: 20px; /* Espaçamento entre os destaques */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
             margin: 20px 0;
             border-radius: 10px;
             background-color: #f1f1f1;
@@ -62,8 +62,8 @@
             padding: 20px;
             text-align: center;
             transition: background-color 0.3s, transform 0.3s;
-            background-color: #ffffff; /* Fundo branco para os destaques */
-            border-radius: 10px; /* Bordas arredondadas */
+            background-color: #ffffff;
+            border-radius: 10px;
         }
 
         .highlight:hover {
@@ -78,6 +78,24 @@
             margin-top: 20px;
         }
 
+        .critical-warning {
+            background-color: #ffcccc;
+            border-left: 6px solid red;
+            padding: 15px;
+            color: red;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            animation: pulse 1.5s infinite;
+        }
+
+        .critical-warning i {
+            margin-right: 10px;
+            font-size: 24px;
+        }
+
         .forecast-card {
             background-color: #ffffff;
             border-radius: 10px;
@@ -86,6 +104,25 @@
             text-align: center;
             transition: transform 0.3s;
             height: 150px;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(0.9);
+            }
+            50% {
+                transform: scale(0.95);
+            }
+            100% {
+                transform: scale(0.9);
+            }
+        }
+
+        .error-message {
+            color: red;
+            font-weight: bold;
+            margin: 20px 0;
+            text-align: center;
         }
 
         .forecast-card:hover {
@@ -129,7 +166,7 @@
             }
 
             .highlights {
-                grid-template-columns: repeat(2, 1fr); /* Muda para 2 colunas em telas menores */
+                grid-template-columns: repeat(2, 1fr);
             }
 
             .highlight {
@@ -147,6 +184,16 @@
 <div class="weather-container">
     <div class="weather-header">
         <h2>Previsão do Tempo para {{ cidade.nome }}</h2>
+        {% for item in previsao %}
+            {% if item.data == today %}
+                {% if temperatura_atual > 25 or temperatura_atual < 20 %}
+                    <div class="critical-warning">
+                        <i class="fa fa-exclamation-triangle"></i>
+                        Atenção: Temperatura fora do ideal (20-25ºC)
+                    </div>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
         <div class="current-temperature">{{ temperatura_atual }}°C</div>
     </div>
     <div class="date-display" id="dateDisplay"></div>
