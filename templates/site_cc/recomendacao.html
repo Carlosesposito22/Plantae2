@@ -9,40 +9,170 @@
 
 {% block extracss %}
     <link rel="stylesheet" href="{% static 'css/recomendacao.css' %}">
+    <style>
+        .superholder {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            min-height: 730px; /* Ajustar a altura mínima do container */
+        }
+
+        .breadcrumb h1 {
+            font-size: 1.75rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: bold;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            margin-top: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* Estilizando o select para parecer um addon */
+        select {
+            flex-grow: 1; /* Ocupa o espaço disponível */
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-right: none; /* Remove a borda direita */
+            border-top-left-radius: 8px;
+            border-bottom-left-radius: 8px;
+            height: 48px; /* Definindo a altura fixa igual ao botão */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box; /* Garante que padding e border não aumentem a altura */
+        }
+
+        /* Estilizando o botão como parte do addon */
+        .btn-addon {
+            height: 48px; /* Mesma altura do select */
+            padding: 0 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #28a745;
+            color: white;
+            font-size: 18px;
+            border: 1px solid #28a745; /* A mesma cor do fundo */
+            cursor: pointer;
+            border-top-right-radius: 8px;
+            border-bottom-right-radius: 8px;
+            border-left: none; /* Remove a borda esquerda */
+            transition: background-color 0.3s ease;
+            flex-shrink: 0; /* Evita que o botão encolha */
+        }
+
+        .btn-addon:hover {
+            background-color: #218838;
+        }
+
+        .btn-addon i {
+            margin: 0; /* Remove qualquer margem do ícone */
+        }
+
+        .result-container {
+            max-height: 520px; /* Ajuste a altura máxima do container de resultados */
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 10px;
+        }
+
+        .result-card {
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .result-card.green {
+            background-color: #e3f7e3;
+            border-left: 4px solid #28a745;
+        }
+
+        .result-card.red {
+            background-color: #f7e3e3;
+            border-left: 4px solid #dc3545;
+        }
+
+        .result-card.yellow {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .ai-text {
+            background-color: #f1f1f1;
+            padding: 15px;
+            border-left: 4px solid #007bff;
+            border-radius: 8px;
+            box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .no-result {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
 {% endblock extracss %}
 
-
 {% block content %}
-
 <div class="superholder">
     <h2>Compatibilidade entre Plantas</h2>
+    
+    <div class="form-section">
+        <form method="GET" action="">
+            <div class="form-group">
+                <select name="planta" id="planta2">
+                    <option value="">Escolha uma opção</option>
+                    {% for planta in plantas %}
+                        <option value="{{ planta }}" {% if planta == planta %}selected{% endif %}>
+                            {{ planta }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <button class="btn-addon" type="submit">
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </form>
+    </div>
 
-    <form method="GET" action="">
-        <label for="planta">Selecione uma planta:</label>
-        <select name="planta" id="planta">
-            <option value="">Escolha uma opção</option>
-            {% for planta in plantas %}
-                <option value="{{ planta }}" {% if planta == planta %}selected{% endif %}>
-                    {{ planta }}
-                </option>
-            {% endfor %}
-        </select>
-        <button class="btn btn-primary" type="submit">Buscar</button>
-    </form>
+    <div class="result-container">
+        {% if resultado %}
+            <div class="result-card green">
+                <h3>Se dá bem com:</h3>
+                <p>{{ resultado.se_da_bem|join:', ' }}</p>
+            </div>
+            <div class="result-card red">
+                <h3>Não se dá bem com:</h3>
+                <p>{{ resultado.nao_se_da_bem|join:', ' }}</p>
+            </div>
+            <div class="result-card yellow">
+                <h3>Indiferente:</h3>
+                <p>{{ resultado.indiferente|join:', ' }}</p>
+            </div>
+            <div class="ai-text">
+                <h3>Análise:</h3>
+                <p>{{ texto_gerado }}</p>
+            </div>
+        {% elif planta %}
+            <p class="no-result">Nenhum resultado encontrado para "{{ planta }}".</p>
+        {% endif %}
+    </div>
 
-    {% if resultado %}
-        <h3>Resultados para "{{ planta }}":</h3>
-        <p><strong>Se dá bem com:</strong> {{ resultado.se_da_bem|join:', ' }}</p>
-        <p><strong>Não se dá bem com:</strong> {{ resultado.nao_se_da_bem|join:', ' }}</p>
-        <p><strong>Indiferente:</strong> {{ resultado.indiferente|join:', ' }}</p>
-    {% elif planta %}
-        <p>Nenhum resultado encontrado para "{{ planta }}".</p>
-    {% endif %}
-
-    <h3>Texto gerado pela IA:</h3>
-    <p>{{ texto_gerado }}</p>
 </div>
-
-
-
 {% endblock %}
