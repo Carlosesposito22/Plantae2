@@ -7,6 +7,9 @@
         <link rel="stylesheet" href="{% static 'css/accounts.css' %}" />
     </head>
     <body>
+        <header>
+            <img src="{% static 'images/logo.png' %}" alt="logo" width="150px">
+        </header>
         <section class="ftco-section">
             <div class="container">
                 <div class="row justify-content-center">
@@ -30,25 +33,25 @@
                                             <div class="row">
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="label" for="email">Email Address</label>
+                                                        <label class="label" for="email">E-mail</label>
                                                         {{ form.email }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <label class="label" for="password">Password</label>
+                                                        <label class="label" for="password">Senha</label>
                                                         {{ form.password }}
                                                     </div>
                                                 </div>
                                                 <div class="col-md-12">
                                                     <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary">Sign In</button>
+                                                        <button type="submit" class="btn btn-primary">Entrar</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </form>
                                         <div class="w-100">
-                                            <p class="mt-4">New in event calendar? <a href="{% url 'accounts:signup' %}">Sign Up</a></p>
+                                            <p class="mt-4">Não tem cadastro ainda? <a href="{% url 'accounts:signup' %}">Cadastrar</a></p>
                                         </div>
                                     </div>
                                 </div>
