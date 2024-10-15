@@ -1,8 +1,6 @@
-from django.views.generic import ListView
 from site_cc.models import Event, EventMember
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 from django.contrib.auth.decorators import login_required
@@ -14,11 +12,6 @@ import calendar
 import requests
 import google.generativeai as genai
 from .forms import EventForm
-from .models import Event
-
-
-
-
 from .models import Event, EventMember
 from .forms import EventForm  
 

@@ -209,8 +209,8 @@
                 document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
                 $('#detailModal').modal('show');
             },
-            editable: true,
-            dayMaxEvents: true,
+            editable: false,
+            dayMaxEvents: false,
             events: {{ events|safe }},
             eventDidMount: function(info) {
                 //O CSS geral tá sobrependo esses das cores dos eventos
