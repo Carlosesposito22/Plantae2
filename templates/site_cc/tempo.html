@@ -59,11 +59,15 @@
         }
 
         .highlight {
-            padding: 20px;
             text-align: center;
             transition: background-color 0.3s, transform 0.3s;
             background-color: #ffffff;
             border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
         }
 
         .highlight:hover {
@@ -203,32 +207,32 @@
     {% else %}
         <div class="highlights">
             <div class="highlight">
-                <p>Temperatura</p>
+                <p><i class="bi bi-thermometer-half"></i> Temperatura</p>
                 <strong>Média: {{ temperatura_atual }}°C</strong><br>
                 <strong>Máxima: {{ temperatura_max_atual }}°C</strong><br>
-                <strong>Mínima: {{ temperatura_min_atual }}°C</strong><br>
+                <strong>Mínima: {{ temperatura_min_atual }}°C</strong>
             </div>
             <div class="highlight">
-                <p>Umidade</p>
+                <p><i class="bi bi-water"></i> Umidade</p>
                 <strong>{{ umidade_atual }}%</strong>
             </div>
             <div class="highlight">
-                <p>Vento</p>
+                <p><i class="bi bi-wind"></i> Vento</p>
                 <strong>{{ vento_velocidade_atual }} km/h</strong>
             </div>
             <div class="highlight">
-                <p>Acompanhamento solar</p>
+                <p><i class="bi bi-sun-fill"></i> Acompanhamento solar</p>
                 <strong>Horas de sol: {{ horas_sol }}</strong><br>
                 <strong>Índice UV: {{ indice_uv_atual }} %</strong><br>
                 <strong>Nascente: {{ nascer_do_sol }}</strong><br>
-                <strong>Poente: {{ por_do_sol }}</strong><br>
+                <strong>Poente: {{ por_do_sol }}</strong>
             </div>
             <div class="highlight">
-                <p>Acompanhamento lunar</p>
+                <p><i class="bi bi-moon-fill"></i> Acompanhamento lunar</p>
                 <strong>{{ fases_da_lua }}</strong>
             </div>
             <div class="highlight">
-                <p>Precipitação</p>
+                <p><i class="bi bi-moisture"></i> Precipitação</p>
                 <strong>{{ precipitacao_atual }} mm</strong>
             </div>
         </div>
