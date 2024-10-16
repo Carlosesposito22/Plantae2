@@ -50,6 +50,9 @@ class EventForm(ModelForm):
                 attrs={"type": "datetime-local", "class": "form-control"},
                 format="%Y-%m-%dT%H:%M",
             ),
+            "local":forms.TextInput(
+                attrs={"class": "form-control", "placeholder": "Nome do Local"}
+            ),
         }
         exclude = ["user"]
 
