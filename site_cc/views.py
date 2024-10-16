@@ -1,8 +1,6 @@
-from django.views.generic import ListView
 from site_cc.models import Event, EventMember
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
-from django.views import generic
 from django.utils.safestring import mark_safe
 from datetime import timedelta, datetime, date
 from django.contrib.auth.decorators import login_required
@@ -14,10 +12,6 @@ import calendar
 import requests
 import google.generativeai as genai
 from .forms import EventForm
-
-
-
-
 from .models import Event, EventMember
 from .forms import EventForm  
 
@@ -137,14 +131,15 @@ def post(self, request, *args, **kwargs):
         return render(request, self.template_name, context)
 
 
-
 def delete_event(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
     if request.method == 'POST':
-        event.delete()
-        return JsonResponse({'message': 'Event successfully deleted.'})
-    else:
-        return JsonResponse({'message': 'Error!'}, status=400)
+        try:
+            event = Event.objects.get(id=event_id)
+            event.delete()
+            return JsonResponse({'message': 'Evento excluído com sucesso!'})
+        except Event.DoesNotExist:
+            return JsonResponse({'message': 'Evento não encontrado!'}, status=404)
+    return JsonResponse({'message': 'Método não permitido!'}, status=405)
 
 def next_week(request, event_id):
     event = get_object_or_404(Event, id=event_id)
@@ -170,6 +165,7 @@ def next_day(request, event_id):
     else:
         return JsonResponse({'message': 'Error!'}, status=400)
 
+
 def tempo(request):
     API_KEY = "61e7d91b7e2f42feba2154249240810"
     cidade = "Carpina"
@@ -190,7 +186,23 @@ def tempo(request):
             }
 
             today = datetime.now().date().strftime("%Y-%m-%d")
-            temperatura_atual = requisicao_forecast_dic['current']['temp_c'] 
+
+            # Informações atuais do tempo
+            temperatura_atual = requisicao_forecast_dic['current']['temp_c']
+            descricao_atual = requisicao_forecast_dic['current']['condition']['text']
+            umidade_atual = requisicao_forecast_dic['current']['humidity']
+            vento_velocidade_atual = requisicao_forecast_dic['current']['wind_kph']
+            precipitacao_atual = requisicao_forecast_dic['current']['precip_mm']
+            indice_uv_atual = requisicao_forecast_dic['current']['uv']
+
+            # Informações do dia atual
+            dia_atual = requisicao_forecast_dic['forecast']['forecastday'][0]
+            horas_sol = dia_atual['day'].get('sunshine', 'N/A')
+            fases_da_lua = dia_atual['astro'].get('moon_phase', 'N/A')
+            por_do_sol = dia_atual['astro'].get('sunset', 'N/A')
+            nascer_do_sol = dia_atual['astro'].get('sunrise', 'N/A')
+            temperatura_max_atual = dia_atual['day']['maxtemp_c']
+            temperatura_min_atual = dia_atual['day']['mintemp_c']
 
             for item in requisicao_forecast_dic['forecast']['forecastday']:
                 is_critical = (
@@ -215,7 +227,18 @@ def tempo(request):
                 'cidade': cidade_info,
                 'previsao': previsao,
                 'today': today,
-                'temperatura_atual': temperatura_atual  
+                'temperatura_atual': temperatura_atual,
+                'descricao_atual': descricao_atual,
+                'umidade_atual': umidade_atual,
+                'vento_velocidade_atual': vento_velocidade_atual,
+                'precipitacao_atual': precipitacao_atual,
+                'indice_uv_atual': indice_uv_atual,
+                'horas_sol': horas_sol,
+                'fases_da_lua': fases_da_lua,
+                'por_do_sol': por_do_sol,
+                'nascer_do_sol': nascer_do_sol,
+                'temperatura_max_atual': temperatura_max_atual,
+                'temperatura_min_atual': temperatura_min_atual,
             }
 
     except requests.exceptions.RequestException as e:

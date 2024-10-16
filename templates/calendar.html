@@ -2,11 +2,11 @@
 
 {% block content %}
 <div class="clearfix">
-    <span class="left m-2" style="font-size: 20px;">Wellcome, {{ request.user }}</span>
+    <span class="left m-2" style="font-size: 20px;">Bem-vindo, {{ request.user }}</span>
     <a class="btn btn-info right" href="{% url 'accounts:signout' %}"> Sign Out</a>
-	<a class="btn btn-info right mr-2" href="{% url 'site_cc:calendar' %}?{{ next_month }} "> Next Month >> </a>
-    <a class="btn btn-info right mr-2" href="{% url 'site_cc:calendar' %}?{{ prev_month }}"> << Previous Month </a>
-    <a class="btn btn-info right mr-2" href="{% url 'site_cc:event_new' %}"> + New Event </a>
+	<a class="btn btn-info right mr-2" href="{% url 'site_cc:calendar' %}?{{ next_month }} "> Próximo Mês >> </a>
+    <a class="btn btn-info right mr-2" href="{% url 'site_cc:calendar' %}?{{ prev_month }}"> << Mês Anterior </a>
+    <a class="btn btn-info right mr-2" href="{% url 'site_cc:event_new' %}"> + Novo Evento </a>
 </div>
 <div style="color: blueviolet;">
     {{ calendar }}

@@ -8,19 +8,19 @@ Event Details
     <div class="container">
         <div class="clearfix">
             <a class="btn btn-primary left" href="{% url 'site_cc:calendar' %}"> Calendar </a>
-            <a class="btn btn-info right mr-2" href="{% url 'site_cc:event_edit' event.pk %}"> Edit Event </a>
+            <a class="btn btn-info right mr-2" href="{% url 'site_cc:event_edit' event.pk %}"> Editar Evento </a>
         </div>
 
         <div class="clearfix">
-            <h3>Event Name: {{ event.title }}</h3>
-            <p>From <span style="color: gray;">{{ event.start_time }}</span> To <span style="color: gray;">{{ event.end_time }}</span></p>
+            <h3>Nome do Evento: {{ event.title }}</h3>
+            <p>De <span style="color: gray;">{{ event.start_time }}</span> Até <span style="color: gray;">{{ event.end_time }}</span></p>
             <hr>
             <p>{{ event.description }}</p>
         </div>
         <hr>
         <div class="clearfix">
-            <h4 class="left" > Members of this Event</h4>
-            <a class="btn btn-success right" href="{% url 'site_cc:add_eventmember' event.id %}"> Add Member </a>
+            <h4 class="left" > Membros deste Evento</h4>
+            <a class="btn btn-success right" href="{% url 'site_cc:add_eventmember' event.id %}"> Adicionar membro </a>
         </div>
         <table class="table table-bordered">
             <thead>
@@ -40,7 +40,7 @@ Event Details
                     <td>{{ member.user.username }}</td>
                     <td>{{ member.user.email }}</td>
                     <td>
-                        <a class="btn btn-danger" href="{% url 'site_cc:remove_event' member.id %}">Remove</a>
+                        <a class="btn btn-danger" href="{% url 'site_cc:remove_event' member.id %}">Remover</a>
                     </td>
                 </tr>
                 {% endfor %}

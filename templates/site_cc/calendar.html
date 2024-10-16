@@ -69,9 +69,9 @@
 {% block content %}
 <div class="row">
     <div class="coluna-ongoing col-md-3">
-        <h4 class="mb-4">Culturas em andamento</h4>
+        <h4 class="mb-4">Eventos em andamento</h4>
         {% for event in events_month %}
-          <div class="fc-event">
+          <div class="fc-event" data-event-id="{{ event.id }}">
               <h4>{{ event.title }}</h4>
               <p><strong>Tipo: </strong>{{ event.type }}</p>
               <p><strong>Cultura: </strong>{{ event.cultura }}</p>  {# Exibindo o campo cultura aqui #}
@@ -205,61 +205,135 @@
                 document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
                 document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
                 document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível'; 
-    
-                // Definir o ID do evento no botão de editar
                 document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
+                document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
                 $('#detailModal').modal('show');
             },
-            editable: true,
-            dayMaxEvents: true,
-            events: {{ events|safe }}
+            editable: false,
+            dayMaxEvents: false,
+            events: {{ events|safe }},
+            eventDidMount: function(info) {
+                var eventType = info.event.extendedProps.type;
+
+                if (eventType) {
+                    info.el.classList.add(eventType);
+                }
+            }
         });
-    
+
         calendar.render();
-    
-        // Adicionando a funcionalidade de edição
+
+        // Evento de clique nos cards da coluna "Culturas em andamento"
+        document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
+            if (event.target.closest('.fc-event')) {
+                const eventElement = event.target.closest('.fc-event');
+                const eventId = eventElement.getAttribute('data-event-id');
+                const eventData = calendar.getEventById(eventId);
+
+                if (eventData) {
+                    document.getElementById('title_event_detail').textContent = eventData.title;
+                    document.getElementById('description_event_detail').textContent = eventData.extendedProps.description || '';
+                    document.getElementById('start_event_detail').textContent = formatDateTime(eventData.start);
+                    document.getElementById('end_event_detail').textContent = formatDateTime(eventData.end);
+                    document.getElementById('type_event_detail').textContent = eventData.extendedProps.type || 'Sem tipo';
+                    document.getElementById('local_event_detail').textContent = eventData.extendedProps.local || 'Sem local';
+                    document.getElementById('cultura_event_detail').textContent = eventData.extendedProps.cultura || 'Sem cultura';
+                    document.getElementById('duration_readable_event_detail').textContent = eventData.extendedProps.duration_readable || 'Duração não disponível';
+                    document.getElementById('edit-event-button').setAttribute("data-event-id", eventId);
+                    document.getElementById('delete-event-button').setAttribute("data-event-id", eventId);
+                    $('#detailModal').modal('show');
+                }
+            }
+        });
+
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
-    
-            // Preencher o formulário de adicionar/editar
+
             document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
             document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
             document.getElementById('id_cultura').value = document.getElementById('cultura_event_detail').textContent;
             document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
             document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
-            document.getElementById('id_start_time').value = converterDataParaDjangoFormat(new Date(document.getElementById('start_event_detail').textContent));
-            document.getElementById('id_end_time').value = converterDataParaDjangoFormat(new Date(document.getElementById('end_event_detail').textContent));
-    
-            // Adicionar o ID do evento ao formulário para edição
+
+            // Pegando a string do campo e tentando tratar manualmente a data
+            let startDateStr = document.getElementById('start_event_detail').textContent.trim();
+            let endDateStr = document.getElementById('end_event_detail').textContent.trim();
+
+            // Ajuste para tratar o formato pt-BR com o nome do dia da semana
+            let startDate = parseDateBR(startDateStr);
+            let endDate = parseDateBR(endDateStr);
+
+            if (startDate) {
+                document.getElementById('id_start_time').value = startDate.toISOString().slice(0, 19);
+            } else {
+                console.error("Data de início inválida:", startDateStr);
+            }
+
+            if (endDate) {
+                document.getElementById('id_end_time').value = endDate.toISOString().slice(0, 19);
+            } else {
+                console.error("Data de fim inválida:", endDateStr);
+            }
+
             document.getElementById('id_event_id').value = eventId;
     
-            // Fechar o modal de detalhes antes de abrir o modal de edição
             $('#detailModal').modal('hide');
-    
-            // Mostrar o modal de adição/edição
             $('#eventModal').modal('show');
         });
+
+        document.getElementById('delete-event-button').addEventListener('click', function() {
+            const eventId = this.getAttribute('data-event-id');
+            console.log(`Tentando excluir o evento com ID: ${eventId}`);
+            if (confirm('Tem certeza que deseja apagar este evento?')) {
+                $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
+                  .done(function(response) { 
+                      alert(response.message); 
+                      window.location.reload(); 
+                  })
+                  .fail(function(jqXHR) { 
+                      alert('Erro ao apagar: ' + jqXHR.responseText); 
+                  });
+            }
+        });
     });
-    
-    // Formatação de data e hora
+
+    // Função para converter a string no formato pt-BR para um objeto Date
+    function parseDateBR(dateStr) {
+        // Regex para ignorar o nome do dia da semana
+        let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
+        let matches = regex.exec(dateStr);
+        
+        if (matches) {
+            let day = parseInt(matches[1], 10);
+            let month = getMonthNumber(matches[2].toLowerCase());
+            let year = parseInt(matches[3], 10);
+            let hours = parseInt(matches[4], 10);
+            let minutes = parseInt(matches[5], 10);
+
+            return new Date(year, month - 1, day, hours, minutes);
+        }
+        return null;
+    }
+
+    function getMonthNumber(monthStr) {
+        const months = {
+            'janeiro': 1, 'fevereiro': 2, 'março': 3, 'abril': 4,
+            'maio': 5, 'junho': 6, 'julho': 7, 'agosto': 8,
+            'setembro': 9, 'outubro': 10, 'novembro': 11, 'dezembro': 12
+        };
+        return months[monthStr] || 0;
+    }
+
     function formatDateTime(dateTime) {
         return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
     }
-    
+
     function converterDataParaDjangoFormat(data) {
         const dataJS = new Date(data);
-        return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')} ` +
+        return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')}T` +
                `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
     }
-    
-    document.getElementById('delete-event-button').addEventListener('click', function() {
-        const eventId = this.getAttribute('data-event-id');
-        if (confirm('Tem certeza que deseja apagar este evento?')) {
-            $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
-              .done(function(response) { alert(response.message); window.location.reload(); })
-              .fail(function() { alert('Erro ao apagar!'); });
-        }
-    });
-    </script>
-    
+</script>
 {% endblock extrascripts %}
+
+
