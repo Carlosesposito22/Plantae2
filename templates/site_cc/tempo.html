@@ -247,7 +247,11 @@
             {% for item in previsao %}
                 {% if forloop.counter <= 6 %}
                     <div class="forecast-card">
-                        <img src="{% static 'icons/' %}{{ item.icone }}.png" alt="{{ item.descricao }}">
+                        {% if item.descricao == "Possibilidade de chuva irregular" %}
+                        <i class="bi bi-cloud-rain-heavy-fill"></i>
+                        {% elif item.descricao == "Parcialmente nublado" %}
+                        <i class="bi bi-cloud-sun-fill"></i>
+                        {% endif %}
                         <div class="forecast-description">{{ item.descricao }}</div>
                         <div class="forecast-temperature">Máx: {{ item.temperatura_max }}°C</div>
                         <div class="forecast-temperature">Mín: {{ item.temperatura_min }}°C</div>
