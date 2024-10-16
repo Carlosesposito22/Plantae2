@@ -2619,8 +2619,8 @@ fieldset:disabled a.btn {
 
 .btn-primary {
   color: #FFF;
-  background-color: #27ff8f;
-  border-color: #27ff8f;
+  background-color: #4D933E;
+  border-color: #4D933E;
 }
 
 .btn-primary:hover {
@@ -2636,8 +2636,8 @@ fieldset:disabled a.btn {
 
 .btn-primary.disabled, .btn-primary:disabled {
   color: #FFF;
-  background-color: #27ff8f;
-  border-color: #27ff8f;
+  background-color: #4D933E;
+  border-color: #4D933E;
 }
 
 .btn-primary:not(:disabled):not(.disabled):active, .btn-primary:not(:disabled):not(.disabled).active,
@@ -3179,7 +3179,7 @@ fieldset:disabled a.btn {
 
 .btn-link {
   font-weight: 400;
-  color: #27ff8f;
+  color: #4D933E;
   text-decoration: none;
 }
 
@@ -3489,9 +3489,9 @@ input[type="button"].btn-block {
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-  color: #16181b;
+  color: #ffffff;
   text-decoration: none;
-  background-color: #f8f9fa;
+  background-color: #d53c3c;
 }
 
 .dropdown-item.active, .dropdown-item:active {
@@ -14922,7 +14922,7 @@ be a descendant of the grid when it is being dragged.
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  background-color: #27ff8f;
+  background-color: #0E0E0E;
   z-index: 1030;
   padding-right: 15px;
 }
@@ -14952,6 +14952,7 @@ be a descendant of the grid when it is being dragged.
   display: flex;
   flex-direction: column;
   align-items: center;
+  background-color: #303740 !important;
 }
 
 @media (min-width: 768px) {

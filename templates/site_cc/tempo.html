@@ -38,6 +38,9 @@
             color: #007bff;
             font-weight: bold;
             text-align: right;
+            display: flex;
+            flex-direction: column;
+            justify-content: right;
         }
 
         .date-display {
@@ -85,7 +88,6 @@
         .critical-warning {
             background-color: #ffcccc;
             border-left: 6px solid red;
-            padding: 15px;
             color: red;
             font-weight: bold;
             display: flex;
@@ -93,6 +95,8 @@
             justify-content: center;
             border-radius: 10px;
             animation: pulse 1.5s infinite;
+            font-size: 1rem;
+            padding: 0.5rem 0.5rem;
         }
 
         .critical-warning i {
@@ -187,7 +191,9 @@
 {% block content %}
 <div class="weather-container">
     <div class="weather-header">
-        <h2>Previsão do Tempo para {{ cidade.nome }}</h2>
+        <h2>Previsão do Tempo para: <strong style="color: green;">{{ cidade.nome }}</strong></h2>
+        <div class="current-temperature">
+        {{ temperatura_atual }}°C
         {% for item in previsao %}
             {% if item.data == today %}
                 {% if temperatura_atual > 25 or temperatura_atual < 20 %}
@@ -198,7 +204,7 @@
                 {% endif %}
             {% endif %}
         {% endfor %}
-        <div class="current-temperature">{{ temperatura_atual }}°C</div>
+        </div>
     </div>
     <div class="date-display" id="dateDisplay"></div>
 

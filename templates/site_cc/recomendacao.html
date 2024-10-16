@@ -3,7 +3,7 @@
 
 {% block breadcrumb %}
   <div>
-      <h1><i class="fa fa-calendar"></i> Recomendações</h1>
+      <h1><i class=" fa fa-check-square"></i> Recomendações</h1>
   </div>
 {% endblock breadcrumb %}
 
@@ -52,6 +52,10 @@
             height: 48px; /* Definindo a altura fixa igual ao botão */
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
             box-sizing: border-box; /* Garante que padding e border não aumentem a altura */
+        }
+
+        select:hover{
+            cursor: pointer;
         }
 
         /* Estilizando o botão como parte do addon */
