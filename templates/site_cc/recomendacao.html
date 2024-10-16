@@ -130,6 +130,30 @@
         body {
             font-family: 'Roboto', sans-serif;
         }
+
+        .icon-n-header{
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        h3{
+            margin: 0;
+        }
+
+        .icon-holder{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+            width: 1rem;
+            height: 1rem;
+            border-radius: 50%;
+        }
+
+
+
     </style>
 {% endblock extracss %}
 
@@ -158,15 +182,30 @@
     <div class="result-container">
         {% if resultado %}
             <div class="result-card green">
-                <h3><i class="bi bi-emoji-smile-fill" style="color: #1a6f2c;"></i> Se dá bem com:</h3>
+                <div class="icon-n-header">
+                    <div class="icon-holder" id="green-icon" style="background-color: #006705;">
+                        <i class="bi bi-hand-thumbs-up-fill" style="color: white; margin: 0;"></i>
+                    </div>
+                    <h3>Se dá bem com:</h3>
+                </div>
                 <p>{{ resultado.se_da_bem|join:', ' }}</p>
             </div>
             <div class="result-card red">
-                <h3><i class="bi bi-emoji-frown-fill" style="color: #a70616;"></i> Não se dá bem com:</h3>
+                <div class="icon-n-header" >
+                    <div class="icon-holder" id="red-icon" style="background-color: #85000d;">
+                        <i class="bi bi-hand-thumbs-down-fill" style="color: white; margin: 0;"></i>
+                    </div>
+                    <h3> Não se dá bem com:</h3>
+                </div>
                 <p>{{ resultado.nao_se_da_bem|join:', ' }}</p>
             </div>
             <div class="result-card yellow">
-                <h3><i class="bi bi-emoji-neutral-fill" style="color: #e0a800;"></i> Indiferente:</h3>
+                <div class="icon-n-header" >
+                    <div class="icon-holder" id="yellow-icon" style="background-color: #b2a000;">
+                        <i class="bi bi-dash" style="color: white; margin: 0;"></i>
+                    </div>
+                    <h3> Indiferente:</h3>
+                </div> 
                 <p>{{ resultado.indiferente|join:', ' }}</p>
             </div>
             <div class="ai-text">
