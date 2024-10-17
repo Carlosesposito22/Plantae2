@@ -32,7 +32,7 @@ jobs:
         
       - name: Cleaning testing files
         run: |
-          cd Plantae2/
+          
           rm db.sqlite3
           rm .env
           cd ..
