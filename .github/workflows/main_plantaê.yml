@@ -7,7 +7,7 @@ name: Build and deploy Python app to Azure Web App - plantaê
 on:
   push:
     branches:
-      - main
+      - prod
   workflow_dispatch:
 
 jobs:
@@ -28,12 +28,21 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: pip install -r requirements.txt
+        run: pip install -r Plantae2/requirements.txt
         
-      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
+      - name: Cleaning testing files
+        run: |
+          cd Plantae2/
+          rm db.sqlite3
+          rm .env
+          cd ..
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -r
+        run: |
+          cd Plantae2/
+          zip release.zip ./* -r
+          cd ..
+          mv Plantae2/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
@@ -65,9 +74,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_9A39A811A9DA458282BCB2DE6C54AB0A }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_C0DCD88ACAE0434C9A640EC448E8F87C }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E858B92C219C478CB439970DC24CB7B6 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5B9A862C57F04080A8CC98EB6ED0B5D7 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2DC54AF455C040428D29E256E713DB62 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B61A4BFF53A4403D85E9CEA8D305A5A2 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
