@@ -33,17 +33,17 @@ jobs:
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       - name: Cleaning testing files
         run: |
-          cd Plantae2/
+          cd plantae2/
           rm rm -f db.sqlite3
           rm .env
           cd ..
       
       - name: Zip artifact for deployment
         run: |
-          cd Plantae2/
+          cd plantae2/
           zip release.zip ./* -r
           cd ..
-          mv Plantae2/release.zip .
+          mv plantae2/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
