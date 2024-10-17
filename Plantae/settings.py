@@ -1,14 +1,51 @@
+from pathlib import Path
 import os
+from dotenv import load_dotenv
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) --> Antiga
+BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s"
+load_dotenv(BASE_DIR / '.env')
 
-DEBUG = True
+TARGET_ENV = os.getenv('TARGET_ENV')
+NOT_PROD = not TARGET_ENV.lower().startswith('prod')
+
+if NOT_PROD:
+    DEBUG = True
+    SECRET_KEY = 'i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s'
+    ALLOWED_HOSTS = []
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+else:
+    SECRET_KEY = os.getenv('i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s')
+    DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
+    ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
+    CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(' ')
+
+    SECURE_SSL_REDIRECT = \
+        os.getenv('SECURE_SSL_REDIRECT', '0').lower() in ['true', 't', '1']
+
+    if SECURE_SSL_REDIRECT:
+        SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DBNAME'),
+            'HOST': os.environ.get('DBHOST'),
+            'USER': os.environ.get('DBUSER'),
+            'PASSWORD': os.environ.get('DBPASS'),
+            'OPTIONS': {'sslmode': 'require'},
+        }
+    }
+    
+# Application definition
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
-
-ALLOWED_HOSTS = ["*"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -19,10 +56,12 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "site_cc.apps.SiteCcConfig",
     "accounts.apps.AccountsConfig",
+    "whitenoise.runserver_nostatic",
 ]
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
+    "django.middleware.security.SecurityMiddleware",                            
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -51,29 +90,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "Plantae.wsgi.application"
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
-    }
-}
-
-"""
-##CONECTAR CON POSTGRES
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'proyectoHadaMadrina',
-        'USER': 'postgres',
-        'PASSWORD': 'postgres',
-        'HOST': '127.0.0.1',
-        'DATABASE_PORT': '5432',
-        
-    }
-}
-
-"""
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation."
@@ -96,15 +112,12 @@ USE_L10N = True
 
 USE_TZ = False
 
+STATIC_URL = os.environ.get('DJANGO_STATIC_URL', "/static/")
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-"""
-STATIC_URL = "/static/"
-STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
-"""
+STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage')
 
-STATIC_URL = '/static/'
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
-#STATIC_ROOT=os.path.join(BASE_DIR, 'static/')
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
