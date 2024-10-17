@@ -105,7 +105,7 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
   </li>
 </ul>
 
-## Github dos membros de CC
+## Contribuição dos membros de CC
 
 <a href="https://github.com/Carlosesposito22/Projeto-Django/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Carlosesposito22/Projeto-Django" />
