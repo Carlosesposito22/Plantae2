@@ -136,6 +136,7 @@
             flex-direction: row;
             align-items: center;
             gap: 0.8rem;
+            justify-content: space-between;
         }
 
         h3{
@@ -183,28 +184,28 @@
         {% if resultado %}
             <div class="result-card green">
                 <div class="icon-n-header">
+                    <h3>Se dá bem com:</h3>
                     <div class="icon-holder" id="green-icon" style="background-color: #006705;">
                         <i class="bi bi-hand-thumbs-up-fill" style="color: white; margin: 0;"></i>
                     </div>
-                    <h3>Se dá bem com:</h3>
                 </div>
                 <p>{{ resultado.se_da_bem|join:', ' }}</p>
             </div>
             <div class="result-card red">
                 <div class="icon-n-header" >
+                    <h3> Não se dá bem com:</h3>
                     <div class="icon-holder" id="red-icon" style="background-color: #85000d;">
                         <i class="bi bi-hand-thumbs-down-fill" style="color: white; margin: 0;"></i>
                     </div>
-                    <h3> Não se dá bem com:</h3>
                 </div>
                 <p>{{ resultado.nao_se_da_bem|join:', ' }}</p>
             </div>
             <div class="result-card yellow">
                 <div class="icon-n-header" >
-                    <div class="icon-holder" id="yellow-icon" style="background-color: #b2a000;">
+                    <h3> Indiferente:</h3>
+                    <div class="icon-holder" id="yellow-icon" style="background-color: #ddc915;">
                         <i class="bi bi-dash" style="color: white; margin: 0;"></i>
                     </div>
-                    <h3> Indiferente:</h3>
                 </div> 
                 <p>{{ resultado.indiferente|join:', ' }}</p>
             </div>

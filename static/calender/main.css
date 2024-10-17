@@ -1396,10 +1396,7 @@ A VERTICAL event
 .fc .fc-list-event.fc-event-forced-url {
     cursor: pointer; /* whole row will seem clickable */
   }
-.fc .fc-list-event:hover td {
-    background-color: #f5f5f5;
-    background-color: var(--fc-list-event-hover-bg-color, #f5f5f5);
-  }
+
 .fc {
 
   /* shrink certain cols */
