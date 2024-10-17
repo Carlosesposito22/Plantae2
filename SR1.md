@@ -1,6 +1,6 @@
-# SR1
+# 🖥️ SR1
 
-***Links importantes:***
+*** 📑 Links importantes:***
 <ul>
     <a  href="https://www.figma.com/proto/9YfudFBdVCbdnRiEKH5Hyq/Planta%C3%AA---Projetos-2-%F0%9F%8C%B1?node-id=103-339&node-type=canvas&t=08kK10QCC2D3SZ5t-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=103%3A339"
       >Protótipo de Lo-Fi no Figma</a>
@@ -16,7 +16,7 @@
 </ul>
 <br/>
 
-***Deployment das histórias:***
+*** 🕹️ Deployment das histórias:***
 <ul>
   <li>
     <a  href="https://portal.azure.com/#home"
@@ -25,7 +25,7 @@
 </ul>
 <br/>
 
-***Histórias do usuário:***
+*** 📠 Histórias do usuário:***
 <br/>
 ****1. Consultar o Clima Local****
 	
@@ -165,24 +165,24 @@ Cenário:
 -Então verá uma lista de tarefas essenciais, como horários de poda, quantidade ideal de sol, frequência de irrigação, e cuidados com pragas, para garantir o manejo correto de suas culturas diariamente.
 
 
-***Histórias Implementadas:***
+*** ✅ Histórias Implementadas:***
 
 - Consultar o Clima Local
 - Receber Alertas de Clima Crítico
 - Receber Dicas de Boas Práticas Agrícolas
 
 
-***Diagrama de atividades do sistema:***
+*** 📊 Diagrama de atividades:***
 
  <a  href="https://excalidraw.com/#room=5ebfd22a9450b3a406b2,kPiWp7b0bE8V-hPd0gU96A"></a>
 
 <br/>
 
-***Issues/bug tracker:***
+*** 📲 Issues/bug tracker:***
 
 <br/>
  
-***Relato da Programação em Par experimentada:***
+*** 👩‍💻🧑‍💻 Relato da Programação em Par experimentada:***
 
 ### Par 1: João Micucci & João Pedro Mamede
 

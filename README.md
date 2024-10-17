@@ -25,11 +25,11 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
       >Protótipo de Lo-Fi no Figma</a>
   </li>
    <li>
-    <a  href=""
+    <a 
       >Screencast - Figma</a>
   </li>
   <li>
-    <a  href=""
+    <a 
       >Screencast - Azure</a>
   </li>
 </ul>
@@ -41,7 +41,6 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
       >Projeto na Azure</a>
   </li>
 </ul>
-<br/>
 
 ### Histórias
 
