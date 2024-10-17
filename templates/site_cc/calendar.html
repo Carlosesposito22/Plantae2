@@ -220,7 +220,7 @@
                 $('#detailModal').modal('show');
             },
             editable: false,
-            dayMaxEvents: false,
+            dayMaxEvents: true,
             events: {{ events|safe }},
             eventDidMount: function(info) {
                 var eventType = info.event.extendedProps.type;
@@ -233,7 +233,6 @@
 
         calendar.render();
 
-        // Evento de clique nos cards da coluna "Culturas em andamento"
         document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
             if (event.target.closest('.fc-event')) {
                 const eventElement = event.target.closest('.fc-event');
@@ -265,11 +264,9 @@
             document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
             document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
 
-            // Pegando a string do campo e tentando tratar manualmente a data
             let startDateStr = document.getElementById('start_event_detail').textContent.trim();
             let endDateStr = document.getElementById('end_event_detail').textContent.trim();
 
-            // Ajuste para tratar o formato pt-BR com o nome do dia da semana
             let startDate = parseDateBR(startDateStr);
             let endDate = parseDateBR(endDateStr);
 
@@ -307,9 +304,7 @@
         });
     });
 
-    // Função para converter a string no formato pt-BR para um objeto Date
     function parseDateBR(dateStr) {
-        // Regex para ignorar o nome do dia da semana
         let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
         let matches = regex.exec(dateStr);
         
