@@ -47,7 +47,6 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
 - No total temos 12 histórias definidas e 3 implementadas. As implementadas são:
   - Consultar o Clima Local
   - Receber Alertas de Clima Crítico
-  - Receber Dicas de Boas Práticas Agrícolas
 
 ## 👩‍💻 Membros
 

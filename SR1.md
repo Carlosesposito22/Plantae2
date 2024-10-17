@@ -169,7 +169,6 @@ Cenário:
 
 - Consultar o Clima Local
 - Receber Alertas de Clima Crítico
-- Receber Dicas de Boas Práticas Agrícolas
 
 
 *** 📊 Diagrama de atividades:***
