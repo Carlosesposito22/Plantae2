@@ -107,7 +107,7 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
 
 ## Contribuição dos membros de CC
 
-<a href="https://github.com/Carlosesposito22/Projeto-Django/graphs/contributors">
+<a href="https://github.com/Carlosesposito22/Plantae2/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Carlosesposito22/Plantae2" />
 </a>
 
