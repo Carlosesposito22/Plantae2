@@ -40,10 +40,10 @@ jobs:
       
       - name: Zip artifact for deployment
         run: |
-          cd Platae2/
+          cd Plantae2/
           zip release.zip ./* -r
           cd ..
-          mv Platae2/release.zip .
+          mv Plantae2/release.zip .
 
       - name: Upload artifact for deployment jobs
         uses: actions/upload-artifact@v4
