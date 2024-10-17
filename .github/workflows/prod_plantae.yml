@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python app to Azure Web App - plantae
+name: Build and deploy Python app to Azure Web App - plantaê
 
 on:
   push:
@@ -28,9 +28,7 @@ jobs:
           source venv/bin/activate
       
       - name: Install dependencies
-        run: |
-          cd ..
-          pip install -r requirements.txt
+        run: pip install -r Plantae2/requirements.txt
         
       - name: Cleaning testing files
         run: |
@@ -76,14 +74,14 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5F93B49D7E61447C8B133E670A52AAA1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_B30F10C2241F4B32AB6F36C057E06447 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F2D601C7181B4FEB9EE1F4F708258649 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5B9A862C57F04080A8CC98EB6ED0B5D7 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_2DC54AF455C040428D29E256E713DB62 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_B61A4BFF53A4403D85E9CEA8D305A5A2 }}
 
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'plantae'
+          app-name: 'plantaê'
           slot-name: 'Production'
           
