@@ -2,17 +2,22 @@ from pathlib import Path
 import os
 from dotenv import load_dotenv
 
-#BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) --> Antiga
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(BASE_DIR / '.env')
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 TARGET_ENV = os.getenv('TARGET_ENV')
 NOT_PROD = not TARGET_ENV.lower().startswith('prod')
 
 if NOT_PROD:
+    # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = True
-    SECRET_KEY = 'i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s'
+    # SECURITY WARNING: keep the secret key used in production secret!
+    SECRET_KEY = 'v$1futpjqj*xfgsy0zhj&@!%+o1$mruagj@b=_%=f25gy^9l'
     ALLOWED_HOSTS = []
     DATABASES = {
         'default': {
@@ -21,7 +26,7 @@ if NOT_PROD:
         }
     }
 else:
-    SECRET_KEY = os.getenv('i8e1s3!_(fjsiv%1pn3sb3o=s)!p*nzwh1$gp5-l&%nb!d=y_s')
+    SECRET_KEY = os.getenv('SECRET_KEY')
     DEBUG = os.getenv('DEBUG', '0').lower() in ['true', 't', '1']
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(' ')
     CSRF_TRUSTED_ORIGINS = os.getenv('CSRF_TRUSTED_ORIGINS').split(' ')
@@ -44,8 +49,6 @@ else:
     }
     
 # Application definition
-
-DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -119,5 +122,6 @@ STATICFILES_STORAGE = ('whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 STATICFILES_DIRS = (os.path.join(BASE_DIR, "static"),)
 
+DEFAULT_AUTO_FIELD='django.db.models.AutoField' 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 MEDIA_URL = '/media/'
