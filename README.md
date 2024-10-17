@@ -37,14 +37,14 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
 ***Deployment das histórias produzidas:***
 <ul>
   <li>
-    <a  href="https://meet.google.com/qts-aavz-fjw"
+    <a 
       >Projeto na Azure</a>
   </li>
 </ul>
 
 ### Histórias
 
-- No total temos 12 histórias definidas e 3 implementadas. As implementadas são:
+- No total temos 12 histórias definidas e 2 implementadas. As implementadas são:
   - Consultar o Clima Local
   - Receber Alertas de Clima Crítico
 

@@ -19,7 +19,7 @@
 *** 🕹️ Deployment das histórias:***
 <ul>
   <li>
-    <a  href="https://portal.azure.com/#home"
+    <a
       >Projeto na Azure</a>
   </li>
 </ul>
