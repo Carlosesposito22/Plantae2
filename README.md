@@ -17,29 +17,44 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
 <br>
 
 ## 📑 Prototipação Lo-Fi
+<li> <a href = "https://www.figma.com/proto/9YfudFBdVCbdnRiEKH5Hyq/Planta%C3%AA---Projetos-2-%F0%9F%8C%B1?node-id=103-339&node-type=canvas&t=08kK10QCC2D3SZ5t-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1&starting-point-node-id=103%3A339"> Link do Lo-Fi </a></li>
 
 ## 👩‍💻 Membros
 
 <ul>
   <li>
-    <a href="https://github.com/amanda-montarroios">Amanda Montarroios</a> - amo@cesar.school 📩
+    Amanda Montarroios - amo@cesar.school 📩
   </li>
   <li>
-    <a href="https://github.com/JhMicucci">João Micucci</a> - jhmm@cesar.school 📩
+    João Micucci - jhmm@cesar.school 📩
   </li>
    <li>
-    <a href="https://github.com/maludantass">Malu Dantas</a> - mldt@cesar.school 📩
+    Malu Dantas - mldt@cesar.school 📩
   </li>
   <li>
-    <a href="https://github.com/Mateus-Ribeir0">Mateus Ribeiro</a> - mar2@cesar.school 📩
+    Mateus Ribeiro - mar2@cesar.school 📩
   </li>
   <li>
-    <a href="https://github.com/jpmamededs">João Pedro Mamede</a> - jpmd2@cesar.school 📩
+    João Pedro Mamede - jpmd2@cesar.school 📩
   </li>
   <li>
-    <a href="https://github.com/Carlosesposito22">Carlos Eduardo Espósito</a> - ceec@cesar.school 📩
+    Carlos Eduardo Espósito - ceec@cesar.school 📩
+  </li>
+    <li>
+    Clara Maria Paes Barreto Bandeira - cmpbb@cesar.school 📩
+  </li>
+  <li>
+    Maria Clara Vieira de Melo Borges - mcvmb@cesar.school 📩
+  </li>
+   <li>
+    Emmanoel Henrique de Arruda Melo - eham@cesar.school 📩
+  </li>
+  <li>
+    Thales Souza Lima - tsl2@cesar.school  📩
   </li>
 </ul>
+
+## Github dos membros de CC
 
 <a href="https://github.com/Carlosesposito22/Projeto-Django/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=Carlosesposito22/Projeto-Django" />
