@@ -173,11 +173,14 @@ Cenário:
 
 *** 📊 Diagrama de atividades:***
 
- <a  href="https://excalidraw.com/#room=5ebfd22a9450b3a406b2,kPiWp7b0bE8V-hPd0gU96A"></a>
+ <li>
+    <a href="https://excalidraw.com/#room=5ebfd22a9450b3a406b2,kPiWp7b0bE8V-hPd0gU96A"
+      >Diagrama de Atividades</a>
+  </li>
 
 <br/>
 
 *** 📲 Issues/bug tracker:***
-<img src ="Plantae2/static/images/issues.png" />
+<img src="![alt text](image.png)" alt="Issue Tracker"/>
 <br/>
  
