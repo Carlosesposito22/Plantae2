@@ -6,11 +6,11 @@
       >Protótipo de Lo-Fi no Figma</a>
   </li>
    <li>
-    <a 
+    <a href="https://drive.google.com/file/d/16oCJANJX6McgLvQhzH-JkIA9ypisI2YP/view?usp=sharing"
       >Screencast - Figma</a>
   </li>
   <li>
-    <a  
+    <a href="https://drive.google.com/file/d/1frHRKDRtSO41zwEVjYxHUoN2YnmuS-AE/view?usp=sharing"
       >Screencast - Azure</a>
   </li>
 </ul>
@@ -19,8 +19,8 @@
 *** 🕹️ Deployment das histórias:***
 <ul>
   <li>
-    <a
-      >Projeto na Azure</a>
+    <a href="https://plantae.azurewebsites.net/accounts/signin/?next=/"
+      >Deployment na Azure</a>
   </li>
 </ul>
 <br/>
@@ -178,6 +178,6 @@ Cenário:
 <br/>
 
 *** 📲 Issues/bug tracker:***
-
+<img src ="Plantae2/static/images/issues.png" />
 <br/>
  
