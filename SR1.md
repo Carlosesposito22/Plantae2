@@ -181,6 +181,6 @@ Cenário:
 <br/>
 
 *** 📲 Issues/bug tracker:***
-<img src="![alt text](image.png)" alt="Issue Tracker"/>
+<img src="![alt text](image.png)" />
 <br/>
  
