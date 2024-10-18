@@ -181,6 +181,9 @@ Cenário:
 <br/>
 
 *** 📲 Issues/bug tracker:***
-<img src="![alt text](image.png)" />
+<li>
+    <a href="https://drive.google.com/file/d/1_ZvPMthFRryos5dokXCLAoPOi00WcPj9/view?usp=sharing"
+      >Bug Trackers</a>
+  </li>
 <br/>
  
