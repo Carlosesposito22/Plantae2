@@ -24,6 +24,9 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
     <a  href="https://www.figma.com/file/7lTqT6QR7tPP4GbiBYDMkY/wireframe?type=design&node-id=0%3A1&mode=design&t=1748pNTyjfC6RMOg-1"
       >Protótipo de Lo-Fi no Figma</a>
   </li>
+        <a  href="https://excalidraw.com/#room=5ebfd22a9450b3a406b2,kPiWp7b0bE8V-hPd0gU96A"
+      >Diagrama de atividades</a>
+  </li>
    <li>
     <a 
       >Screencast - Figma</a>
