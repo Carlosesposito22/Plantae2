@@ -182,16 +182,16 @@
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title text-white">Recomendação de Colheita</h5>
+                    <h5 class="modal-title text-white">Que tal já deixar agendado sua colheita?</h5>
                     <button type="button" class="close" data-dismiss="modal">
                         <span>&times;</span>
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Sugestão: Avalie a colheita para este período.</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Criar</button>
                 </div>
             </div>
         </div>
@@ -204,6 +204,14 @@
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
+    const CULTURA_PRAZOS = {
+        'Tomate': 105,
+        'Cenoura': 85,
+        'Alface': 38,
+        'Batata': 105,
+        'Rúcula': 35,
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -258,8 +266,9 @@
         // Captura o evento de 'submit' do formulário para criação do evento
         document.getElementById('eventForm').addEventListener('submit', function(event) {
             const eventType = document.getElementById('id_type').value;
+            const cultura = document.getElementById('id_cultura').value;
+            const diasParaColheita = CULTURA_PRAZOS[cultura] || 'Não disponível';
 
-            // Verifica se o evento sendo criado é do tipo "Plantio" antes de enviar o formulário
             if (eventType === "Plantio") {
                 event.preventDefault(); // Impede o envio imediato do formulário
 
@@ -267,6 +276,11 @@
                 $('#eventModal').modal('hide');
 
                 $('#eventModal').on('hidden.bs.modal', function() {
+                    // Atualiza o texto do modal com o nome da cultura e o número de dias para a colheita
+                    document.querySelector('#recommendationModal .modal-body').innerHTML = 
+                        `<p>Em média, a colheita (do/da) <strong>${cultura}</strong> ocorre após <strong>${diasParaColheita} dias</strong>. Contudo esse prazo pode variar de acrodo com condições de solo e clima.</p>
+                         <p><strong>Crie agora mesmo um evento de colheita referente a este plantio e edite tudo que for necessário.</strong></p>`;
+                    
                     $('#recommendationModal').modal('show'); // Abre o modal de recomendação de colheita
                 });
 
@@ -384,4 +398,6 @@
     }
 </script>
 {% endblock extrascripts %}
+
+
 
