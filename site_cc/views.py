@@ -45,6 +45,14 @@ plantas = {
         'indiferente': ['Tomate'],
     },
 }
+## Dicionário para as culturas e os intervalos de dias para colheita
+CULTURA_PRAZOS = {
+    'Tomate': (105),
+    'Cenoura': (85),
+    'Alface': (38),
+    'Batata': (105),
+    'Rúcula': (35),
+}
 
 
 
@@ -67,7 +75,6 @@ def next_month(d):
     month = "month=" + str(next_month.year) + "-" + str(next_month.month)
     return month
 
-
 @login_required(login_url="signup")
 def create_event(request):
     form = EventForm(request.POST or None)
@@ -76,19 +83,29 @@ def create_event(request):
         description = form.cleaned_data["description"]
         start_time = form.cleaned_data["start_time"]
         end_time = form.cleaned_data["end_time"]
-        cultura = form.cleaned_data["cultura"]  # Adicione o campo cultura
+        cultura = form.cleaned_data["cultura"]  # Cultura selecionada no formulário
         local = form.cleaned_data["local"]
-        duration_readable = form.cleaned_data["duration_readable"]
+
+        # Obtenha o tempo médio de colheita para a cultura selecionada
+        tempo_colheita = CULTURA_PRAZOS.get(cultura, None)
+
+        # Cria o evento no banco de dados
         Event.objects.get_or_create(
             user=request.user,
             title=title,
             description=description,
             start_time=start_time,
             end_time=end_time,
-            cultura=cultura,  
+            cultura=cultura,
         )
-        return HttpResponseRedirect(reverse("site_cc:calendar"))
+
+        # Redireciona para o calendário com o tempo médio e cultura na URL
+        if tempo_colheita:
+            return HttpResponseRedirect(reverse("site_cc:calendar") + f"?tempo_colheita={tempo_colheita}&cultura={cultura}")
+        else:
+            return HttpResponseRedirect(reverse("site_cc:calendar"))
     return render(request, "event.html", {"form": form})
+
 
 
 
@@ -409,3 +426,5 @@ def calendar_view_new(request, event_id=None):
         "previsoes": previsoes
     }
     return render(request, "site_cc/calendar.html", context)
+
+
