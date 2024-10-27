@@ -186,6 +186,14 @@
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
+    const CULTURA_PRAZOS = {
+        'Tomate': 105,
+        'Cenoura': 85,
+        'Alface': 38,
+        'Batata': 105,
+        'Rúcula': 35,
+    };
+
     document.addEventListener('DOMContentLoaded', function() {
         // Função para obter o token CSRF
         function getCookie(name) {
