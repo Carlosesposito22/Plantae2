@@ -177,6 +177,27 @@
             </div>
         </div>
     </div>
+    <!-- Modal para recomendação de colheita -->
+    <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">Recomendação de Colheita</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Sugestão: Avalie a colheita para este período.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
 </div>
 {% endblock content %}
 
@@ -225,6 +246,7 @@
             eventDidMount: function(info) {
                 var eventType = info.event.extendedProps.type;
 
+                // Adiciona uma classe CSS baseada no tipo de evento
                 if (eventType) {
                     info.el.classList.add(eventType);
                 }
@@ -232,6 +254,28 @@
         });
 
         calendar.render();
+
+        // Captura o evento de 'submit' do formulário para criação do evento
+        document.getElementById('eventForm').addEventListener('submit', function(event) {
+            const eventType = document.getElementById('id_type').value;
+
+            // Verifica se o evento sendo criado é do tipo "Plantio" antes de enviar o formulário
+            if (eventType === "Plantio") {
+                event.preventDefault(); // Impede o envio imediato do formulário
+
+                // Fecha o modal de criação de evento e, quando fechado, abre o modal de recomendação
+                $('#eventModal').modal('hide');
+
+                $('#eventModal').on('hidden.bs.modal', function() {
+                    $('#recommendationModal').modal('show'); // Abre o modal de recomendação de colheita
+                });
+
+                // Submete o formulário quando o modal de recomendação de colheita for fechado
+                $('#recommendationModal').on('hidden.bs.modal', function() {
+                    document.getElementById('eventForm').submit(); // Envia o formulário
+                });
+            }
+        });
 
         document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
             if (event.target.closest('.fc-event')) {
@@ -340,5 +384,4 @@
     }
 </script>
 {% endblock extrascripts %}
-
 
