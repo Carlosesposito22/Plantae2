@@ -4,8 +4,9 @@
 
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
   
-<style>
+  <style>
     #calendar {
         border: 1px solid #ccc;
         border-radius: 8px;
@@ -56,18 +57,27 @@
         border-color: #858585;
     }
 
-    .save-btn{
-        background-color:#4D933E;
+    .save-btn {
+        background-color: #4D933E;
         border-color: #096d10;
     }
 
-    .save-btn:hover{
+    .save-btn:hover {
         background-color: #2c5f20 !important;
         border-color: #00570d !important;
     }
 
     .btn-primary:hover {
         background-color: #515151;
+    }
+
+    .day-icon {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+        position: absolute;
+        top: 5px;
+        left: 5px;
     }
 </style>
 {% endblock extracss %}
@@ -177,7 +187,35 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Previsão do Tempo -->
+    <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalDate"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Tempo:</strong> <span id="modalDescription"></span></p>
+                    <p><strong>Temperatura:</strong> <span id="modalTemperature"></span></p>
+                    <p><strong>Umidade:</strong> <span id="modalHumidity"></span></p>
+                    <p><strong>Vento:</strong> <span id="modalWind"></span></p>
+                    <p><strong>Precipitação:</strong> <span id="modalPrecipitation"></span></p>
+                    <p><strong>Índice UV:</strong> <span id="modalUV"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+{{ previsoes|json_script:"weatherData" }}
+
 {% endblock content %}
 
 {% block extrascripts %}
@@ -185,6 +223,19 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         var calendarEl = document.getElementById('calendar');
+        var previsoes = JSON.parse(document.getElementById('weatherData').textContent);
+        let displayedIconsCount = 0;
+        const descriptionIcons = {
+            'Possibilidade de chuva irregular': 'wi wi-day-sprinkle',
+            'Ensolarado': 'wi wi-day-sunny',
+            'Nublado': 'wi wi-cloudy',
+            'Tempestade': 'wi wi-storm-showers',
+            'Neve': 'wi wi-snow',
+            'Neblina': 'wi wi-fog',
+            'Chuva moderada': 'wi wi-rain',
+            'Chuva forte': 'wi wi-rain-wind',
+            'Parcialmente nublado': 'wi wi-day-cloudy',
+        };
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: 'pt-br',
             headerToolbar: { 
@@ -228,10 +279,56 @@
                 if (eventType) {
                     info.el.classList.add(eventType);
                 }
+            },
+            dayCellDidMount: function(args) {
+                const dateStr = args.date.toISOString().split('T')[0];
+                const forecast = previsoes[dateStr];
+
+                if (forecast && displayedIconsCount < 7) {
+                    const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
+
+                    let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
+
+                    const icon = document.createElement('i');
+                    icon.className = `${iconClass} day-icon`;
+                    icon.style.position = 'absolute';
+                    icon.style.top = '5px';
+                    icon.style.left = '5px';
+                    icon.style.fontSize = "20px";
+                    icon.style.cursor = "pointer";
+                    icon.style.color = "green";
+
+                    icon.onclick = function(event) {
+                        event.stopPropagation();
+                        openWeatherModal(dateStr);
+                    };
+
+                    cellContent.appendChild(icon);
+                    displayedIconsCount++;
+                }
+            },
+
+            datesSet: function() {
+                displayedIconsCount = 0;
             }
         });
 
         calendar.render();
+
+        window.openWeatherModal = function(dateStr) {
+            const forecast = previsoes[dateStr];
+            
+            if (forecast) {
+                document.getElementById('modalDate').textContent = new Date(dateStr).toLocaleDateString('pt-BR');
+                document.getElementById('modalDescription').textContent = forecast.descricao;
+                document.getElementById('modalTemperature').textContent = `Máx: ${forecast.temperatura_max}°C / Mín: ${forecast.temperatura_min}°C`;
+                document.getElementById('modalHumidity').textContent = `Umidade: ${forecast.umidade}%`;
+                document.getElementById('modalWind').textContent = `Vento: ${forecast.vento} km/h`;
+                document.getElementById('modalPrecipitation').textContent = `Precipitação: ${forecast.precipitacao} mm`;
+                document.getElementById('modalUV').textContent = `Índice UV: ${forecast.indice_uv}`;
+                $('#weatherModal').modal('show');
+            }
+        };
 
         document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
             if (event.target.closest('.fc-event')) {

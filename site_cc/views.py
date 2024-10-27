@@ -167,7 +167,7 @@ def next_day(request, event_id):
 
 
 def tempo(request):
-    API_KEY = "61e7d91b7e2f42feba2154249240810"
+    API_KEY = "741f449bc3d44b16b85205922242710"
     cidade = "Carpina"
     
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"
@@ -338,31 +338,27 @@ def event_member_delete(request, event_member_id):
 def calendar_view_new(request, event_id=None):
     if request.method == "POST":
         event_id = request.POST.get('event_id')
-        if event_id:  
+        if event_id:
             event = get_object_or_404(Event, pk=event_id, user=request.user)
-            form = EventForm(request.POST, instance=event) 
-        else:  
+            form = EventForm(request.POST, instance=event)
+        else:
             form = EventForm(request.POST)
 
         if form.is_valid():
             new_event = form.save(commit=False)
-            new_event.user = request.user 
+            new_event.user = request.user
             new_event.save()
-            return redirect("site_cc:calendar") 
-
-    else:  # Método GET
+            return redirect("site_cc:calendar")
+    else:
         form = EventForm()
-        if event_id: 
+        if event_id:
             event = get_object_or_404(Event, id=event_id, user=request.user)
             form = EventForm(instance=event)
 
-    # Obtenha todos os eventos e eventos do mês
     events = Event.objects.get_all_events(user=request.user)
     events_month = Event.objects.get_running_events(user=request.user)
-    event_list = []
-
-    for event in events:
-        event_list.append({
+    event_list = [
+        {
             "id": event.id,
             "title": event.title,
             "type": event.type,
@@ -372,11 +368,44 @@ def calendar_view_new(request, event_id=None):
             "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "description": event.description,
             "duration_readable": event.duration_readable,
-        })
+        }
+        for event in events
+    ]
+
+    API_KEY = "741f449bc3d44b16b85205922242710"
+    cidade = "Carpina"
+    link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=30&lang=pt"
+    
+    previsoes = {}
+    try:
+        requisicao_forecast = requests.get(link_forecast)
+        requisicao_forecast.raise_for_status()
+        dados_previsao = requisicao_forecast.json().get('forecast', {}).get('forecastday', [])
+
+        for dia in dados_previsao:
+            data = dia['date']
+            icone_url = dia['day']['condition']['icon']
+            
+            if icone_url.startswith("//"):
+                icone_url = "https:" + icone_url
+            
+            previsoes[data] = {
+                'descricao': dia['day']['condition']['text'],
+                'icone': icone_url,
+                'temperatura_max': dia['day']['maxtemp_c'],
+                'temperatura_min': dia['day']['mintemp_c'],
+                'umidade': dia['day']['avghumidity'],
+                'vento': dia['day']['maxwind_kph'],
+                'precipitacao': dia['day']['totalprecip_mm'],
+                'indice_uv': dia['day'].get('uv', 'N/A')
+            }
+    except requests.exceptions.RequestException as e:
+        print(f"Erro ao obter previsão do tempo: {e}")
 
     context = {
         "form": form,
         "events": event_list,
-        "events_month": events_month
+        "events_month": events_month,
+        "previsoes": previsoes
     }
     return render(request, "site_cc/calendar.html", context)
