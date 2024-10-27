@@ -3,8 +3,8 @@
 {% block title %}Calendário{% endblock title %}
 
 {% block extracss %}
-  <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
-  
+<link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+
 <style>
     #calendar {
         border: 1px solid #ccc;
@@ -25,15 +25,6 @@
         transform: scale(1.05);
     }
 
-    .fc-event h5 {
-        font-size: 1.2em;
-        margin: 0;
-    }
-
-    .fc-event p {
-        margin: 5px 0;
-    }
-
     .coluna-ongoing {
         background-color: #F2F7F2;
         padding: 20px;
@@ -51,29 +42,20 @@
         font-weight: bold;
     }
 
-    .btn-primary {
-        background-color: #8f8f8f;
-        border-color: #858585;
-    }
-
-    .save-btn{
-        background-color:#4D933E;
+    .save-btn {
+        background-color: #4D933E;
         border-color: #096d10;
     }
 
-    .save-btn:hover{
+    .save-btn:hover {
         background-color: #2c5f20 !important;
         border-color: #00570d !important;
-    }
-
-    .btn-primary:hover {
-        background-color: #515151;
     }
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
-  <h1><i class="fa fa-calendar"></i> Calendário</h1>
+<h1><i class="fa fa-calendar"></i> Calendário</h1>
 {% endblock breadcrumb %}
 
 {% block content %}
@@ -84,12 +66,12 @@
           <div class="fc-event" data-event-id="{{ event.id }}">
               <h4>{{ event.title }}</h4>
               <p><strong>Tipo: </strong>{{ event.type }}</p>
-              <p><strong>Cultura: </strong>{{ event.cultura }}</p>  {# Exibindo o campo cultura aqui #}
+              <p><strong>Cultura: </strong>{{ event.cultura }}</p>
               <p><strong>Local: </strong>{{ event.local }}</p>
               <p><strong>Descrição: </strong>{{ event.description }}</p>
               <p><strong>Data Início: </strong>{{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
               <p><strong>Data Fim: </strong>{{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
-              <p><strong>Duração: </strong>{{ event.duration }}</p> {# Exibindo a duração aqui #}
+              <p><strong>Duração: </strong>{{ event.duration }}</p>
           </div>
         {% empty %}
           <p>Nenhuma cultura em andamento</p>
@@ -151,7 +133,28 @@
         </div>
     </div>
 
-        <!-- Modal para Detalhes do Evento -->
+    <!-- Modal para recomendação de colheita -->
+    <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-white">Recomendação de Colheita</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="recommendationMessage" style="font-weight: bold; color: #333;"></p>
+                    <p>Sugestão: Avalie a colheita para este período.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Detalhes do Evento -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -177,27 +180,6 @@
             </div>
         </div>
     </div>
-    <!-- Modal para recomendação de colheita -->
-    <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white">Recomendação de Colheita</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Sugestão: Avalie a colheita para este período.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
 </div>
 {% endblock content %}
 
@@ -205,6 +187,54 @@
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // Função para obter o token CSRF
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        const csrftoken = getCookie('csrftoken');
+
+        // Configuração do formulário para verificar o tipo de evento antes de enviar
+        document.getElementById('eventForm').addEventListener('submit', function(event) {
+            const eventType = document.querySelector('#id_type').value;
+            const cultura = document.querySelector('#id_cultura').value;
+            const eventId = document.getElementById('id_event_id').value;
+
+            const CULTURA_PRAZOS = {
+                'Tomate': 105,
+                'Cenoura': 85,
+                'Alface': 38,
+                'Batata': 105,
+                'Rúcula': 35,
+            };
+
+            // Apenas mostra o modal de recomendação se for um novo evento de "Plantio"
+            if (!eventId && eventType === "Plantio" && CULTURA_PRAZOS[cultura]) {
+                event.preventDefault();
+                const tempoColheita = CULTURA_PRAZOS[cultura];
+                document.getElementById('recommendationMessage').textContent = `Tempo estimado para a colheita da cultura ${cultura}: aproximadamente ${tempoColheita} dias.`;
+
+                $('#eventModal').modal('hide');
+                $('#eventModal').on('hidden.bs.modal', function() {
+                    $('#recommendationModal').modal('show');
+                    $('#recommendationModal').on('hidden.bs.modal', function() {
+                        document.getElementById('eventForm').submit();
+                    });
+                });
+            }
+        });
+
+        // Inicializa o calendário
         var calendarEl = document.getElementById('calendar');
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: 'pt-br',
@@ -222,6 +252,7 @@
             navLinks: true,
             selectable: true,
             select: function(arg) {
+                document.getElementById('id_event_id').value = ""; // Limpa o campo id para um novo evento
                 document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
                 document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
                 $('#eventModal').modal('show');
@@ -245,8 +276,6 @@
             events: {{ events|safe }},
             eventDidMount: function(info) {
                 var eventType = info.event.extendedProps.type;
-
-                // Adiciona uma classe CSS baseada no tipo de evento
                 if (eventType) {
                     info.el.classList.add(eventType);
                 }
@@ -255,52 +284,10 @@
 
         calendar.render();
 
-        // Captura o evento de 'submit' do formulário para criação do evento
-        document.getElementById('eventForm').addEventListener('submit', function(event) {
-            const eventType = document.getElementById('id_type').value;
-
-            // Verifica se o evento sendo criado é do tipo "Plantio" antes de enviar o formulário
-            if (eventType === "Plantio") {
-                event.preventDefault(); // Impede o envio imediato do formulário
-
-                // Fecha o modal de criação de evento e, quando fechado, abre o modal de recomendação
-                $('#eventModal').modal('hide');
-
-                $('#eventModal').on('hidden.bs.modal', function() {
-                    $('#recommendationModal').modal('show'); // Abre o modal de recomendação de colheita
-                });
-
-                // Submete o formulário quando o modal de recomendação de colheita for fechado
-                $('#recommendationModal').on('hidden.bs.modal', function() {
-                    document.getElementById('eventForm').submit(); // Envia o formulário
-                });
-            }
-        });
-
-        document.querySelector('.coluna-ongoing').addEventListener('click', function(event) {
-            if (event.target.closest('.fc-event')) {
-                const eventElement = event.target.closest('.fc-event');
-                const eventId = eventElement.getAttribute('data-event-id');
-                const eventData = calendar.getEventById(eventId);
-
-                if (eventData) {
-                    document.getElementById('title_event_detail').textContent = eventData.title;
-                    document.getElementById('description_event_detail').textContent = eventData.extendedProps.description || '';
-                    document.getElementById('start_event_detail').textContent = formatDateTime(eventData.start);
-                    document.getElementById('end_event_detail').textContent = formatDateTime(eventData.end);
-                    document.getElementById('type_event_detail').textContent = eventData.extendedProps.type || 'Sem tipo';
-                    document.getElementById('local_event_detail').textContent = eventData.extendedProps.local || 'Sem local';
-                    document.getElementById('cultura_event_detail').textContent = eventData.extendedProps.cultura || 'Sem cultura';
-                    document.getElementById('duration_readable_event_detail').textContent = eventData.extendedProps.duration_readable || 'Duração não disponível';
-                    document.getElementById('edit-event-button').setAttribute("data-event-id", eventId);
-                    document.getElementById('delete-event-button').setAttribute("data-event-id", eventId);
-                    $('#detailModal').modal('show');
-                }
-            }
-        });
-
+        // Função para Edição do Evento
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
+            document.getElementById('id_event_id').value = eventId;
 
             document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
             document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
@@ -326,62 +313,65 @@
                 console.error("Data de fim inválida:", endDateStr);
             }
 
-            document.getElementById('id_event_id').value = eventId;
-    
             $('#detailModal').modal('hide');
             $('#eventModal').modal('show');
         });
 
+        // Exclusão de Evento
         document.getElementById('delete-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
-            console.log(`Tentando excluir o evento com ID: ${eventId}`);
             if (confirm('Tem certeza que deseja apagar este evento?')) {
-                $.post(`/delete_event/${eventId}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' })
-                  .done(function(response) { 
-                      alert(response.message); 
-                      window.location.reload(); 
-                  })
-                  .fail(function(jqXHR) { 
-                      alert('Erro ao apagar: ' + jqXHR.responseText); 
-                  });
+                fetch(`/delete_event/${eventId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    window.location.reload();
+                })
+                .catch(error => console.error('Erro ao excluir evento:', error));
             }
         });
-    });
 
-    function parseDateBR(dateStr) {
-        let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
-        let matches = regex.exec(dateStr);
-        
-        if (matches) {
-            let day = parseInt(matches[1], 10);
-            let month = getMonthNumber(matches[2].toLowerCase());
-            let year = parseInt(matches[3], 10);
-            let hours = parseInt(matches[4], 10);
-            let minutes = parseInt(matches[5], 10);
-
-            return new Date(year, month - 1, day, hours, minutes);
+        // Funções de Utilidade
+        function converterDataParaDjangoFormat(data) {
+            const dataJS = new Date(data);
+            return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')}T` +
+                   `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
         }
-        return null;
-    }
 
-    function getMonthNumber(monthStr) {
-        const months = {
-            'janeiro': 1, 'fevereiro': 2, 'março': 3, 'abril': 4,
-            'maio': 5, 'junho': 6, 'julho': 7, 'agosto': 8,
-            'setembro': 9, 'outubro': 10, 'novembro': 11, 'dezembro': 12
-        };
-        return months[monthStr] || 0;
-    }
+        function formatDateTime(dateTime) {
+            return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
+        }
 
-    function formatDateTime(dateTime) {
-        return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
-    }
+        function parseDateBR(dateStr) {
+            let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
+            let matches = regex.exec(dateStr);
+            
+            if (matches) {
+                let day = parseInt(matches[1], 10);
+                let month = getMonthNumber(matches[2].toLowerCase());
+                let year = parseInt(matches[3], 10);
+                let hours = parseInt(matches[4], 10);
+                let minutes = parseInt(matches[5], 10);
 
-    function converterDataParaDjangoFormat(data) {
-        const dataJS = new Date(data);
-        return `${dataJS.getFullYear()}-${(dataJS.getMonth() + 1).toString().padStart(2, '0')}-${dataJS.getDate().toString().padStart(2, '0')}T` +
-               `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
-    }
+                return new Date(year, month - 1, day, hours, minutes);
+            }
+            return null;
+        }
+
+        function getMonthNumber(monthStr) {
+            const months = {
+                'janeiro': 1, 'fevereiro': 2, 'março': 3, 'abril': 4,
+                'maio': 5, 'junho': 6, 'julho': 7, 'agosto': 8,
+                'setembro': 9, 'outubro': 10, 'novembro': 11, 'dezembro': 12
+            };
+            return months[monthStr] || 0;
+        }
+    });
 </script>
 {% endblock extrascripts %}
-
