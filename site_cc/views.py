@@ -75,38 +75,152 @@ def next_month(d):
     month = "month=" + str(next_month.year) + "-" + str(next_month.month)
     return month
 
+from django.http import JsonResponse
+
 @login_required(login_url="signup")
-def create_event(request):
-    form = EventForm(request.POST or None)
-    if request.POST and form.is_valid():
-        title = form.cleaned_data["title"]
-        description = form.cleaned_data["description"]
-        start_time = form.cleaned_data["start_time"]
-        end_time = form.cleaned_data["end_time"]
-        cultura = form.cleaned_data["cultura"]  # Cultura selecionada no formulário
-        local = form.cleaned_data["local"]
+def create_colheita_event(request, plantio_event_id):
+    if request.method == "POST":
+        plantio_event = get_object_or_404(Event, id=plantio_event_id)
 
-        # Obtenha o tempo médio de colheita para a cultura selecionada
-        tempo_colheita = CULTURA_PRAZOS.get(cultura, None)
-
-        # Cria o evento no banco de dados
-        Event.objects.get_or_create(
-            user=request.user,
-            title=title,
-            description=description,
-            start_time=start_time,
-            end_time=end_time,
-            cultura=cultura,
-        )
-
-        # Redireciona para o calendário com o tempo médio e cultura na URL
+        # Verifica se a cultura tem tempo de colheita definido
+        tempo_colheita = CULTURA_PRAZOS.get(plantio_event.cultura, None)
         if tempo_colheita:
-            return HttpResponseRedirect(reverse("site_cc:calendar") + f"?tempo_colheita={tempo_colheita}&cultura={cultura}")
+            # Calcula as datas de início e fim para o evento de colheita
+            colheita_start_time = plantio_event.start_time + timedelta(days=tempo_colheita)
+            colheita_end_time = plantio_event.end_time + timedelta(days=tempo_colheita)
+
+            # Cria o evento de colheita
+            colheita_event = Event.objects.create(
+                user=plantio_event.user,
+                title=f"{plantio_event.title} - Colheita",
+                description=f"Colheita de {plantio_event.description}",
+                start_time=colheita_start_time,
+                end_time=colheita_end_time,
+                cultura=plantio_event.cultura,
+                local=plantio_event.local,
+                type="Colheita",
+            )
+
+            return JsonResponse({
+                "success": True,
+                "message": "Evento de colheita criado com sucesso.",
+                "colheita_event_id": colheita_event.id
+            })
+
+        return JsonResponse({"success": False, "message": "Tempo de colheita não definido para a cultura."}, status=400)
+
+    return JsonResponse({"success": False, "message": "Método inválido"}, status=405)
+
+
+@login_required(login_url="signup")
+def create_or_edit_event(request):
+    if request.method == "POST":
+        event_id = request.POST.get('event_id')
+        if event_id and event_id.strip():  # Verifica se o event_id é válido e não vazio
+            # Edita o evento existente
+            try:
+                event = Event.objects.get(pk=event_id, user=request.user)
+                # Exclui o evento anterior
+                event.delete()
+                success_message = "Evento editado com sucesso."
+            except Event.DoesNotExist:
+                return JsonResponse({"success": False, "message": "Evento não encontrado para edição."}, status=404)
         else:
-            return HttpResponseRedirect(reverse("site_cc:calendar"))
-    return render(request, "event.html", {"form": form})
+            success_message = "Evento criado com sucesso."
+
+        # Cria um novo evento (ou substitui o anterior editado)
+        form = EventForm(request.POST)
+        if form.is_valid():
+            event = form.save(commit=False)
+            event.user = request.user  # Define o usuário, independentemente de ser criação ou edição
+            event.save()
+            return JsonResponse({
+                "success": True,
+                "message": success_message,
+                "event_id": event.id,
+                "title": event.title,
+                "description": event.description,
+                "start_time": event.start_time.isoformat(),
+                "end_time": event.end_time.isoformat(),
+                "type": event.type,
+                "cultura": event.cultura,
+                "local": event.local,
+            })
+
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+
+    return JsonResponse({"success": False, "message": "Método inválido"}, status=405)
 
 
+from django.http import JsonResponse
+from datetime import timedelta
+from django.contrib.auth.decorators import login_required
+
+# Defina CULTURA_PRAZOS na view para corresponder aos valores do JS
+CULTURA_PRAZOS = {
+    'Tomate': 105,
+    'Cenoura': 85,
+    'Alface': 38,
+    'Batata': 105,
+    'Rúcula': 35,
+}
+
+@login_required(login_url="signup")
+def create_plantio_event(request):
+    if request.method == "POST":
+        event_id = request.POST.get('event_id')
+        if event_id and event_id.strip():  # Verifica se o event_id é válido e não vazio
+            try:
+                # Busca o evento existente para edição e o exclui
+                event = Event.objects.get(pk=event_id, user=request.user)
+                event.delete()
+                success_message = "Evento de plantio editado com sucesso."
+            except Event.DoesNotExist:
+                return JsonResponse({"success": False, "message": "Evento de plantio não encontrado para edição."}, status=404)
+        else:
+            success_message = "Evento de plantio criado com sucesso."
+
+        # Cria um novo evento com os dados do formulário
+        form = EventForm(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data["title"]
+            description = form.cleaned_data["description"]
+            start_time = form.cleaned_data["start_time"]
+            end_time = form.cleaned_data["end_time"]
+            cultura = form.cleaned_data["cultura"]
+            local = form.cleaned_data["local"]
+            event_type = form.cleaned_data["type"]
+
+            # Cria apenas o evento de plantio (ou substitui o anterior editado)
+            first_event = Event.objects.create(
+                user=request.user,
+                title=title,
+                description=description,
+                start_time=start_time,
+                end_time=end_time,
+                cultura=cultura,
+                local=local,
+                type=event_type,
+            )
+
+            return JsonResponse({
+                "success": True,
+                "message": success_message,
+                "tempo_colheita": CULTURA_PRAZOS.get(cultura, None),
+                "cultura": cultura,
+                "open_recommendation_modal": True,
+                "event_id": first_event.id,
+                "title": title,
+                "description": description,
+                "start_time": start_time.isoformat(),
+                "end_time": end_time.isoformat(),
+                "type": event_type,
+                "local": local,
+            })
+
+        return JsonResponse({"success": False, "errors": form.errors}, status=400)
+
+    return JsonResponse({"success": False, "message": "Método inválido"}, status=405)
 
 
 
@@ -330,25 +444,12 @@ def calendar_view(request):
     }
     return render(request, "calendar.html", context)
 
-def event_edit(request, event_id):
-    event = get_object_or_404(Event, id=event_id)
-    
-    if request.method == "POST":
-        form = EventForm(request.POST, instance=event)
-        if form.is_valid():
-            form.save()
-            return redirect('site_cc:calendar')  
-    else:
-        form = EventForm(instance=event)
-    
-    return render(request, "event.html", {'form': form})
+
 
 def event_member_delete(request, event_member_id):
     event_member = get_object_or_404(EventMember, id=event_member_id)
     event_member.delete()
     return redirect(reverse_lazy("site_cc:calendar"))
-
-
 
 
 @login_required(login_url="accounts:signin")
