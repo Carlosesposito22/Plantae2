@@ -166,6 +166,7 @@
                     <p>Sugestão: Avalie a colheita para este período.</p>
                 </div>
                 <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-nv-btn">Criar</button>
                     <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
                 </div>
             </div>
@@ -248,7 +249,6 @@
 {{ previsoes|json_script:"weatherData" }}
 
 {% endblock content %}
-
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
@@ -259,9 +259,8 @@
         'Batata': 105,
         'Rúcula': 35,
     };
-
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Função para obter o token CSRF
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -278,29 +277,92 @@
         }
         const csrftoken = getCookie('csrftoken');
 
-        // Configuração do formulário para verificar o tipo de evento antes de enviar
-        document.getElementById('eventForm').addEventListener('submit', function(event) {
-            const eventType = document.querySelector('#id_type').value;
-            const cultura = document.querySelector('#id_cultura').value;
-            const eventId = document.getElementById('id_event_id').value;
-
-            // Apenas mostra o modal de recomendação se for um novo evento de "Plantio"
-            if (!eventId && eventType === "Plantio" && CULTURA_PRAZOS[cultura]) {
-                event.preventDefault();
-                const tempoColheita = CULTURA_PRAZOS[cultura];
-                document.getElementById('recommendationMessage').textContent = `Tempo estimado para a colheita da cultura ${cultura}: aproximadamente ${tempoColheita} dias.`;
-
-                $('#eventModal').modal('hide');
-                $('#eventModal').on('hidden.bs.modal', function() {
-                    $('#recommendationModal').modal('show');
-                    $('#recommendationModal').on('hidden.bs.modal', function() {
-                        document.getElementById('eventForm').submit();
-                    });
-                });
-            }
+        $('#recommendationModal').modal({
+            backdrop: 'static',
+            keyboard: false,
+            show: false
         });
 
-        // Inicializa o calendário
+        document.getElementById('eventForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const eventType = document.querySelector('#id_type').value;
+
+            let url = (eventType === "Plantio") ? "{% url 'site_cc:event_new_plantio' %}" : "{% url 'site_cc:event_new' %}";
+
+            const formData = new FormData(this);
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => { throw new Error(text); });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    alert(data.message || "Eventos criados com sucesso!");
+
+                    calendar.addEvent({
+                        id: data.event_id,
+                        title: data.title,
+                        description: data.description,
+                        start: data.start_time,
+                        end: data.end_time,
+                        type: data.type,
+                        cultura: data.cultura,
+                        local: data.local,
+                    });
+
+                    $('#eventModal').modal('hide');
+
+                    if (data.open_recommendation_modal) {
+                        $('#recommendationModal').modal('show');
+                        console.log(data.cultura);
+                        const diasColheita = CULTURA_PRAZOS[data.cultura];
+                        document.getElementById('recommendationMessage').textContent = 
+                            `Recomendação para ${data.cultura}: Avalie a colheita para este período. A colheita ocorrerá em aproximadamente ${diasColheita} dias.`;
+
+                        document.getElementById('btn-nv-btn').addEventListener('click', function() {
+                            fetch(`/event/plantio/${data.event_id}/create_colheita/`, {
+                                method: 'POST',
+                                headers: {
+                                    'X-CSRFToken': csrftoken
+                                }
+                            })
+                            .then(response => response.json())
+                            .then(colheitaData => {
+                                if (colheitaData.success) {
+                                    alert(colheitaData.message);
+                                    calendar.addEvent({
+                                        id: colheitaData.colheita_event_id,
+                                        title: `${data.title} - Colheita`,
+                                        start: new Date(new Date(data.start_time).getTime() + (diasColheita * 24 * 60 * 60 * 1000)),
+                                        end: new Date(new Date(data.end_time).getTime() + (diasColheita * 24 * 60 * 60 * 1000)),
+                                        type: "Colheita",
+                                        cultura: data.cultura,
+                                        local: data.local,
+                                    });
+                                } else {
+                                    alert("Erro: " + colheitaData.message);
+                                }
+                            })
+                            .catch(error => console.error('Erro ao criar evento de colheita:', error));
+                        });
+                    } else {
+                        window.location.href = "{% url 'site_cc:calendar' %}";
+                    }
+                } else if (data.errors) {
+                    alert("Erro ao salvar o evento: " + JSON.stringify(data.errors));
+                }
+            });
+        });
+
         var calendarEl = document.getElementById('calendar');
         var previsoes = JSON.parse(document.getElementById('weatherData').textContent);
         let displayedIconsCount = 0;
@@ -331,7 +393,7 @@
             navLinks: true,
             selectable: true,
             select: function(arg) {
-                document.getElementById('id_event_id').value = ""; // Limpa o campo id para um novo evento
+                document.getElementById('id_event_id').value = "";
                 document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
                 document.getElementById('id_end_time').value = converterDataParaDjangoFormat(arg.end);
                 $('#eventModal').modal('show');
@@ -344,8 +406,8 @@
                 document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
                 document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
                 document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
-                document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura'; 
-                document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível'; 
+                document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura';
+                document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível';
                 document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
                 document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
                 $('#detailModal').modal('show');
@@ -409,7 +471,6 @@
             }
         };
 
-        // Função para Edição do Evento
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
             document.getElementById('id_event_id').value = eventId;
@@ -442,7 +503,6 @@
             $('#eventModal').modal('show');
         });
 
-        // Exclusão de Evento
         document.getElementById('delete-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
             if (confirm('Tem certeza que deseja apagar este evento?')) {
