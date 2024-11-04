@@ -15,7 +15,7 @@ from .forms import EventForm
 from .models import Event, EventMember
 from .forms import EventForm  
 
-API_KEY = 'AIzaSyC4AVfey0X8ONDz9f_vdw6Sq9yDdhHFowk'
+API_KEY = 'AIzaSyDF834PQjSJFlpv0KjtJXgmefEVmIWlNTY'
 genai.configure(api_key=API_KEY)
 
 pragas_doencas = {
@@ -23,34 +23,70 @@ pragas_doencas = {
         'pragas': [
             {
                 'nome': 'Traça-do-tomateiro',
-                'caracteristicas': 'Larvas que perfuram os frutos e folhas, causando grandes prejuízos devido à alimentação intensa e à redução da qualidade dos frutos. Podem provocar deformações e queda prematura dos frutos.',
+                'caracteristicas': 'Larvas que perfuram os frutos e folhas, causando grandes prejuízos.',
+                'descricao': 'As larvas se alimentam das folhas e frutos, criando buracos e deformidades.',
+                'tratamento': (
+                    '1. Aplicar inseticidas biológicos, como Bacillus thuringiensis, que são seguros para polinizadores. '
+                    '2. Usar armadilhas de feromônio para capturar machos, reduzindo a população. '
+                    '3. Incentivar a presença de predadores naturais, como pássaros e insetos benéficos.'
+                ),
                 'aplicavel_para': ['Tomate']
             },
             {
                 'nome': 'Pulgão',
-                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses e enfraquecendo o crescimento, resultando em folhas enroladas e crescimento atrofiado. Também excreta uma substância pegajosa que favorece o crescimento de fungos.',
+                'caracteristicas': 'Inseto que suga a seiva da planta, causando folhas enroladas.',
+                'descricao': 'Insetos que se alimentam de seiva, causando danos que enfraquecem a planta.',
+                'tratamento': (
+                    '1. Introduzir controle biológico com joaninhas ou crisopídeos, que se alimentam de pulgões. '
+                    '2. Aplicar sabão inseticida ou óleo de neem, que desidrata os insetos. '
+                    '3. Aumentar a diversidade de plantas ao redor para atrair predadores naturais.'
+                ),
                 'aplicavel_para': ['Tomate', 'Alface']
             },
             {
                 'nome': 'Broca-do-fruto',
-                'caracteristicas': 'Inseto cujas larvas perfuram os frutos, comprometendo sua qualidade e causando apodrecimento acelerado.',
+                'caracteristicas': 'Larvas que perfuram os frutos e causam apodrecimento.',
+                'descricao': 'Inseto cujas larvas penetram nos frutos, levando à deterioração.',
+                'tratamento': (
+                    '1. Monitorar a plantação frequentemente para detectar infestações precoces. '
+                    '2. Remover e destruir frutos infetados para interromper o ciclo de vida do inseto. '
+                    '3. Considerar o uso de inseticidas biológicos apenas se as infestações forem severas.'
+                ),
                 'aplicavel_para': ['Tomate']
             }
         ],
         'doencas': [
             {
                 'nome': 'Requeima',
-                'caracteristicas': 'Doença fúngica que causa manchas escuras nas folhas e frutos, podendo levar à perda total da colheita. As manchas começam nas bordas das folhas e se expandem, causando necrose e morte do tecido.',
+                'caracteristicas': 'Manchas escuras nas folhas e frutos.',
+                'descricao': 'Doença fúngica que causa necrose e pode destruir plantações inteiras.',
+                'tratamento': (
+                    '1. Aplicação de fungicidas preventivos à base de cobre ou bicarbonato de sódio. '
+                    '2. Práticas de rotação de culturas e remoção de restos de cultura para reduzir a incidência. '
+                    '3. Melhorar a ventilação e a drenagem para diminuir a umidade, um fator-chave para a doença.'
+                ),
                 'aplicavel_para': ['Tomate']
             },
             {
                 'nome': 'Murcha-bacteriana',
-                'caracteristicas': 'Infecção bacteriana que causa murcha súbita das plantas, seguida por amarelecimento das folhas. Pode ser transmitida pela água ou solo contaminado.',
+                'caracteristicas': 'Murcha súbita e amarelecimento das folhas.',
+                'descricao': 'Infecção que bloqueia os vasos da planta, causando murcha irreversível.',
+                'tratamento': (
+                    '1. Escolha variedades resistentes à murcha-bacteriana. '
+                    '2. Praticar um manejo adequado da irrigação, evitando encharcamento. '
+                    '3. Incorporar compostos orgânicos ao solo para melhorar a saúde do solo e a resistência da planta.'
+                ),
                 'aplicavel_para': ['Tomate', 'Batata']
             },
             {
                 'nome': 'Mancha-bacteriana',
-                'caracteristicas': 'Manchas pequenas e encharcadas que evoluem para áreas maiores e marrons, afetando folhas, caules e frutos.',
+                'caracteristicas': 'Manchas pequenas que se tornam marrons.',
+                'descricao': 'Infecção bacteriana que afeta a qualidade das folhas e frutos.',
+                'tratamento': (
+                    '1. Remover e destruir as plantas infectadas imediatamente. '
+                    '2. Aplicar bactericidas à base de extratos naturais, como o de alho. '
+                    '3. Aumentar a rotação de culturas para evitar a persistência da bactéria no solo.'
+                ),
                 'aplicavel_para': ['Tomate']
             }
         ]
@@ -59,29 +95,59 @@ pragas_doencas = {
         'pragas': [
             {
                 'nome': 'Mosca-da-cenoura',
-                'caracteristicas': 'Larvas que se alimentam das raízes, causando deformações, cavidades escuras e perdas significativas na colheita. A infestação pode ser favorecida por solo úmido e condições de plantio inadequadas.',
+                'caracteristicas': 'Larvas que se alimentam das raízes, causando deformações.',
+                'descricao': 'As larvas formam galerias nas raízes, levando à perda de qualidade.',
+                'tratamento': (
+                    '1. Cobrir o solo com redes finas para impedir que as moscas ponham ovos. '
+                    '2. Praticar a rotação de culturas para quebrar o ciclo de vida da praga. '
+                    '3. Introduzir plantas repelentes, como cebolinha ou alho, nas proximidades.'
+                ),
                 'aplicavel_para': ['Cenoura']
             },
             {
                 'nome': 'Nematóides',
-                'caracteristicas': 'Pequenos vermes que atacam as raízes, prejudicando o desenvolvimento da planta e causando galhas nas raízes, que dificultam a absorção de nutrientes.',
+                'caracteristicas': 'Vermes que atacam as raízes, causando galhas.',
+                'descricao': 'Microscópicos parasitas que comprometem o crescimento das raízes.',
+                'tratamento': (
+                    '1. Utilizar plantas antagonistas, como a mostarda, que ajudam a repelir nematóides. '
+                    '2. Aplicar compostos orgânicos como farinha de neem, que têm propriedades nematicidas. '
+                    '3. Praticar a rotação de culturas para reduzir a população de nematóides no solo.'
+                ),
                 'aplicavel_para': ['Cenoura', 'Rúcula']
             },
             {
                 'nome': 'Pulgão-verde',
-                'caracteristicas': 'Suga a seiva das folhas, causando enrolamento e redução no crescimento da planta. Pode transmitir doenças virais.',
+                'caracteristicas': 'Suga a seiva das folhas, causando enrolamento.',
+                'descricao': 'Pequenos insetos que causam danos significativos às folhas.',
+                'tratamento': (
+                    '1. Pulverizar com uma solução de sabão ou detergente natural para desidratar os pulgões. '
+                    '2. Utilizar controle biológico com insetos predadores, como joaninhas. '
+                    '3. Plantar flores que atraem insetos benéficos, como flores da família Asteraceae.'
+                ),
                 'aplicavel_para': ['Cenoura']
             }
         ],
         'doencas': [
             {
                 'nome': 'Queima-das-folhas',
-                'caracteristicas': 'Lesões marrons que progridem para necrose nas folhas, geralmente causadas por um fungo. Podem resultar em perda de área foliar significativa, afetando a fotossíntese e a produtividade.',
+                'caracteristicas': 'Lesões marrons nas folhas.',
+                'descricao': 'Infecção fúngica que reduz a área foliar, afetando a fotossíntese.',
+                'tratamento': (
+                    '1. Aplicar fungicidas à base de cobre ou soluções caseiras com bicarbonato de sódio. '
+                    '2. Remover e descartar folhas afetadas para limitar a propagação do fungo. '
+                    '3. Aumentar a circulação de ar entre as plantas para evitar umidade excessiva.'
+                ),
                 'aplicavel_para': ['Cenoura']
             },
             {
                 'nome': 'Podridão-mole',
-                'caracteristicas': 'Causada por bactérias, resulta em apodrecimento aquoso e de odor desagradável nas raízes, especialmente em condições de alta umidade.',
+                'caracteristicas': 'Apodrecimento aquoso e de odor desagradável nas raízes.',
+                'descricao': 'Infecção bacteriana que ocorre em condições de alta umidade.',
+                'tratamento': (
+                    '1. Melhorar a drenagem do solo e evitar irrigação excessiva. '
+                    '2. Aplicar compostos que contenham microrganismos benéficos, como biofertilizantes. '
+                    '3. Remover qualquer material em decomposição próximo à cultura para reduzir a carga bacteriana.'
+                ),
                 'aplicavel_para': ['Cenoura']
             }
         ]
@@ -90,29 +156,59 @@ pragas_doencas = {
         'pragas': [
             {
                 'nome': 'Lagarta-das-folhas',
-                'caracteristicas': 'Insetos que devoram as folhas, deixando buracos irregulares e reduzindo a qualidade do produto. Podem ser identificadas pela presença de fezes nas folhas afetadas.',
+                'caracteristicas': 'Insetos que devoram as folhas, deixando buracos.',
+                'descricao': 'Insetos que danificam as folhas e afetam a aparência e qualidade.',
+                'tratamento': (
+                    '1. Uso de inseticidas naturais, como extrato de neem, que são menos prejudiciais. '
+                    '2. Remoção manual das lagartas e ovos visíveis nas folhas. '
+                    '3. Introduzir predadores naturais, como pássaros e insetos benéficos, para controle.'
+                ),
                 'aplicavel_para': ['Alface']
             },
             {
                 'nome': 'Pulgão',
-                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses, enfraquecendo o crescimento e causando folhas amareladas e enroladas. A substância pegajosa que excretam favorece o desenvolvimento de fungos como a fumagina.',
+                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses.',
+                'descricao': 'Causa folhas amareladas e enroladas, favorecendo fungos.',
+                'tratamento': (
+                    '1. Pulverização com óleo de neem, que também ajuda a controlar fungos. '
+                    '2. Uso de controle biológico, como larvas de joaninhas. '
+                    '3. Plantar espécies que atraem insetos benéficos nas proximidades.'
+                ),
                 'aplicavel_para': ['Tomate', 'Alface']
             },
             {
                 'nome': 'Tripes',
-                'caracteristicas': 'Insetos pequenos que causam manchas prateadas nas folhas devido à sucção de seiva, levando à deformação e morte dos tecidos.',
+                'caracteristicas': 'Insetos que causam manchas prateadas nas folhas.',
+                'descricao': 'Pequenos insetos que deformam e danificam o tecido das folhas.',
+                'tratamento': (
+                    '1. Aplicar inseticidas naturais, como extratos de pimenta ou alho, que podem repelir trips. '
+                    '2. Usar armadilhas adesivas amarelas para capturar os adultos. '
+                    '3. Promover a biodiversidade no jardim, plantando flores que atraem inimigos naturais.'
+                ),
                 'aplicavel_para': ['Alface']
             }
         ],
         'doencas': [
             {
                 'nome': 'Míldio',
-                'caracteristicas': 'Doença causada por fungos que resulta em manchas amareladas na parte superior das folhas, enquanto na parte inferior surge uma camada de fungos de coloração branca ou acinzentada. Afeta severamente o crescimento.',
+                'caracteristicas': 'Manchas amareladas nas folhas com fungo branco na parte inferior.',
+                'descricao': 'Doença que afeta a qualidade e produtividade da alface.',
+                'tratamento': (
+                    '1. Aplicar fungicidas específicos à base de cobre ou bicarbonato de sódio. '
+                    '2. Melhorar a ventilação entre as plantas para reduzir a umidade. '
+                    '3. Remover folhas infectadas e manter um solo bem drenado para prevenir a umidade excessiva.'
+                ),
                 'aplicavel_para': ['Alface']
             },
             {
                 'nome': 'Podridão de esclerotínia',
-                'caracteristicas': 'Causa podridão branca no caule e nas folhas, com presença de micélio de fungo e escleródios pretos, levando à morte da planta.',
+                'caracteristicas': 'Podridão branca com micélio de fungo no caule.',
+                'descricao': 'Afeta o caule e folhas, levando à morte da planta.',
+                'tratamento': (
+                    '1. Remover e destruir plantas infectadas imediatamente. '
+                    '2. Aplicar fungicidas preventivos que contenham ingredientes naturais, como fungos benéficos. '
+                    '3. Evitar irrigação por cima e melhorar a circulação de ar ao redor das plantas.'
+                ),
                 'aplicavel_para': ['Alface']
             }
         ]
@@ -121,65 +217,126 @@ pragas_doencas = {
         'pragas': [
             {
                 'nome': 'Besouro-da-batata',
-                'caracteristicas': 'Inseto que se alimenta das folhas, causando grandes danos à planta e comprometendo o crescimento e a produtividade. Pode devastar plantações inteiras se não controlado.',
+                'caracteristicas': 'Inseto que se alimenta das folhas.',
+                'descricao': 'Causa danos extensos ao se alimentar das folhas da planta.',
+                'tratamento': (
+                    '1. Uso de controle biológico com insetos predadores, como percevejos e joaninhas. '
+                    '2. Aplicar inseticidas naturais, como extrato de neem, que são menos prejudiciais. '
+                    '3. Rotação de culturas para interromper o ciclo de vida do besouro.'
+                ),
                 'aplicavel_para': ['Batata']
             },
             {
                 'nome': 'Lagarta-rosada',
-                'caracteristicas': 'Ataca os tubérculos, formando galerias internas e reduzindo a qualidade e a capacidade de armazenamento.',
+                'caracteristicas': 'Ataca os tubérculos, formando galerias.',
+                'descricao': 'Diminui a qualidade e a capacidade de armazenamento dos tubérculos.',
+                'tratamento': (
+                    '1. Aplicação de inseticidas biológicos específicos. '
+                    '2. Monitorar frequentemente a presença de lagartas e removê-las manualmente quando possível. '
+                    '3. Melhorar a qualidade do solo e a saúde das plantas para aumentar a resistência.'
+                ),
                 'aplicavel_para': ['Batata']
             }
         ],
         'doencas': [
             {
                 'nome': 'Murcha-bacteriana',
-                'caracteristicas': 'Infecção que causa murcha súbita das plantas, seguida por amarelecimento e escurecimento dos vasos. Ocorre especialmente em climas quentes e úmidos.',
+                'caracteristicas': 'Murcha súbita e escurecimento dos vasos.',
+                'descricao': 'Afeta o sistema vascular da planta, impedindo a passagem de água.',
+                'tratamento': (
+                    '1. Usar variedades resistentes e adaptar o manejo da irrigação para evitar estresse hídrico. '
+                    '2. Praticar a rotação de culturas para minimizar a presença da bactéria no solo. '
+                    '3. Incorporar matéria orgânica ao solo para melhorar sua estrutura e saúde.'
+                ),
                 'aplicavel_para': ['Tomate', 'Batata']
             },
             {
                 'nome': 'Requeima',
-                'caracteristicas': 'Manchas escuras nas folhas e tubérculos, que progridem para necrose. As áreas afetadas podem exibir um crescimento fúngico em condições úmidas.',
+                'caracteristicas': 'Manchas escuras nas folhas e tubérculos.',
+                'descricao': 'Progride rapidamente e causa necrose nas partes afetadas.',
+                'tratamento': (
+                    '1. Aplicação de fungicidas naturais e prevenção com plantas resistentes. '
+                    '2. Remoção imediata de folhas e tubérculos afetados para limitar a propagação. '
+                    '3. Melhorar a drenagem do solo e evitar excessos de umidade.'
+                ),
                 'aplicavel_para': ['Batata']
             },
             {
                 'nome': 'Podridão-seca',
-                'caracteristicas': 'Causada por fungos, resulta em tubérculos com áreas murchas e descoloridas, que eventualmente secam e apodrecem.',
+                'caracteristicas': 'Áreas murchas e descoloridas nos tubérculos.',
+                'descricao': 'Causada por fungos, levando ao apodrecimento lento dos tubérculos.',
+                'tratamento': (
+                    '1. Manter o solo saudável com práticas de rotação e adubação orgânica. '
+                    '2. Evitar o excesso de umidade e garantir a ventilação adequada ao redor dos tubérculos. '
+                    '3. Remover tubérculos infectados para impedir a propagação da doença.'
+                ),
                 'aplicavel_para': ['Batata']
             }
         ]
     },
-    'Rúcula': {
+    'Rucula': {
         'pragas': [
             {
                 'nome': 'Nematóides',
-                'caracteristicas': 'Pequenos vermes que atacam as raízes, causando galhas e reduzindo a absorção de nutrientes, prejudicando o desenvolvimento da planta e deixando-a mais suscetível a outras doenças.',
+                'caracteristicas': 'Atacam as raízes, causando galhas.',
+                'descricao': 'Reduzem a absorção de nutrientes, prejudicando o crescimento.',
+                'tratamento': (
+                    '1. Rotação de culturas para quebrar o ciclo dos nematóides. '
+                    '2. Uso de plantas repelentes, como a calêndula, que ajudam a deter nematóides. '
+                    '3. Aplicação de compostos orgânicos, como farinha de neem, que têm propriedades nematicidas.'
+                ),
                 'aplicavel_para': ['Cenoura', 'Rúcula']
             },
             {
                 'nome': 'Pulgão',
-                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses e causando deformações e amarelecimento das folhas. Excreta uma substância adocicada que pode atrair formigas e favorecer fungos.',
+                'caracteristicas': 'Suga a seiva e causa amarelecimento.',
+                'descricao': 'Favorece o crescimento de fungos devido à substância pegajosa.',
+                'tratamento': (
+                    '1. Controle biológico com inimigos naturais, como joaninhas. '
+                    '2. Uso de inseticidas suaves, como sabão inseticida. '
+                    '3. Plantar flores que atraem insetos benéficos nas proximidades.'
+                ),
                 'aplicavel_para': ['Tomate', 'Alface', 'Rúcula']
             },
             {
                 'nome': 'Lagarta-da-ruz',
-                'caracteristicas': 'Insetos que causam danos ao se alimentarem das folhas, podendo reduzir a qualidade da colheita.',
+                'caracteristicas': 'Danos às folhas por alimentação.',
+                'descricao': 'Pode reduzir a qualidade da colheita.',
+                'tratamento': (
+                    '1. Uso de armadilhas e controle manual das lagartas. '
+                    '2. Aplicação de inseticidas naturais, como extratos de pimenta ou alho. '
+                    '3. Incentivar a presença de aves e insetos predadores no cultivo.'
+                ),
                 'aplicavel_para': ['Rúcula']
             }
         ],
         'doencas': [
             {
                 'nome': 'Míldio',
-                'caracteristicas': 'Doença fúngica que causa manchas amareladas e um pó branco nas folhas, podendo comprometer a qualidade da produção.',
+                'caracteristicas': 'Manchas amareladas e pó branco nas folhas.',
+                'descricao': 'Afeta a qualidade da planta e pode ser disseminada pelo vento.',
+                'tratamento': (
+                    '1. Aplicar fungicidas específicos, como bicarbonato de sódio ou cobre. '
+                    '2. Melhorar a ventilação nas plantações para reduzir a umidade. '
+                    '3. Remover e destruir folhas infectadas para limitar a propagação.'
+                ),
                 'aplicavel_para': ['Rúcula']
             },
             {
                 'nome': 'Podridão-rota',
-                'caracteristicas': 'Causada por fungos, resulta em apodrecimento das folhas e hastes, especialmente em condições de alta umidade.',
+                'caracteristicas': 'Apodrecimento das folhas em alta umidade.',
+                'descricao': 'Causa danos extensos em condições úmidas.',
+                'tratamento': (
+                    '1. Melhorar a drenagem do solo e evitar encharcamento. '
+                    '2. Aplicar fungicidas preventivos à base de extratos naturais. '
+                    '3. Remover folhas afetadas e manter o espaço entre as plantas para melhor circulação de ar.'
+                ),
                 'aplicavel_para': ['Rúcula']
             }
         ]
     }
 }
+
 
 
 plantas = {
@@ -554,6 +711,54 @@ def detalhes_problema(request):
     return render(request, 'site_cc/detalhes_problema.html', {
         'plantio_selecionado': plantio_selecionado,
     })
+
+def detectar_pragas_doencas(request):
+    if request.method == 'POST':
+        try:
+            plantio_selecionado = request.POST.get('plantio')
+            descricao_problema = request.POST.get('detalhes')
+            pragas_encontradas = []
+            doencas_encontradas = []
+
+            if plantio_selecionado in pragas_doencas:
+                for praga in pragas_doencas[plantio_selecionado]['pragas']:
+                    if any(palavra in descricao_problema.lower() for palavra in praga['caracteristicas'].lower().split()):
+                        pragas_encontradas.append({
+                            'nome': praga.get('nome', 'Nome não disponível'),
+                            'descricao': f"{praga.get('descricao', 'Descrição não disponível')} Esta praga é caracterizada por {praga.get('caracteristicas', 'características desconhecidas')}.",
+                            'tratamento': "\n".join(praga.get('tratamento', 'Tratamento não disponível').split(' . '))  # Cada tratamento em uma linha
+                        })
+
+                for doenca in pragas_doencas[plantio_selecionado]['doencas']:
+                    if any(palavra in descricao_problema.lower() for palavra in doenca['caracteristicas'].lower().split()):
+                        doencas_encontradas.append({
+                            'nome': doenca.get('nome', 'Nome não disponível'),
+                            'descricao': f"{doenca.get('descricao', 'Descrição não disponível')} Esta doença geralmente apresenta {doenca.get('caracteristicas', 'características desconhecidas')}.",
+                            'tratamento': "\n".join(doenca.get('tratamento', 'Tratamento não disponível').split(' . '))  # Cada tratamento em uma linha
+                        })
+
+                return JsonResponse({
+                    'success': True,
+                    'plantio': plantio_selecionado,
+                    'pragas': pragas_encontradas,
+                    'doencas': doencas_encontradas,
+                })
+            else:
+                return JsonResponse({
+                    'success': False,
+                    'message': 'Plantio não encontrado ou nenhum problema detectado.'
+                })
+
+        except Exception as e:
+            print(f"Erro na view detectar_pragas_doencas: {e}")
+            return JsonResponse({
+                'success': False,
+                'message': f'Erro no processamento: {str(e)}'
+            }, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
+
+
 
 def recomendacao(request):
     resultado = None
