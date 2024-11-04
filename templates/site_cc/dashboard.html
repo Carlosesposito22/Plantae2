@@ -41,8 +41,11 @@
                                         <tr role="row">
                                             <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Nome: ative para classificar a coluna em ordem decrescente" style="width: 261.641px;">SL</th>
                                             <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Nome do Evento: ative para classificar a coluna em ordem crescente" style="width: 417.312px;">Nome do Evento</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Início: ative para classificar a coluna em ordem crescente" style="width: 189.281px;">Tempo de Início</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Fim: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Tempo de Término</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Tipo: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Tipo</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Cultura: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Cultura</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Local: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Local</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Início: ative para classificar a coluna em ordem crescente" style="width: 189.281px;">Data de Início</th>
+                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Fim: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Data de Término</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -50,6 +53,9 @@
                                             <tr role="row" class="odd">
                                                 <td class="sorting_1">{{ forloop.counter }}</td>
                                                 <td>{{ event.title }}</td>
+                                                <td>{{event.type}}</td>
+                                                <td>{{event.cultura}}</td>
+                                                <td>{{event.local}}</td>
                                                 <td>{{ event.start_time }}</td>
                                                 <td>{{ event.end_time }}</td>
                                             </tr>
