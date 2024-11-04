@@ -18,6 +18,170 @@ from .forms import EventForm
 API_KEY = 'AIzaSyC4AVfey0X8ONDz9f_vdw6Sq9yDdhHFowk'
 genai.configure(api_key=API_KEY)
 
+pragas_doencas = {
+    'Tomate': {
+        'pragas': [
+            {
+                'nome': 'Traça-do-tomateiro',
+                'caracteristicas': 'Larvas que perfuram os frutos e folhas, causando grandes prejuízos devido à alimentação intensa e à redução da qualidade dos frutos. Podem provocar deformações e queda prematura dos frutos.',
+                'aplicavel_para': ['Tomate']
+            },
+            {
+                'nome': 'Pulgão',
+                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses e enfraquecendo o crescimento, resultando em folhas enroladas e crescimento atrofiado. Também excreta uma substância pegajosa que favorece o crescimento de fungos.',
+                'aplicavel_para': ['Tomate', 'Alface']
+            },
+            {
+                'nome': 'Broca-do-fruto',
+                'caracteristicas': 'Inseto cujas larvas perfuram os frutos, comprometendo sua qualidade e causando apodrecimento acelerado.',
+                'aplicavel_para': ['Tomate']
+            }
+        ],
+        'doencas': [
+            {
+                'nome': 'Requeima',
+                'caracteristicas': 'Doença fúngica que causa manchas escuras nas folhas e frutos, podendo levar à perda total da colheita. As manchas começam nas bordas das folhas e se expandem, causando necrose e morte do tecido.',
+                'aplicavel_para': ['Tomate']
+            },
+            {
+                'nome': 'Murcha-bacteriana',
+                'caracteristicas': 'Infecção bacteriana que causa murcha súbita das plantas, seguida por amarelecimento das folhas. Pode ser transmitida pela água ou solo contaminado.',
+                'aplicavel_para': ['Tomate', 'Batata']
+            },
+            {
+                'nome': 'Mancha-bacteriana',
+                'caracteristicas': 'Manchas pequenas e encharcadas que evoluem para áreas maiores e marrons, afetando folhas, caules e frutos.',
+                'aplicavel_para': ['Tomate']
+            }
+        ]
+    },
+    'Cenoura': {
+        'pragas': [
+            {
+                'nome': 'Mosca-da-cenoura',
+                'caracteristicas': 'Larvas que se alimentam das raízes, causando deformações, cavidades escuras e perdas significativas na colheita. A infestação pode ser favorecida por solo úmido e condições de plantio inadequadas.',
+                'aplicavel_para': ['Cenoura']
+            },
+            {
+                'nome': 'Nematóides',
+                'caracteristicas': 'Pequenos vermes que atacam as raízes, prejudicando o desenvolvimento da planta e causando galhas nas raízes, que dificultam a absorção de nutrientes.',
+                'aplicavel_para': ['Cenoura', 'Rúcula']
+            },
+            {
+                'nome': 'Pulgão-verde',
+                'caracteristicas': 'Suga a seiva das folhas, causando enrolamento e redução no crescimento da planta. Pode transmitir doenças virais.',
+                'aplicavel_para': ['Cenoura']
+            }
+        ],
+        'doencas': [
+            {
+                'nome': 'Queima-das-folhas',
+                'caracteristicas': 'Lesões marrons que progridem para necrose nas folhas, geralmente causadas por um fungo. Podem resultar em perda de área foliar significativa, afetando a fotossíntese e a produtividade.',
+                'aplicavel_para': ['Cenoura']
+            },
+            {
+                'nome': 'Podridão-mole',
+                'caracteristicas': 'Causada por bactérias, resulta em apodrecimento aquoso e de odor desagradável nas raízes, especialmente em condições de alta umidade.',
+                'aplicavel_para': ['Cenoura']
+            }
+        ]
+    },
+    'Alface': {
+        'pragas': [
+            {
+                'nome': 'Lagarta-das-folhas',
+                'caracteristicas': 'Insetos que devoram as folhas, deixando buracos irregulares e reduzindo a qualidade do produto. Podem ser identificadas pela presença de fezes nas folhas afetadas.',
+                'aplicavel_para': ['Alface']
+            },
+            {
+                'nome': 'Pulgão',
+                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses, enfraquecendo o crescimento e causando folhas amareladas e enroladas. A substância pegajosa que excretam favorece o desenvolvimento de fungos como a fumagina.',
+                'aplicavel_para': ['Tomate', 'Alface']
+            },
+            {
+                'nome': 'Tripes',
+                'caracteristicas': 'Insetos pequenos que causam manchas prateadas nas folhas devido à sucção de seiva, levando à deformação e morte dos tecidos.',
+                'aplicavel_para': ['Alface']
+            }
+        ],
+        'doencas': [
+            {
+                'nome': 'Míldio',
+                'caracteristicas': 'Doença causada por fungos que resulta em manchas amareladas na parte superior das folhas, enquanto na parte inferior surge uma camada de fungos de coloração branca ou acinzentada. Afeta severamente o crescimento.',
+                'aplicavel_para': ['Alface']
+            },
+            {
+                'nome': 'Podridão de esclerotínia',
+                'caracteristicas': 'Causa podridão branca no caule e nas folhas, com presença de micélio de fungo e escleródios pretos, levando à morte da planta.',
+                'aplicavel_para': ['Alface']
+            }
+        ]
+    },
+    'Batata': {
+        'pragas': [
+            {
+                'nome': 'Besouro-da-batata',
+                'caracteristicas': 'Inseto que se alimenta das folhas, causando grandes danos à planta e comprometendo o crescimento e a produtividade. Pode devastar plantações inteiras se não controlado.',
+                'aplicavel_para': ['Batata']
+            },
+            {
+                'nome': 'Lagarta-rosada',
+                'caracteristicas': 'Ataca os tubérculos, formando galerias internas e reduzindo a qualidade e a capacidade de armazenamento.',
+                'aplicavel_para': ['Batata']
+            }
+        ],
+        'doencas': [
+            {
+                'nome': 'Murcha-bacteriana',
+                'caracteristicas': 'Infecção que causa murcha súbita das plantas, seguida por amarelecimento e escurecimento dos vasos. Ocorre especialmente em climas quentes e úmidos.',
+                'aplicavel_para': ['Tomate', 'Batata']
+            },
+            {
+                'nome': 'Requeima',
+                'caracteristicas': 'Manchas escuras nas folhas e tubérculos, que progridem para necrose. As áreas afetadas podem exibir um crescimento fúngico em condições úmidas.',
+                'aplicavel_para': ['Batata']
+            },
+            {
+                'nome': 'Podridão-seca',
+                'caracteristicas': 'Causada por fungos, resulta em tubérculos com áreas murchas e descoloridas, que eventualmente secam e apodrecem.',
+                'aplicavel_para': ['Batata']
+            }
+        ]
+    },
+    'Rúcula': {
+        'pragas': [
+            {
+                'nome': 'Nematóides',
+                'caracteristicas': 'Pequenos vermes que atacam as raízes, causando galhas e reduzindo a absorção de nutrientes, prejudicando o desenvolvimento da planta e deixando-a mais suscetível a outras doenças.',
+                'aplicavel_para': ['Cenoura', 'Rúcula']
+            },
+            {
+                'nome': 'Pulgão',
+                'caracteristicas': 'Inseto que suga a seiva da planta, transmitindo viroses e causando deformações e amarelecimento das folhas. Excreta uma substância adocicada que pode atrair formigas e favorecer fungos.',
+                'aplicavel_para': ['Tomate', 'Alface', 'Rúcula']
+            },
+            {
+                'nome': 'Lagarta-da-ruz',
+                'caracteristicas': 'Insetos que causam danos ao se alimentarem das folhas, podendo reduzir a qualidade da colheita.',
+                'aplicavel_para': ['Rúcula']
+            }
+        ],
+        'doencas': [
+            {
+                'nome': 'Míldio',
+                'caracteristicas': 'Doença fúngica que causa manchas amareladas e um pó branco nas folhas, podendo comprometer a qualidade da produção.',
+                'aplicavel_para': ['Rúcula']
+            },
+            {
+                'nome': 'Podridão-rota',
+                'caracteristicas': 'Causada por fungos, resulta em apodrecimento das folhas e hastes, especialmente em condições de alta umidade.',
+                'aplicavel_para': ['Rúcula']
+            }
+        ]
+    }
+}
+
+
 plantas = {
     'Tomate': {
         'se_da_bem': ['Cenoura', 'Alface'],
@@ -378,6 +542,12 @@ def tempo(request):
         }
     
     return render(request, 'site_cc/tempo.html', contexto)
+
+
+
+def praga(request):
+    return render(request, 'site_cc/praga.html')
+    
 
 def recomendacao(request):
     resultado = None

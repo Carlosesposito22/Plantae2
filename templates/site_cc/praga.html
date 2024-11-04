@@ -1,0 +1,132 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+  <div>
+      <h1><i class="app-menu__icon fa fa-bug"></i> Reportar uma praga</h1>
+  </div>
+{% endblock breadcrumb %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5; /* Fundo mais agradável visualmente */
+        }
+
+        .info-box {
+            background-color: #ffffff; /* Cor de fundo */
+            border: 2px solid #28a745; /* Borda verde */
+            border-radius: 15px; /* Cantos arredondados */
+            padding: 20px; /* Espaçamento interno */
+            text-align: center; /* Centralização do texto */
+            font-size: 22px; /* Tamanho da fonte */
+            font-weight: bold; /* Texto em negrito */
+            color: #333; /* Cor do texto */
+            max-width: 1200px; /* Mesma largura máxima dos cards */
+            width: 100%; /* Largura completa */
+            margin: 0 auto 30px; /* Centralizado com margem inferior */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+        .card-container {
+            max-width: 1200px; /* Mesma largura máxima */
+            margin: 0 auto; /* Centralizado */
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            padding: 0; /* Remover padding adicional para manter a mesma largura */
+        }
+
+
+        .card-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            margin: 40px auto;
+            max-width: 1200px; /* Definido para manter o tamanho ideal */
+            padding: 20px;
+        }
+
+        .card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            padding: 30px; /* Aumentado para deixar o conteúdo mais espaçado */
+            transition: transform 0.3s, box-shadow 0.3s;
+            overflow: hidden; /* Mantém a borda redonda */
+        }
+
+        .card:hover {
+            transform: scale(1.05); /* Suaviza o aumento do tamanho ao passar o mouse */
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .card-icon {
+            font-size: 60px; /* Aumentei o tamanho do ícone */
+            margin-bottom: 15px;
+            color: #28a745;
+        }
+
+        .card-title {
+            font-size: 24px; /* Fonte maior para o título */
+            font-weight: bold;
+            color: #333;
+        }
+
+        .card-description {
+            font-size: 16px; /* Texto de descrição adicional */
+            color: #777;
+            margin-top: 10px;
+        }
+
+        /* Adicionando um efeito sutil ao fundo do card */
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -20%;
+            right: -20%;
+            width: 140%;
+            height: 140%;
+            background: rgba(40, 167, 69, 0.05);
+            transform: rotate(25deg);
+            z-index: -1;
+            transition: all 0.4s ease-in-out;
+        }
+
+        .card:hover::before {
+            transform: rotate(15deg);
+            background: rgba(40, 167, 69, 0.1);
+        }
+    </style>
+{% endblock extracss %}
+
+{% block content %}
+<div class="info-box">
+    Selecione o plantio que esta sendo afetado
+</div>
+<div class="card-container">
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-seedling"></i></div> <!-- Batata -->
+        <div class="card-title">Batata</div>
+    </div>
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-carrot"></i></div> <!-- Cenoura -->
+        <div class="card-title">Cenoura</div>
+    </div>
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-apple-alt"></i></div> <!-- Tomate -->
+        <div class="card-title">Tomate</div>
+    </div>
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-leaf"></i></div> <!-- Alface -->
+        <div class="card-title">Alface</div>
+    </div>
+    <div class="card">
+        <div class="card-icon"><i class="fas fa-spa"></i></div> <!-- Rúcula -->
+        <div class="card-title">Rúcula</div>
+    </div>
+</div>
+{% endblock content %}
