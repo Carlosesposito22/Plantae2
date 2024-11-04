@@ -1,0 +1,99 @@
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block breadcrumb %}
+<div>
+    <h1><i class="app-menu__icon fa fa-bug"></i> Reportar uma Praga</h1>
+</div>
+{% endblock breadcrumb %}
+
+{% block extracss %}
+    <link rel="stylesheet" href="{% static 'css/cards.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #f5f5f5; /* Fundo mais agradável visualmente */
+        }
+
+        .problem-form {
+            background-color: #ffffff; /* Cor de fundo do formulário */
+            border: 2px solid #28a745; /* Borda verde */
+            border-radius: 15px; /* Cantos arredondados */
+            padding: 30px; /* Aumentado para mais espaçamento interno */
+            max-width: 600px; /* Largura máxima do formulário */
+            margin: 30px auto; /* Centraliza o formulário com margem */
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        }
+
+        .section-title {
+            text-align: center; /* Centraliza o título da seção */
+            font-size: 28px; /* Tamanho da fonte do título */
+            margin-bottom: 20px; /* Margem inferior */
+            color: #333; /* Cor do texto */
+        }
+
+        .plantio-info {
+            background-color: #e9f5e9; /* Fundo leve para destacar */
+            border: 1px solid #28a745; /* Borda verde */
+            border-radius: 10px; /* Cantos arredondados */
+            padding: 15px; /* Espaçamento interno */
+            margin-bottom: 20px; /* Margem inferior */
+            text-align: center; /* Centraliza o texto */
+        }
+
+        .plantio-name {
+            font-weight: bold; /* Texto em negrito */
+            font-size: 20px; /* Tamanho da fonte do plantio selecionado */
+            color: #28a745; /* Cor verde */
+        }
+
+        .form-group {
+            margin-bottom: 15px; /* Margem inferior para cada grupo de formulário */
+        }
+
+        .form-textarea {
+            width: 100%; /* Largura completa do textarea */
+            border: 1px solid #ccc; /* Borda cinza */
+            border-radius: 8px; /* Cantos arredondados */
+            padding: 15px; /* Aumentado para mais espaçamento interno */
+            font-size: 18px; /* Tamanho da fonte aumentado */
+            resize: vertical; /* Permite redimensionar verticalmente */
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra interna */
+        }
+
+        .btn-submit {
+            background-color: #28a745; /* Cor do botão */
+            color: white; /* Cor do texto do botão */
+            border: none; /* Remove a borda */
+            border-radius: 8px; /* Cantos arredondados */
+            padding: 12px 25px; /* Espaçamento interno do botão */
+            font-size: 20px; /* Tamanho da fonte do botão */
+            cursor: pointer; /* Muda o cursor ao passar o mouse */
+            transition: background-color 0.3s, transform 0.2s; /* Transições suaves */
+        }
+
+        .btn-submit:hover {
+            background-color: #218838; /* Cor do botão ao passar o mouse */
+            transform: translateY(-2px); /* Levanta o botão ao passar o mouse */
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px); /* Efeito de pressão ao clicar */
+        }
+    </style>
+{% endblock extracss %}
+
+{% block content %}
+<h2 class="section-title">Detalhes do Problema</h2>
+<div class="plantio-info">
+    <p><strong>Plantio Selecionado:</strong> <span class="plantio-name">{{ plantio_selecionado }}</span></p>
+</div>
+<form method="post" class="problem-form">
+    {% csrf_token %}
+    <div class="form-group">
+        <textarea id="detalhes" name="detalhes" rows="6" placeholder="Descreva o problema..." class="form-textarea"></textarea>
+    </div>
+    <button type="submit" class="btn btn-submit">Enviar</button>
+</form>
+{% endblock content %}
+    

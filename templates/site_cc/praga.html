@@ -39,16 +39,6 @@
             padding: 0; /* Remover padding adicional para manter a mesma largura */
         }
 
-
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 30px;
-            margin: 40px auto;
-            max-width: 1200px; /* Definido para manter o tamanho ideal */
-            padding: 20px;
-        }
-
         .card {
             background-color: #ffffff;
             border-radius: 15px;
@@ -57,6 +47,8 @@
             padding: 30px; /* Aumentado para deixar o conteúdo mais espaçado */
             transition: transform 0.3s, box-shadow 0.3s;
             overflow: hidden; /* Mantém a borda redonda */
+            text-decoration: none; /* Remove o sublinhado do link */
+            color: inherit; /* Mantém a cor do texto */
         }
 
         .card:hover {
@@ -105,28 +97,39 @@
 
 {% block content %}
 <div class="info-box">
-    Selecione o plantio que esta sendo afetado
+    Selecione o plantio que está sendo afetado
 </div>
 <div class="card-container">
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-seedling"></i></div> <!-- Batata -->
-        <div class="card-title">Batata</div>
-    </div>
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-carrot"></i></div> <!-- Cenoura -->
-        <div class="card-title">Cenoura</div>
-    </div>
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-apple-alt"></i></div> <!-- Tomate -->
-        <div class="card-title">Tomate</div>
-    </div>
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-leaf"></i></div> <!-- Alface -->
-        <div class="card-title">Alface</div>
-    </div>
-    <div class="card">
-        <div class="card-icon"><i class="fas fa-spa"></i></div> <!-- Rúcula -->
-        <div class="card-title">Rúcula</div>
-    </div>
+    <a href="{% url 'site_cc:detalhes_problema' %}?plantio=Batata">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-seedling"></i></div> <!-- Batata -->
+            <div class="card-title">Batata</div>
+        </div>
+    </a>
+    <a href="{% url 'site_cc:detalhes_problema' %}?plantio=Cenoura">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-carrot"></i></div> <!-- Cenoura -->
+            <div class="card-title">Cenoura</div>
+        </div>
+    </a>
+    <a href="{% url 'site_cc:detalhes_problema' %}?plantio=Tomate">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-apple-alt"></i></div> <!-- Tomate -->
+            <div class="card-title">Tomate</div>
+        </div>
+    </a>
+    <a href="{% url 'site_cc:detalhes_problema' %}?plantio=Alface">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-leaf"></i></div> <!-- Alface -->
+            <div class="card-title">Alface</div>
+        </div>
+    </a>
+    <a href="{% url 'site_cc:detalhes_problema' %}?plantio=Rucula">
+        <div class="card">
+            <div class="card-icon"><i class="fas fa-spa"></i></div> <!-- Rúcula -->
+            <div class="card-title">Rúcula</div>
+        </div>
+    </a>
 </div>
+
 {% endblock content %}

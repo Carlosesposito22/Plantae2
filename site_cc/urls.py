@@ -17,6 +17,7 @@ urlpatterns = [
     path("all-event-list/", views.all_events_list, name="all_events"),    
     path("running-event-list/", views.running_events_list, name="running_events"), 
     path('praga/', views.praga, name='praga'),
+    path('detalhes_problema/', views.detalhes_problema, name='detalhes_problema'),
     path('recomendacao/', views.recomendacao, name='recomendacao'),
     path("event/plantio/<int:plantio_event_id>/create_colheita/", views.create_colheita_event, name="create_colheita_event"),
 

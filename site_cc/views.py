@@ -547,7 +547,13 @@ def tempo(request):
 
 def praga(request):
     return render(request, 'site_cc/praga.html')
-    
+
+def detalhes_problema(request):
+    # Captura o parâmetro 'plantio' da URL
+    plantio_selecionado = request.GET.get('plantio', 'Nenhum plantio selecionado')  # Valor padrão caso não seja passado
+    return render(request, 'site_cc/detalhes_problema.html', {
+        'plantio_selecionado': plantio_selecionado,
+    })
 
 def recomendacao(request):
     resultado = None
