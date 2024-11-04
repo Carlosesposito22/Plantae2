@@ -77,7 +77,11 @@
     <div class="coluna-ongoing col-md-3">
         <h4 class="mb-4">Eventos em andamento</h4>
         {% for event in events_month %}
-          <div class="fc-event" data-event-id="{{ event.id }}">
+        <div class="fc-event" data-event-id="{{ event.id }}" data-end-date="{{ event.end_time|date:"Y-m-d" }}" data-type="{{ event.type }}">
+
+            {% if event.end_time|date:"Y-m-d" == today and event.type == "Colheita" %}
+                <span class="deadline-icon" id="deadlineIcon-{{ event.id }}" style="cursor: pointer;">⚠️</span> <!-- Ícone de prazo final -->
+            {% endif %}
               <h4>{{ event.title }}</h4>
               <p><strong>Tipo: </strong>{{ event.type }}</p>
               <p><strong>Cultura: </strong>{{ event.cultura }}</p>
@@ -167,6 +171,7 @@
             </div>
         </div>
     </div>
+    
 
     <!-- Modal para Detalhes do Evento -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
@@ -220,6 +225,25 @@
         </div>
     </div>
 </div>
+<!-- Modal genérico -->
+<div class="modal fade" id="genericModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">Informação</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="genericModalMessage" style="font-weight: bold; color: #333;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 {{ previsoes|json_script:"weatherData" }}
 
@@ -259,14 +283,6 @@
             const eventType = document.querySelector('#id_type').value;
             const cultura = document.querySelector('#id_cultura').value;
             const eventId = document.getElementById('id_event_id').value;
-
-            const CULTURA_PRAZOS = {
-                'Tomate': 105,
-                'Cenoura': 85,
-                'Alface': 38,
-                'Batata': 105,
-                'Rúcula': 35,
-            };
 
             // Apenas mostra o modal de recomendação se for um novo evento de "Plantio"
             if (!eventId && eventType === "Plantio" && CULTURA_PRAZOS[cultura]) {
@@ -446,6 +462,35 @@
             }
         });
 
+        // Exibe o ícone de prazo final e configura o clique para abrir o modal de recomendação
+        const today = new Date().toISOString().split('T')[0];
+        document.querySelectorAll('.fc-event').forEach(event => {
+            const endDate = event.getAttribute('data-end-date');
+            const eventType = event.getAttribute('data-type');
+            
+            if (endDate === today && eventType === "Colheita") {
+                let deadlineIcon = event.querySelector('.deadline-icon');
+                
+                if (!deadlineIcon) {
+                    // Adiciona o ícone se ele não existir
+                    deadlineIcon = document.createElement('span');
+                    deadlineIcon.className = 'deadline-icon';
+                    deadlineIcon.textContent = '⚠️';
+                    deadlineIcon.style.cursor = 'pointer';
+                    event.prepend(deadlineIcon);
+                }
+
+                // Configura o clique no ícone
+                deadlineIcon.addEventListener('click', function() {
+                    // Aqui você pode personalizar a mensagem a ser exibida no modal
+                    const eventId = event.getAttribute('data-event-id');
+                    const message = `Você clicou no evento com ID: ${eventId}.`; // Mensagem personalizada
+                    document.getElementById('genericModalMessage').textContent = message;
+                    $('#genericModal').modal('show'); // Abre o modal
+                });
+            }
+        });
+
         // Funções de Utilidade
         function converterDataParaDjangoFormat(data) {
             const dataJS = new Date(data);
@@ -483,4 +528,5 @@
         }
     });
 </script>
+
 {% endblock extrascripts %}

@@ -284,7 +284,7 @@ def recomendacao(request):
             'Não posso responder sobre esse tema, fui treinado apenas para práticas agrícolas.'
             """
 
-            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {plantas} ou de não serem compatíveis, caso as plantas compitam por mesmos nutrientes informe quais são e de dicas de como melhorar o solo caso mesmo assim a pessoa queira plantar, essas dicas precisam ser com materiais fáceis de encontrar, de preferência encontrados em casa."
+            prompt_geracao = f"Escreva um texto de 8 linhas onde fala sobre {planta}, focando em informações sobre sua compatibilidade com estas plantas, explicando o motivo da compatibilidade {resultado['se_da_bem']} ou de não serem compatíveis. Se houver competição por nutrientes, informe quais são e sugira maneiras de melhorar o solo com materiais caseiros."
 
             try:
                 model = genai.GenerativeModel('gemini-pro')
@@ -295,7 +295,17 @@ def recomendacao(request):
                     texto_gerado = "Nenhuma informação válida gerada sobre a planta."
             except Exception as e:
                 print(f"Erro ao gerar texto: {e}")
+                texto_gerado = "Erro ao gerar texto de recomendação."
 
+    # Se a requisição for AJAX, retorna o JSON com o texto gerado
+    if request.is_ajax():
+        return JsonResponse({
+            'planta': planta,
+            'resultado': resultado,
+            'texto_gerado': texto_gerado if texto_gerado else "Nenhum texto gerado pela IA.",
+        })
+
+    # Caso contrário, renderiza a página HTML
     contexto = {
         'plantas': plantas.keys(),
         'planta': planta,
@@ -304,7 +314,6 @@ def recomendacao(request):
     }
 
     return render(request, 'site_cc/recomendacao.html', contexto)
-
 
 def all_events_list(request):
     events = Event.objects.get_all_events(user=request.user)
