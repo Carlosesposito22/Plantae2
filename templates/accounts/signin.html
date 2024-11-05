@@ -1,64 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
-	{% load static %}
-    <head>
-        
+{% load static %}
 
-        <link rel="stylesheet" href="{% static 'css/accounts.css' %}" />
-    </head>
-    <body>
-        <header>
-            <img src="{% static 'images/logo.png' %}" alt="logo" width="150px">
-        </header>
-        <section class="ftco-section">
-            <div class="container">
-                <div class="row justify-content-center">
+<head>
+    <link rel="stylesheet" href="{% static 'css/accounts.css' %}" />
+</head>
+
+<body>
+    <section class="ftco-section">
+        <div class="img-holder">
+            <img class="login-img" src="{% static 'images\ai-generated-8703672_1280.jpg' %}"></img>
+        </div>
+        <div class="container">
+            <h3><strong>Entre na sua conta</strong></h3>
+            <p>Acesse o melhor portal do Brasil</p>
+
+            <div class="login-register-holder-changer">
+                <a class="loginactive">Login</a>
+                <a class="registerinactive">Cadastro</a>
+            </div>
+
+            <form action="#" method="post" class="signup-form">
+                {% csrf_token %}
+                <div class="row">
                     <div class="col-md-12">
-                        <div class="wrap d-md-flex">
-                            <div class="text-wrap p-4 p-lg-5 d-flex img" style="background: url({% static 'images\ai-generated-8703672_1280.jpg' %}); background-position: center; background-size: cover; background-repeat: no-repeat;">
-                                <div class="text w-100">
-                                </div>
-                            </div>
-                            <div class="login-wrap p-4 p-md-5">
-                                <div class="row justify-content-center py-md-5">
-                                    <div class="col-lg-9">
-                                        <div class="social-wrap">
-                                            
-                                           
-                                        </div>
-                                        <form action="#" method="post" class="signup-form">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="label" for="email">E-mail</label>
-                                                        {{ form.email }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="label" for="password">Senha</label>
-                                                        {{ form.password }}
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary">Entrar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="w-100">
-                                            <p class="mt-4">Não tem cadastro ainda? <a href="{% url 'accounts:signup' %}">Cadastrar</a></p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="form-group">
+                            {{ form.email }}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            {{ form.password }}
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
                         </div>
                     </div>
                 </div>
+            </form>
+            <div class="w-100">
+                <p>Não tem cadastro ainda? <a href="{% url 'accounts:signup' %}">Cadastrar</a></p>
             </div>
-        </section>
-        {% include 'base/js.html' %}
-    </body>
+        </div>
+    </section>
+    {% include 'base/js.html' %}
+</body>
+
 </html>

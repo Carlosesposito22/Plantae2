@@ -13,72 +13,61 @@
         <link rel="stylesheet" href="{% static 'css/accounts.css' %}" />
     </head>
     <body>
-        <header>
-            <img src="{% static 'images/logo.png' %}" alt="logo" width="150px">
-        </header>
+
         <section class="ftco-section">
+            <div class="img-holder">
+                <img class="login-img" src="{% static 'images\ai-generated-8703672_1280.jpg' %}"></img>
+            </div>
             <div class="container">
-                <div class="row justify-content-center">
-                    <div class="col-md-12">
-                        <div class="wrap d-md-flex">
-                            <div class="text-wrap p-4 p-lg-5 d-flex img" style="background-image: url({% static 'images/agricultor.jpg' %});">
-                                <div class="text w-100" style="color: white; padding: 10px; border-radius: 5px;">
-                                    <h2 class="mb-4" style="color: white;">Bem-vindo ao Plantaê</h2>
-                                    <p>Organize suas atividades, receba alertas climáticos e descubra quais plantações têm afinidade ou não com as que você busca, tudo em um só lugar.</p>
-                                </div>
+                <h3><strong>Crie a sua conta</strong></h3>
+                <p>Acesse o melhor portal do Brasil</p>
+    
+                <div class="login-register-holder-changer">
+                    <a class="logininactive">Login</a>
+                    <a class="registeractive">Cadastro</a>
+                </div>
+    
+                <form action="#" method="post" class="signup-form">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.email }}
+                                <span class="text-danger">{{ form.errors.email }}</span>
                             </div>
-                            <div class="login-wrap p-4 p-md-5">
-                                <div class="row justify-content-center py-md-5">
-                                        <form action="#" method="post" class="signup-form">
-                                            {% csrf_token %}
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="label" for="email">E-mail</label>
-                                                        {{ form.email }}
-                                                        <span class="text-danger">{{ form.errors.email }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="label" for="password">Senha</label>
-                                                        {{ form.password1 }}
-                                                        <span class="text-danger">{{ form.errors.password1 }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <label class="label" for="password">Confirme a senha</label>
-                                                        {{ form.password2 }}
-                                                        <span class="text-danger">{{ form.errors.password2 }}</span>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12 my-4">
-                                                    <div class="form-group">
-                                                        <div class="w-100">
-                                                            <label class="checkbox-wrap checkbox-primary">
-                                                                Eu concordo com todos os termos de serviço.
-                                                                <input type="checkbox" checked />
-                                                                <span class="checkmark"></span>
-                                                            </label>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <button type="submit" class="btn btn-primary">Criar conta</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                        <div class="w-100">
-                                            <p class="mt-4">Já é membro? <a href="{% url 'accounts:signin' %}">Entrar</a></p>
-                                        </div>
-                                    </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.password1 }}
+                                <span class="text-danger">{{ form.errors.password1 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                {{ form.password2 }}
+                                <span class="text-danger">{{ form.errors.password2 }}</span>
+                            </div>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="w-100">
+                                    <label class="checkbox-wrap checkbox-primary">
+                                        Eu concordo com todos os termos de serviço.
+                                        <input type="checkbox" checked />
+                                        <span class="checkmark"></span>
+                                    </label>
                                 </div>
                             </div>
                         </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">Finalizar cadastro</button>
+                            </div>
+                        </div>
                     </div>
+                </form>
+                <div class="w-100">
+                    <p>Já tem uma conta? <a href="{% url 'accounts:signup' %}">Login</a></p>
                 </div>
             </div>
         </section>

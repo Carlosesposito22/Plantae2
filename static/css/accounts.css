@@ -4,6 +4,9 @@
  * Copyright 2011-2019 Twitter, Inc.
  * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE)
  */
+
+ @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,200..1000;1,6..12,200..1000&family=Outfit:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
   --blue: #007bff;
   --indigo: #6610f2;
@@ -57,7 +60,8 @@ body {
   line-height: 1.5;
   color: #212529;
   text-align: left;
-  background-color: #fff; }
+  background-color: #fff;
+}
 
 [tabindex="-1"]:focus {
   outline: 0 !important; }
@@ -69,12 +73,11 @@ hr {
   overflow: visible; }
 
 h1, h2, h3, h4, h5, h6 {
-  margin-top: 0;
-  margin-bottom: 0.5rem; }
+  margin-top: 0; }
 
 p {
   margin-top: 0;
-  margin-bottom: 1rem; }
+}
 
 abbr[title],
 abbr[data-original-title] {
@@ -447,11 +450,13 @@ pre {
   overflow-y: scroll; }
 
 .container {
-  width: 100%;
+  width: 25%;
   padding-right: 15px;
   padding-left: 15px;
   margin-right: auto;
-  margin-left: auto; }
+  margin-left: auto;
+  height: fit-content;
+}
   @media (min-width: 576px) {
     .container {
       max-width: 540px; } }
@@ -8153,7 +8158,6 @@ a {
 
 h1, h2, h3, h4, h5,
 .h1, .h2, .h3, .h4, .h5 {
-  line-height: 1.5;
   font-weight: 400;
   font-family: "Roboto", Arial, sans-serif;
   color: #000; }
@@ -8162,7 +8166,12 @@ h1, h2, h3, h4, h5,
   background: #6807f9 !important; }
 
 .ftco-section {
-  padding: 7em 0; }
+  display: flex;
+  flex-direction: row;
+  height: 100vh !important;
+  align-items: center;
+  justify-content: center;
+}
 
 .ftco-no-pt {
   padding-top: 0; }
@@ -8388,9 +8397,11 @@ textarea.form-control {
   .btn:hover, .btn:active, .btn:focus {
     outline: none; }
   .btn.btn-primary {
-    background: var(--green) !important;
-    border: 1px solid #6807f9 !important;
-    color: #fff !important;
+    background: black !important;
+    border: none !important;
+    color: white !important;
+    width: 100% !important;
+    border-radius: 2rem !important;
     -webkit-box-shadow: 0px 10px 19px -16px rgba(0, 0, 0, 0.29) !important;
     -moz-box-shadow: 0px 10px 19px -16px rgba(0, 0, 0, 0.29) !important;
     box-shadow: 0px 10px 19px -16px rgba(0, 0, 0, 0.29) !important; }
@@ -8406,3 +8417,57 @@ textarea.form-control {
         border: 1px solid transparent;
         background: #6807f9;
         color: #fff; }
+
+        .login-register-holder-changer{
+          display: flex;
+          flex-direction: row;
+          background-color: #F2F7F2;
+          padding: 0.3rem;
+          justify-content: space-between;
+          border-radius: 4rem;
+          align-items: center;
+        }
+
+        .loginactive{
+          background-color: #AFE507 !important;
+          padding: 0.5rem 3rem;
+          color: black !important;
+          border-radius: 2rem;
+          width: 50%;
+          text-align: center;
+
+        }
+
+        .logininactive{
+          padding-left: 1rem;
+          padding-right: 1rem;
+          color: #666666 !important;
+          width: 50%;
+          text-align: center;
+        }
+
+        .registerinactive{
+          padding-left: 1rem;
+          padding-right: 1rem;
+          color: #666666 !important;
+          width: 50%;
+          text-align: center;
+        }
+
+        .registeractive{
+          background-color: #AFE507 !important;
+          padding: 0.5rem 3rem;
+          color: black !important;
+          border-radius: 2rem;
+          width: 50%;
+          text-align: center;
+
+        }
+
+        .img-holder{
+          overflow: hidden;
+          border-top-right-radius: 2.5rem;
+          border-bottom-right-radius: 2.5rem;
+          height: 100vh;
+          width: 40%;
+        }
