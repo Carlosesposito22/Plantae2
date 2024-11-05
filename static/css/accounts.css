@@ -8426,6 +8426,7 @@ textarea.form-control {
           justify-content: space-between;
           border-radius: 4rem;
           align-items: center;
+          margin-bottom: 1rem;
         }
 
         .loginactive{
@@ -8470,4 +8471,29 @@ textarea.form-control {
           border-bottom-right-radius: 2.5rem;
           height: 100vh;
           width: 40%;
+        }
+
+        .form-control{
+          border-top-right-radius: 2rem;
+          border-bottom-right-radius: 2rem;
+        }
+
+
+        .icon-form{
+          background-color: rgba(0, 0, 0, 0.03);
+          padding-left: 1rem;
+          border-top-left-radius: 2rem;
+          border-bottom-left-radius: 2rem;
+          height: 50px;
+          text-align: center;
+          display: flex;
+          flex-direction: row;
+          gap: 0.5rem;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .vr{
+          height: 60%;
+          border-color: #999999;
         }
