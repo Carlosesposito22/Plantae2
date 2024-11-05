@@ -792,14 +792,12 @@ def recomendacao(request):
                 print(f"Erro ao gerar texto: {e}")
                 texto_gerado = "Erro ao gerar texto de recomendação."
 
-    # Se a requisição for AJAX, retorna o JSON com o texto gerado
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         return JsonResponse({
             'planta': planta,
             'resultado': resultado,
             'texto_gerado': texto_gerado if texto_gerado else "Nenhum texto gerado pela IA.",
         })
-
     # Caso contrário, renderiza a página HTML
     contexto = {
         'plantas': plantas.keys(),
