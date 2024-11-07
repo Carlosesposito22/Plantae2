@@ -77,23 +77,29 @@
     <div class="coluna-ongoing col-md-3">
         <h4 class="mb-4">Eventos em andamento</h4>
         {% for event in events_month %}
-        <div class="fc-event" data-event-id="{{ event.id }}" data-end-date="{{ event.end_time|date:"Y-m-d" }}" data-type="{{ event.type }}">
+            <div class="fc-event" 
+                data-event-id="{{ event.id }}" 
+                data-end-date="{{ event.end_time|date:"Y-m-d" }}" 
+                data-type="{{ event.type }}" 
+                data-cultura="{{ event.cultura }}"> <!-- Adiciona data-cultura -->
 
-            {% if event.end_time|date:"Y-m-d" == today and event.type == "Colheita" %}
-                <span class="deadline-icon" id="deadlineIcon-{{ event.id }}" style="cursor: pointer;">⚠️</span> <!-- Ícone de prazo final -->
-            {% endif %}
-              <h4>{{ event.title }}</h4>
-              <p><strong>Tipo: </strong>{{ event.type }}</p>
-              <p><strong>Cultura: </strong>{{ event.cultura }}</p>
-              <p><strong>Local: </strong>{{ event.local }}</p>
-              <p><strong>Descrição: </strong>{{ event.description }}</p>
-              <p><strong>Data Início: </strong>{{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
-              <p><strong>Data Fim: </strong>{{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
-              <p><strong>Duração: </strong>{{ event.duration }}</p>
-          </div>
+                {% if event.end_time|date:"Y-m-d" == today and event.type == "Colheita" %}
+                    <span class="deadline-icon" id="deadlineIcon-{{ event.id }}" style="cursor: pointer;">⚠️</span> <!-- Ícone de prazo final -->
+                {% endif %}
+                
+                <h4>{{ event.title }}</h4>
+                <p><strong>Tipo: </strong>{{ event.type }}</p>
+                <p><strong>Cultura: </strong>{{ event.cultura }}</p>
+                <p><strong>Local: </strong>{{ event.local }}</p>
+                <p><strong>Descrição: </strong>{{ event.description }}</p>
+                <p><strong>Data Início: </strong>{{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
+                <p><strong>Data Fim: </strong>{{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
+                <p><strong>Duração: </strong>{{ event.duration }}</p>
+            </div>
         {% empty %}
-          <p>Nenhuma cultura em andamento</p>
+            <p>Nenhuma cultura em andamento</p>
         {% endfor %}
+
     </div>
     <div class="col-md-9">
         <div id="calendar"></div>
@@ -231,7 +237,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-white">Informação</h5>
+                <h5 class="modal-title text-white" id="genericModalTitle">Informação</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -522,17 +528,16 @@
             }
         });
 
-        // Exibe o ícone de prazo final e configura o clique para abrir o modal de recomendação
         const today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('.fc-event').forEach(event => {
             const endDate = event.getAttribute('data-end-date');
             const eventType = event.getAttribute('data-type');
-            
+            const cultura = event.getAttribute('data-cultura'); // Identifica a cultura
+
             if (endDate === today && eventType === "Colheita") {
                 let deadlineIcon = event.querySelector('.deadline-icon');
-                
+
                 if (!deadlineIcon) {
-                    // Adiciona o ícone se ele não existir
                     deadlineIcon = document.createElement('span');
                     deadlineIcon.className = 'deadline-icon';
                     deadlineIcon.textContent = '⚠️';
@@ -542,14 +547,35 @@
 
                 // Configura o clique no ícone
                 deadlineIcon.addEventListener('click', function() {
-                    // Aqui você pode personalizar a mensagem a ser exibida no modal
-                    const eventId = event.getAttribute('data-event-id');
-                    const message = `Você clicou no evento com ID: ${eventId}.`; // Mensagem personalizada
-                    document.getElementById('genericModalMessage').textContent = message;
-                    $('#genericModal').modal('show'); // Abre o modal
+                    fetch(`/alerta_colheita?cultura=${encodeURIComponent(cultura)}`)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Erro na resposta da rede');
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            // Verifica se o texto foi gerado com sucesso
+                            const modalTitle = document.querySelector('#genericModal .modal-title');
+                            const modalMessage = document.querySelector('#genericModalMessage');
+                            if (data.texto_gerado) {
+                                modalTitle.textContent = `Alerta de Colheita - ${data.cultura}`;
+                                modalMessage.textContent = data.texto_gerado;
+                            } else {
+                                modalMessage.textContent = "Nenhuma informação gerada sobre a colheita.";
+                            }
+                            $('#genericModal').modal('show'); // Abre o modal
+                        })
+                        .catch(error => {
+                            console.error('Erro ao carregar o alerta de colheita:', error);
+                            document.getElementById('genericModalMessage').textContent = "Erro ao carregar informações de colheita.";
+                            $('#genericModal').modal('show'); // Exibe mensagem de erro no modal
+                        });
                 });
             }
         });
+
+
 
         // Funções de Utilidade
         function converterDataParaDjangoFormat(data) {

@@ -868,7 +868,7 @@ def calendar_view_new(request, event_id=None):
             "id": event.id,
             "title": event.title,
             "type": event.type,
-            "cultura": event.cultura,
+            "cultura": event.cultura,  # Certifique-se de que a cultura está incluída aqui
             "local": event.local,
             "start": event.start_time.strftime("%Y-%m-%dT%H:%M:%S"),
             "end": event.end_time.strftime("%Y-%m-%dT%H:%M:%S"),
@@ -917,3 +917,49 @@ def calendar_view_new(request, event_id=None):
     return render(request, "site_cc/calendar.html", context)
 
 
+from django.http import JsonResponse
+import google.generativeai as genai
+
+def alerta_colheita(request):
+    texto_gerado = None
+    cultura = request.GET.get('cultura')
+    
+    # Log para confirmar a cultura recebida
+    print(f"Cultura recebida para o alerta de colheita: {cultura}")
+
+    if cultura:
+        cultura = cultura.capitalize()
+        
+        # Prompt para geração de texto
+        prompt_geracao = (
+            f"Escreva um texto de 8 linhas sobre a cultura {cultura}, "
+            "focando em dicas de colheita, cuidados finais antes de colher e sinais de maturidade. "
+            "Explique se há necessidade de melhorar o solo após a colheita e como fazer isso com compostos caseiros."
+        )
+
+        try:
+            # Instancia o modelo e tenta gerar o conteúdo
+            model = genai.GenerativeModel('gemini-pro')
+            response = model.generate_content(prompt_geracao)
+            
+            # Verifica se a resposta foi gerada
+            if response and response.text:
+                texto_gerado = response.text.strip()
+                print(f"Texto gerado pela IA: {texto_gerado}")
+            else:
+                texto_gerado = "Nenhuma informação válida gerada pela IA para essa cultura."
+                print("A IA não gerou uma resposta válida.")
+
+        except Exception as e:
+            print(f"Erro ao gerar texto: {e}")
+            texto_gerado = "Erro ao gerar texto de alerta de colheita."
+
+    else:
+        texto_gerado = "Cultura não especificada."
+        print("Cultura não foi passada no request.")
+
+    # Retorna o JSON com status HTTP 200 explicitamente
+    return JsonResponse({
+        'cultura': cultura,
+        'texto_gerado': texto_gerado,
+    }, status=200)
