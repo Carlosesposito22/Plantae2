@@ -57,25 +57,48 @@
         background-color: #515151;
     }
 
-    .day-icon {
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
+    .day-icon, .moon-icon {
+        font-size: 100px;
         position: absolute;
-        top: 5px;
-        left: 5px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        cursor: pointer;
+        color: green !important;
+    }
+
+    .mode-buttons {
+        margin-top: 10px;
+    }
+
+    .mode-buttons button.active {
+        background-color: #4D933E !important;
+        color: white !important;
+    }
+
+    #addEventButtonContainer {
+        margin-top: 10px;
     }
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
 <h1><i class="fa fa-calendar"></i> Calendário</h1>
+
+<div class="mode-buttons">
+    <button id="modeEventos" class="btn btn-primary active">Eventos</button>
+    <button id="modeTempo" class="btn btn-primary active">Clima</button>
+    <button id="modeFasesLua" class="btn btn-primary active">Fases da Lua</button>
+</div>
 {% endblock breadcrumb %}
 
 {% block content %}
 <div class="row">
     <div class="coluna-ongoing col-md-3">
         <h4 class="mb-4">Eventos em andamento</h4>
+        <div id="addEventButtonContainer">
+            <button id="addEventButton" class="btn btn-success">Adicionar Evento</button>
+        </div>
         {% for event in events_month %}
             <div class="fc-event" 
                 data-event-id="{{ event.id }}" 
@@ -231,7 +254,30 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal para Detalhes da Fase da Lua -->
+    <div class="modal fade" id="moonPhaseModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="moonModalDate"></h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p><strong>Fase da Lua:</strong> <span id="moonModalPhase"></span></p>
+                    <p><strong>Iluminação:</strong> <span id="moonModalIllumination"></span>%</p>
+                    <p><strong>Fluxo da Seiva:</strong> <span id="moonModalSapFlow"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
 <!-- Modal genérico -->
 <div class="modal fade" id="genericModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -252,7 +298,9 @@
     </div>
 </div>
 
+
 {{ previsoes|json_script:"weatherData" }}
+{{ fases_lua|json_script:"moonPhaseData" }}
 
 {% endblock content %}
 {% block extrascripts %}
@@ -267,6 +315,7 @@
     };
     
     document.addEventListener('DOMContentLoaded', function() {
+        let currentMode = 'eventos';
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -282,6 +331,71 @@
             return cookieValue;
         }
         const csrftoken = getCookie('csrftoken');
+
+        const modeEventosButton = document.getElementById('modeEventos');
+        const modeTempoButton = document.getElementById('modeTempo');
+        const modeFasesLuaButton = document.getElementById('modeFasesLua');
+
+        modeEventosButton.addEventListener('click', function() {
+            currentMode = 'eventos';
+            modeEventosButton.classList.add('active');
+            modeTempoButton.classList.remove('active');
+            modeFasesLuaButton.classList.remove('active');
+            updateCalendarMode();
+        });
+
+        modeTempoButton.addEventListener('click', function() {
+            currentMode = 'tempo';
+            modeTempoButton.classList.add('active');
+            modeEventosButton.classList.remove('active');
+            modeFasesLuaButton.classList.remove('active');
+            updateCalendarMode();
+        });
+
+        modeFasesLuaButton.addEventListener('click', function() {
+            currentMode = 'fases_lua';
+            modeFasesLuaButton.classList.add('active');
+            modeEventosButton.classList.remove('active');
+            modeTempoButton.classList.remove('active');
+            updateCalendarMode();
+        });
+
+        function updateCalendarMode() {
+            const ongoingEventsColumn = document.querySelector('.coluna-ongoing');
+            const addEventButton = document.getElementById('addEventButton');
+            
+            if (currentMode === 'eventos') {
+                calendar.setOption('selectable', false);
+                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.getEvents().forEach(event => event.setProp('display', 'auto'));
+                ongoingEventsColumn.style.display = 'block';
+                addEventButton.style.display = 'inline-block';
+                document.querySelectorAll('.day-icon, .moon-icon').forEach(icon => icon.remove());
+            } else if (currentMode === 'tempo') {
+                calendar.setOption('selectable', false);
+                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.getEvents().forEach(event => event.setProp('display', 'none'));
+                ongoingEventsColumn.style.display = 'none';
+                addEventButton.style.display = 'none';
+                document.querySelectorAll('.moon-icon').forEach(icon => icon.remove());
+                renderWeatherIcons();
+            } else if (currentMode === 'fases_lua') {
+                calendar.setOption('selectable', false);
+                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.getEvents().forEach(event => event.setProp('display', 'none'));
+                ongoingEventsColumn.style.display = 'none';
+                addEventButton.style.display = 'none';
+                document.querySelectorAll('.day-icon').forEach(icon => icon.remove());
+                renderMoonPhaseIcons();
+            }
+        }
+
+        document.getElementById('addEventButton').addEventListener('click', function() {
+            document.getElementById('id_event_id').value = "";
+            document.getElementById('id_start_time').value = "";
+            document.getElementById('id_end_time').value = "";
+            $('#eventModal').modal('show');
+        });
 
         $('#recommendationModal').modal({
             backdrop: 'static',
@@ -371,10 +485,11 @@
 
         var calendarEl = document.getElementById('calendar');
         var previsoes = JSON.parse(document.getElementById('weatherData').textContent);
+        var fasesLua = JSON.parse(document.getElementById('moonPhaseData').textContent);
         let displayedIconsCount = 0;
         const descriptionIcons = {
             'Possibilidade de chuva irregular': 'wi wi-day-sprinkle',
-            'Ensolarado': 'wi wi-day-sunny',
+            'Sol': 'wi wi-day-sunny',
             'Nublado': 'wi wi-cloudy',
             'Tempestade': 'wi wi-storm-showers',
             'Neve': 'wi wi-snow',
@@ -383,21 +498,115 @@
             'Chuva forte': 'wi wi-rain-wind',
             'Parcialmente nublado': 'wi wi-day-cloudy',
         };
+        const moonPhaseIcons = {
+            'New Moon': 'wi wi-moon-new',
+            'Waxing Crescent': 'wi wi-moon-waxing-crescent-3',
+            'First Quarter': 'wi wi-moon-first-quarter',
+            'Waxing Gibbous': 'wi wi-moon-waxing-gibbous-3',
+            'Full Moon': 'wi wi-moon-full',
+            'Waning Gibbous': 'wi wi-moon-waning-gibbous-3',
+            'Last Quarter': 'wi wi-moon-third-quarter',
+            'Waning Crescent': 'wi wi-moon-waning-crescent-3',
+        };
+        const moonPhaseTranslation = {
+            "New Moon": "Lua Nova",
+            "Waxing Crescent": "Crescente",
+            "First Quarter": "Quarto Crescente",
+            "Waxing Gibbous": "Crescente Gibosa",
+            "Full Moon": "Lua Cheia",
+            "Waning Gibbous": "Minguante Gibosa",
+            "Last Quarter": "Quarto Minguante",
+            "Waning Crescent": "Minguante"
+        };
+        const sapFlowMapping = {
+            'Lua Nova': 'Seiva em baixo',
+            'Crescente': 'Seiva subindo',
+            'Quarto Crescente': 'Seiva subindo',
+            'Crescente Gibosa': 'Seiva em cima',
+            'Lua Cheia': 'Seiva em cima',
+            'Minguante Gibosa': 'Seiva descendo',
+            'Quarto Minguante': 'Seiva descendo',
+            'Minguante': 'Seiva em baixo',
+        };
+
+        function renderWeatherIcons() {
+            document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
+                const dateStr = dayCell.getAttribute('data-date');
+                const forecast = previsoes[dateStr];
+
+                const existingIcon = dayCell.querySelector('.day-icon');
+                if (existingIcon) existingIcon.remove();
+
+                if (forecast) {
+                    const iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
+                    const icon = document.createElement('i');
+                    icon.className = `${iconClass} day-icon`;
+                    icon.style.fontSize = '20px';
+                    icon.style.color = 'green';
+                    icon.style.cursor = 'pointer';
+
+                    icon.onclick = function(event) {
+                        event.stopPropagation();
+                        openWeatherModal(dateStr);
+                    };
+
+                    dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
+                }
+            });
+        }
+
+        function renderMoonPhaseIcons() {
+            document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
+                const dateStr = dayCell.getAttribute('data-date');
+                const moonData = fasesLua[dateStr];
+
+                const existingIcon = dayCell.querySelector('.moon-icon');
+                if (existingIcon) existingIcon.remove();
+
+                if (moonData) {
+                    const phase = moonData.fase_da_lua;
+                    let iconClass = moonPhaseIcons[phase] || 'wi wi-moon-alt-new';
+
+                    const icon = document.createElement('i');
+                    icon.className = `${iconClass} moon-icon`;
+                    icon.style.fontSize = '20px';
+                    icon.style.color = 'purple';
+                    icon.style.cursor = 'pointer';
+
+                    icon.onclick = function(event) {
+                        event.stopPropagation();
+                        openMoonPhaseModal(dateStr);
+                    };
+
+                    dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
+                }
+            });
+        }
+
+        function openMoonPhaseModal(dateStr) {
+            const moonData = fasesLua[dateStr];
+            const faseDaLuaIngles = moonData.fase_da_lua;
+            const faseDaLuaPortugues = moonPhaseTranslation[faseDaLuaIngles] || faseDaLuaIngles;
+
+            if (moonData) {
+                document.getElementById('moonModalDate').textContent = dateStr.split('-').reverse().join('/');
+                document.getElementById('moonModalPhase').textContent = faseDaLuaPortugues;
+                document.getElementById('moonModalIllumination').textContent = moonData.iluminacao;
+                document.getElementById('moonModalSapFlow').textContent = moonData.fluxo_seiva;
+                $('#moonPhaseModal').modal('show');
+            }
+        }
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: 'pt-br',
-            headerToolbar: { 
-                left: 'prev,next today', 
-                center: 'title', 
-                right: 'dayGridMonth,list' 
-            },
             buttonText: {
-                today: 'Hoje',
-                month: 'Mês',
-                list: 'Tarefas do dia'
+                today: 'Atual'
+                //month: 'Mês',
+                //list: 'Tarefas do dia'
             },
             initialDate: new Date(),
-            navLinks: true,
-            selectable: true,
+            navLinks: false,
+            //selectable: true,
             select: function(arg) {
                 document.getElementById('id_event_id').value = "";
                 document.getElementById('id_start_time').value = converterDataParaDjangoFormat(arg.start);
@@ -406,17 +615,19 @@
                 calendar.unselect();
             },
             eventClick: function(arg) {
-                document.getElementById('title_event_detail').textContent = arg.event.title;
-                document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
-                document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
-                document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
-                document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
-                document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
-                document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura';
-                document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível';
-                document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
-                document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
-                $('#detailModal').modal('show');
+                if (currentMode === 'eventos') {
+                    document.getElementById('title_event_detail').textContent = arg.event.title;
+                    document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
+                    document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
+                    document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
+                    document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
+                    document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
+                    document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura';
+                    document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível';
+                    document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
+                    document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
+                    $('#detailModal').modal('show');
+                }
             },
             editable: false,
             dayMaxEvents: true,
@@ -428,45 +639,51 @@
                 }
             },
             dayCellDidMount: function(args) {
-                const dateStr = args.date.toISOString().split('T')[0];
-                const forecast = previsoes[dateStr];
+                if (currentMode === 'tempo') {
+                    const dateStr = args.date.toISOString().split('T')[0];
+                    const forecast = previsoes[dateStr];
 
-                if (forecast && displayedIconsCount < 7) {
-                    const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
+                    if (forecast) {
+                        const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
 
-                    let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
+                        let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
 
-                    const icon = document.createElement('i');
-                    icon.className = `${iconClass} day-icon`;
-                    icon.style.position = 'absolute';
-                    icon.style.top = '5px';
-                    icon.style.left = '5px';
-                    icon.style.fontSize = "20px";
-                    icon.style.cursor = "pointer";
-                    icon.style.color = "green";
+                        const icon = document.createElement('i');
+                        icon.className = `${iconClass} day-icon`;
+                        icon.style.fontSize = '20px';
+                        icon.style.color = 'green';
+                        icon.style.cursor = 'pointer';
 
-                    icon.onclick = function(event) {
-                        event.stopPropagation();
-                        openWeatherModal(dateStr);
-                    };
+                        icon.onclick = function(event) {
+                            event.stopPropagation();
+                            openWeatherModal(dateStr);
+                        };
 
-                    cellContent.appendChild(icon);
-                    displayedIconsCount++;
+                        cellContent.appendChild(icon);
+                    }
                 }
             },
 
             datesSet: function() {
-                displayedIconsCount = 0;
+                if (currentMode === 'tempo') {
+                    renderWeatherIcons();
+                } else if (currentMode === 'fases_lua') {
+                    renderMoonPhaseIcons();
+                } else {
+                    document.querySelectorAll('.day-icon, .moon-icon').forEach(icon => icon.remove());
+                }
             }
         });
 
         calendar.render();
 
+        updateCalendarMode();
+
         window.openWeatherModal = function(dateStr) {
             const forecast = previsoes[dateStr];
             
             if (forecast) {
-                document.getElementById('modalDate').textContent = new Date(dateStr).toLocaleDateString('pt-BR');
+                document.getElementById('modalDate').textContent = dateStr.split('-').reverse().join('/');
                 document.getElementById('modalDescription').textContent = forecast.descricao;
                 document.getElementById('modalTemperature').textContent = `Máx: ${forecast.temperatura_max}°C / Mín: ${forecast.temperatura_min}°C`;
                 document.getElementById('modalHumidity').textContent = `Umidade: ${forecast.umidade}%`;

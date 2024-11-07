@@ -883,6 +883,7 @@ def calendar_view_new(request, event_id=None):
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=30&lang=pt"
     
     previsoes = {}
+    fases_lua = {}
     try:
         requisicao_forecast = requests.get(link_forecast)
         requisicao_forecast.raise_for_status()
@@ -905,6 +906,35 @@ def calendar_view_new(request, event_id=None):
                 'precipitacao': dia['day']['totalprecip_mm'],
                 'indice_uv': dia['day'].get('uv', 'N/A')
             }
+
+            fase_da_lua = dia['astro'].get('moon_phase', 'N/A')
+            iluminacao = dia['astro'].get('moon_illumination', 'N/A')
+
+            fluxo_seiva = ''
+            if fase_da_lua in ['New Moon', 'Lua Nova', 'Lua nova']:
+                fluxo_seiva = 'Seiva em baixo'
+            elif fase_da_lua in ['Waxing Crescent', 'Crescente']:
+                fluxo_seiva = 'Seiva subindo'
+            elif fase_da_lua in ['First Quarter', 'Quarto Crescente']:
+                fluxo_seiva = 'Seiva subindo'
+            elif fase_da_lua in ['Waxing Gibbous', 'Crescente Gibosa']:
+                fluxo_seiva = 'Seiva em cima'
+            elif fase_da_lua in ['Full Moon', 'Lua Cheia', 'Lua cheia']:
+                fluxo_seiva = 'Seiva em cima'
+            elif fase_da_lua in ['Waning Gibbous', 'Minguante Gibosa']:
+                fluxo_seiva = 'Seiva descendo'
+            elif fase_da_lua in ['Last Quarter', 'Quarto Minguante']:
+                fluxo_seiva = 'Seiva descendo'
+            elif fase_da_lua in ['Waning Crescent', 'Minguante']:
+                fluxo_seiva = 'Seiva em baixo'
+            else:
+                fluxo_seiva = 'Informação indisponível'
+
+            fases_lua[data] = {
+                'fase_da_lua': fase_da_lua,
+                'iluminacao': iluminacao,
+                'fluxo_seiva': fluxo_seiva
+            }
     except requests.exceptions.RequestException as e:
         print(f"Erro ao obter previsão do tempo: {e}")
 
@@ -912,7 +942,8 @@ def calendar_view_new(request, event_id=None):
         "form": form,
         "events": event_list,
         "events_month": events_month,
-        "previsoes": previsoes
+        "previsoes": previsoes,
+        "fases_lua": fases_lua
     }
     return render(request, "site_cc/calendar.html", context)
 
