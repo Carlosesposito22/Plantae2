@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
+    <title>Página Inicial</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div class="container text-center mt-5">
-        <h1>Bem-vindo à Página Principal</h1>
-        <p>Acesse o calendário para ver seus eventos.</p>
-        <a href="{% url 'site_cc:calendar' %}" class="btn btn-secondary">Acessar Calendário</a>
+        <h1>Bem-vindo ao Plantae</h1>
+        <p>Para acessar todas as funcionalidades, faça login.</p>
+        <a href="{% url 'accounts:signin' %}" class="btn btn-primary">Fazer Login</a>
     </div>
 </body>
 </html>

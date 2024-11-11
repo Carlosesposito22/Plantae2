@@ -2,8 +2,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from accounts.forms import SignInForm
-
-
 def sign_in_view(request):
     template_name = "accounts/signin.html"
     
@@ -15,10 +13,9 @@ def sign_in_view(request):
             user = authenticate(email=email, password=password)
             if user:
                 login(request, user)
-                return redirect("site_cc:calendar")
+                return redirect("site_cc:mainpage")  # Inclua o namespace do app
     else:
         form = SignInForm()
 
     context = {"form": form}
-    return render(request,template_name, context)
-
+    return render(request, template_name, context)

@@ -994,3 +994,9 @@ def alerta_colheita(request):
         'cultura': cultura,
         'texto_gerado': texto_gerado,
     }, status=200)
+@login_required(login_url="accounts:signin")
+def mainpage_view(request):
+    return render(request, "site_cc/mainpage.html")  # Renderiza o template mainpage.html
+
+def homepage_view(request):
+    return render(request, "site_cc/homepage.html")  # Substitua pelo caminho correto do template
