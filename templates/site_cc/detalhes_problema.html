@@ -95,7 +95,7 @@
         background-color: #28a745; /* Cor do botão */
         color: white; /* Cor do texto do botão */
         border: none; /* Remove a borda */
-        border-radius: 8px; /* Cantos arredondados */
+        border-radius: 2rem; /* Cantos arredondados */
         padding: 12px 25px; /* Espaçamento interno do botão */
         font-size: 20px; /* Tamanho da fonte do botão */
         cursor: pointer; /* Muda o cursor ao passar o mouse */
@@ -105,6 +105,7 @@
     .btn-submit:hover {
         background-color: #218838; /* Cor do botão ao passar o mouse */
         transform: translateY(-2px); /* Levanta o botão ao passar o mouse */
+        color: white;
     }
 
     .btn-submit:active {
@@ -162,7 +163,7 @@
         </div>  
         <input type="hidden" name="plantio" value="{{ plantio_selecionado }}">
         <textarea id="detalhes" name="detalhes" rows="6" placeholder="Descreva o problema..." class="form-textarea"></textarea>
-        <button type="submit" class="btn btn-submit">Quero resolver</button>
+        <button type="submit" class="btn btn-submit">Resolva meu problema <i class="bi bi-send-fill" style="margin-left: 0.8rem;"></i></button>
     </form>
 
     <div class="resultado-container">
