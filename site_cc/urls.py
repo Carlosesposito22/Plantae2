@@ -1,10 +1,13 @@
 from django.urls import path
 from . import views
 from .views import mainpage_view 
+from .views import homepage_view
+
 
 app_name = "site_cc"
 
 urlpatterns = [
+    path("", homepage_view, name="homepage"),
     path("mainpage/", mainpage_view, name="mainpage"),
     path("calender/", views.calendar_view_new, name="calendar"),
     path("calenders/", views.calendar_view, name="calendars"),
