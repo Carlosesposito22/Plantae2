@@ -1,16 +1,352 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Principal</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-</head>
-<body>
-    <div class="container text-center mt-5">
-        <h1>Bem-vindo à Página Principal</h1>
-        <p>Acesse o calendário para ver seus eventos.</p>
-        <a href="{% url 'site_cc:calendar' %}" class="btn btn-secondary">Acessar Calendário</a>
+{% block content %}
+{% include 'navbar.html' %}
+
+<style>
+    p {
+        margin: 0;
+    }
+
+    .container{
+        padding-top: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .card {
+        display: flex;
+        flex-direction: column;
+        align-items: left;
+        justify-content: center;
+        padding: 1rem;
+        padding-left: 2rem;
+        padding-right: 2rem;
+        width: 30rem;
+        gap: 1rem;
+        border-radius: 0;
+        border-top-right-radius: 3rem;
+        border: none;
+    }
+
+    .plantio {
+        font-size: 2rem;
+        font-weight: bold;
+    }
+
+    .fa-circle {
+        font-size: 0.5rem;
+    }
+
+    .navigation {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+    .plantio-e-navigation {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: fit-content;
+    }
+
+    .img-e-detalhes {
+        display: flex;
+        flex-direction: row;
+        gap: 1.5rem;
+        align-items: center;
+    }
+
+    .detalhes {
+        display: flex;
+        flex-direction: column;
+        text-align: left;
+    }
+
+    .plantio-img {
+        background-color: red;
+        border-radius: 4rem;
+        height: 6rem;
+        width: 6rem;
+    }
+
+    .calendario-ul {
+        list-style: none;
+        margin: 0;
+        display: flex;
+        flex-direction: row;
+        padding: 0;
+        gap: 1rem;
+    }
+
+    .calendario-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .plantio-img-lista {
+        background-color: red;
+        height: 3rem;
+        width: 3rem;
+        border-radius: 1.5rem;
+    }
+
+    .datas-calendario-setaBtn {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .seta-btn {
+        margin-bottom: -1rem;
+        background-color: rgb(0, 0, 0);
+        padding: 1rem;
+        padding-left: 1.2rem;
+        padding-right: 1.2rem;
+        border-radius: 3rem;
+    }
+
+    .hold-cards{
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btns-holder{
+        display: flex;
+        flex-direction: column;
+        width: 23rem;
+        gap: 1rem;
+    }
+
+    .gerenciar-culturas{
+        background-color: black;
+        border-radius: 1.5rem;
+        padding: 0.5rem;
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .botoes-debaixo{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .reportar-pragas{
+        background-color: black;
+        border-radius: 1.5rem;
+        padding: 0.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        width: 100%;
+        font-size: 1rem;
+    }
+
+    .adicionar-cultura{
+        background-color: black;
+        border-radius: 1.5rem;
+        padding: 0.5rem;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        width: 100%;
+        font-size: 1rem;
+    }
+</style>
+
+<div class="container">
+
+    <div class="hold-cards">
+        <div class="card shadow-lg" id="plantio-card">
+            <div class="plantio-e-navigation">
+
+                <p class="plantio">Plantio</p>
+
+                <div class="navigation">
+                    <i class="fa-solid fa-angle-left"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+
+            </div>
+
+            <div class="img-e-detalhes">
+
+                <div class="plantio-img">
+                </div>
+
+                <div class="detalhes">
+                    <p class="data">SEGUNDA-FEIRA</p>
+                    <h1 class="evento" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X
+                    </h1>
+                    <p class="status-plantio"
+                        style="background-color: grey; margin-top: -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; color: white; text-align: center; border-radius: 1rem; font-size: 0.8rem;">
+                        STATUS DO PLANTIO</p>
+                </div>
+
+            </div>
+
+            <div class="datas-calendario-setaBtn">
+                <div class="datas-calendario">
+                    <ul class="calendario-ul">
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <a href="" class="seta-btn"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="card shadow-lg" id="clima-card">
+            <div class="plantio-e-navigation">
+
+                <p class="plantio">Clima</p>
+
+                <div class="navigation">
+                    <i class="fa-solid fa-angle-left"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-circle"></i>
+                    <i class="fa-solid fa-angle-right"></i>
+                </div>
+
+            </div>
+
+            <div class="img-e-detalhes">
+
+                <div class="plantio-img">
+                </div>
+
+                <div class="detalhes">
+                    <p class="data">SEGUNDA-FEIRA</p>
+                    <h1 class="evento" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X
+                    </h1>
+                    <p class="status-plantio"
+                        style="background-color: grey; margin-top: -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; color: white; text-align: center; border-radius: 1rem; font-size: 0.8rem;">
+                        STATUS DO PLANTIO</p>
+                </div>
+
+            </div>
+
+            <div class="datas-calendario-setaBtn">
+                <div class="datas-calendario">
+                    <ul class="calendario-ul">
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                        <li class="calendario-li">
+                            <div class="calendario-item">
+                                <p class="data-na-lista">TER</p>
+                                <div class="plantio-img-lista"></div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <a href="" class="seta-btn"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
+                </a>
+            </div>
+
+        </div>
     </div>
-</body>
-</html>
+
+    <div class="btns-holder">
+        <a class="gerenciar-culturas" href=""><i class="bi bi-pencil-square" style="margin-right: 1rem;"></i> Gerenciar Culturas</a>
+        <div class="botoes-debaixo">
+            <a class="reportar-pragas" href=""><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
+            <a class="adicionar-cultura" href=""><i class="bi bi-plus-circle" style="margin-right: 0.5rem;"></i> Adicionar Cultura</a>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
