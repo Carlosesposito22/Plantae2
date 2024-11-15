@@ -101,6 +101,45 @@ Conseguiram implementar a funcionalidade principal do calendário, com a exibiç
 ### Conclusão
 As sessões de pair programming proporcionaram uma oportunidade valiosa de colaboração entre os membros da equipe. Todos os pares conseguiram avançar nas tarefas e resolver problemas de forma eficiente. As funcionalidades desenvolvidas estão em fase de testes e ajustes, com boas perspectivas para conclusão.
 
+## 🖥️ SR2
+
+***Links relevantes:***
+<ul>
+    <li> 
+    <a  href="https://www.figma.com/proto/9YfudFBdVCbdnRiEKH5Hyq/Planta%C3%AA---Projetos-2-%F0%9F%8C%B1?node-id=445-961&node-type=canvas&t=Jy6oyuCezfvJPfJX-0&scaling=min-zoom&content-scaling=fixed&page-id=214%3A436&starting-point-node-id=445%3A961"
+      >Protótipo de Lo-Fi no Figma</a>
+  </li>
+    <li>
+        <a  href=""
+      >Diagrama de atividades</a>
+  </li>
+   <li>
+    <a href="" 
+      >Screencast - Figma</a>
+  </li>
+  <li>
+    <a href=""
+      >Screencast - Azure</a>
+  </li>
+</ul>
+
+***Deployment das histórias produzidas:***
+<ul>
+  <li>
+    <a href=""
+      >Deployment na Azure</a>
+  </li>
+</ul>
+
+### Histórias
+
+- No total temos X histórias definidas e X implementadas. As implementadas são:
+  - Consultar o Clima Local
+  - Receber Alertas de Clima Crítico
+  - X
+
+*** 👩‍💻🧑‍💻 Relato da Programação em Par experimentada:***
+
 ## 👩‍💻 Membros
 
 <ul>
