@@ -1,127 +1,296 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plantaê</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Arial, sans-serif;
-    }
+{% include 'navbar.html' %}
+{% block content %}
+<title>Plantaê</title>
+<style>
+  .container-nav {
+    background-color: #e0e0e0;
+  }
 
-    body {
-      background-color: #f0f0f0;
-      color: #333;
-    }
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
 
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1rem 2rem;
-      background-color: #d3d3d3;
-    }
+  .subtitle {
+    font: bold;
+  }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: bold;
-    }
+  .join-btn {
+    padding: 0.5rem 1rem;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+  }
 
-    .subtitle{
-        font: bold;
-    }
+  .hero {
+    display: flex;
+    justify-content: center;
+    gap: 6rem;
+    align-items: center;
+    background-color: #e0e0e0;
+    overflow: hidden;
+    padding-top: 2rem;
+    padding-top: 5rem;
+  }
 
-    nav a {
-      margin: 0 1rem;
-      color: #333;
-      text-decoration: none;
-    }
+  .hero-text {
+    max-width: 500px;
+  }
 
-    .join-btn {
-      padding: 0.5rem 1rem;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-    }
+  .hero-image {
+    height: 25rem;
+    width: 22rem;
+    background-color: red;
+  }
 
-    .hero {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 2rem;
-      background-color: #e0e0e0;
-    }
+  .hero h1 {
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
 
-    .hero-text {
-      max-width: 500px;
-    }
+  .subtitle {
+    font-weight: bold;
+  }
 
-    .hero h1 {
-      font-size: 2.5rem;
-      line-height: 1.2;
-      margin-bottom: 1rem;
-    }
+  .cta-btn {
+    padding: 0.75rem 1.5rem;
+    background-color: black;
+    color: #fff;
+    border: none;
+    border-radius: 1.5rem;
+    cursor: pointer;
+    margin-top: 1rem;
+  }
 
-    .subtitle {
-      color: #30503A;
-      font-weight: bold;
-    }
+  .about {
+    background-color: #f7f7f7;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 10rem;
+    padding: 2rem;
+  }
 
-    .cta-btn {
-      padding: 0.75rem 1.5rem;
-      background-color: #333;
-      color: #fff;
-      border: none;
-      border-radius: 20px;
-      cursor: pointer;
-      margin-top: 1rem;
-    }
+  .about h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
 
-    .about {
-      padding: 2rem;
-      background-color: #f7f7f7;
-    }
+  .about-text {
+    width: 30%;
+  }
 
-    .about h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
-    }
+  .img-sobre {
+    width: 22rem;
+    height: 22rem;
+    background-color: red;
+  }
 
-  </style>
+  .cards-sec {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e0e0;
+    padding: 2rem;
+    gap: 2rem;
+  }
+
+  .cardsul {
+    display: flex;
+    flex-direction: row;
+    list-style: none;
+    gap: 8rem;
+  }
+
+  .cardimg {
+    height: 15rem;
+    width: 15rem;
+    background-color: red;
+  }
+
+  .quemsomos{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+  }
+
+  .hold-imgnossa {
+    width: 35rem;
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .ulimgnossa {
+    display: flex;
+    gap: 1.5rem;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .imgnossa {
+    margin: 0;
+    padding: 0;
+    height: fit-content;
+    width: fit-content;
+  }
+
+  .imgdiv {
+    height: 6rem;
+    width: 6rem;
+    background-color: green;
+    padding: 0;
+    margin: 0;
+  }
+
+  .textoquemsomos-holdimgnossa{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .head-subtexto{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    text-align: right;
+    width: 50%;
+  }
+
+  .subtexto{
+    width: 100%;
+  }
+
+  .contato{
+    background-color: #e0e0e0;
+    padding: 2rem;
+  }
+
+</style>
 </head>
-<body>
-  <header>
-    <div class="logo">Plantaê</div>
-    <nav>
-      <a href="#sobre">Sobre o Plantaê</a>
-      <a href="#quem-somos">Quem somos</a>
-      <a href="#contato">Contato</a>
-    </nav>
-  </header>
 
+<body>
   <section class="hero">
     <div class="hero-text">
-        <h1>Seu plantio, <br> Nossa tecnologia</h1>
-        <h3 class="subtitle">Gerencie seu cultivo de forma simples e eficiente.</h3>
-        <h3>Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</h3>
-        <a href="{% url 'accounts:signin' %}">
-          <button class="cta-btn">Experimente agora</button>
-        </a>
-      </div>      
+      <h1 style="font-size: 3rem;"><strong>Seu plantio, <br> Nossa tecnologia</strong></h1>
+      <p class="subtitle">Gerencie seu cultivo de forma simples e eficiente.</p>
+      <p>Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</p>
+      <a href="{% url 'accounts:signin' %}">
+        <button class="cta-btn">Experimente agora</button>
+      </a>
+    </div>
     <div class="hero-image">
     </div>
   </section>
 
   <section class="about" id="sobre">
-    <h2>Sobre o Plantaê</h2>
+    <div class="about-text">
+      <h2><strong>Sobre o Plantaê</strong></h2>
+      <p>O <strong>Plantaê</strong> é uma plataforma desenvolvida para apoiar pequenos agricultores, facilitando o
+        planejamento e manejo de plantios e colheitas.</p>
+      <br>
+      <p>Criada para atender às necessidades identificadas em parceria com o coletivo CAIS, onde os pequenos produtores
+        dizem qual a sua necessidade de plantio e recebem ajuda para gerenciar suas culturas de forma simples.</p>
+    </div>
+
+    <div class="img-sobre">
+    </div>
+
   </section>
+
+  <section class="cards-sec">
+
+    <p class="cards-header"><strong>Plantaê</strong> simboliza a força da agricultura familiar e a conexão com a terra.
+    </p>
+
+    <ul class="cardsul">
+      <li class="cardsli">
+        <div class="cardimg"></div>
+      </li>
+      <li class="cardsli">
+        <div class="cardimg"></div>
+      </li>
+      <li class="cardsli">
+        <div class="cardimg"></div>
+      </li>
+    </ul>
+
+  </section>
+
+  <section class="quemsomos">
+
+    <div class="textoquemsomos-holdimgnossa">
+      <h2><strong>Quem somos</strong></h2>
+
+      <div class="hold-imgnossa">
+        <ul class="ulimgnossa">
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+          <li class="imgnossa">
+            <div class="imgdiv"></div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="head-subtexto">
+      <h3><strong>Conheça a equipe por trás do Plantaê</strong></h3>
+      <br>
+      <p class="subtexto">Formada por estudantes de Design e Ciência da Computação do segundo período da CESAR School, unidos pela missão de apoiar pequenos produtores na conexão com a terra e na construção de práticas sustentáveis e independentes no campo.</p>
+    </div>
+
+  </section>
+
+  <section class="contato">
+
+    <h2><strong>Contato</strong></h2>
+
+  </section>
+
+  
+
+
 
   <footer>
   </footer>
 </body>
-</html>
+{% endblock %}

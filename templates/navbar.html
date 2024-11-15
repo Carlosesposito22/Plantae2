@@ -11,12 +11,17 @@
         color: white;
     }
 
-    .container {
+    p{
+        margin: 0;
+    }
+
+    .container-nav {
         display: flex;
         flex-direction: row;
         justify-content: center;
-        padding: 1rem;
-        padding-top: 0.5rem;
+        padding: 1.5rem;
+        padding-top: 1.5rem;
+        background: none;
     }
 
     .navbar {
@@ -28,6 +33,8 @@
         justify-content: center;
         gap: 1rem;
         border-radius: 3rem;
+        z-index: 999;
+        position: fixed;
     }
 
     .nav-ul {
@@ -51,7 +58,7 @@
     }
 </style>
 
-<div class="container text-center mt-5">
+<div class="container-nav text-center">
     <nav class="navbar shadow-lg">
         <ul class="nav-ul">
             <a href=""><li class="nav-li"><p class="nav-item">Página Principal</p></li></a>
