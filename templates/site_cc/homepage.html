@@ -1,16 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página Inicial</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plantaê</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f0f0f0;
+      color: #333;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: #d3d3d3;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+
+    .subtitle{
+        font: bold;
+    }
+
+    nav a {
+      margin: 0 1rem;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .join-btn {
+      padding: 0.5rem 1rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+    }
+
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 2rem;
+      background-color: #e0e0e0;
+    }
+
+    .hero-text {
+      max-width: 500px;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      line-height: 1.2;
+      margin-bottom: 1rem;
+    }
+
+    .subtitle {
+      color: #30503A;
+      font-weight: bold;
+    }
+
+    .cta-btn {
+      padding: 0.75rem 1.5rem;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+
+    .about {
+      padding: 2rem;
+      background-color: #f7f7f7;
+    }
+
+    .about h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+
+  </style>
 </head>
 <body>
-    <div class="container text-center mt-5">
-        <h1>Bem-vindo ao Plantae</h1>
-        <p>Para acessar todas as funcionalidades, faça login.</p>
-        <a href="{% url 'accounts:signin' %}" class="btn btn-primary">Fazer Login</a>
+  <header>
+    <div class="logo">Plantaê</div>
+    <nav>
+      <a href="#sobre">Sobre o Plantaê</a>
+      <a href="#quem-somos">Quem somos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+        <h1>Seu plantio, <br> Nossa tecnologia</h1>
+        <h3 class="subtitle">Gerencie seu cultivo de forma simples e eficiente.</h3>
+        <h3>Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</h3>
+        <a href="{% url 'accounts:signin' %}">
+          <button class="cta-btn">Experimente agora</button>
+        </a>
+      </div>      
+    <div class="hero-image">
     </div>
+  </section>
+
+  <section class="about" id="sobre">
+    <h2>Sobre o Plantaê</h2>
+  </section>
+
+  <footer>
+  </footer>
 </body>
 </html>
