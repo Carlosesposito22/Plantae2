@@ -183,28 +183,18 @@
                 <div id="sampleTable_wrapper-13" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                     <div class="row-13">
                         <div class="col-sm-12">
-                            <table class="table table-hover table-bordered dataTable no-footer-13" id="sampleTable-13" role="grid" aria-describedby="sampleTable_info">
+                            <table class="table table-hover table-bordered dataTable" id="sampleTable-13">
                                 <thead>
-                                    <tr role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 600px;">N°</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Tipo de plantio</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Data de reporte</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">
-                                            Problema descrito
-                                            <button onclick="descricaoFunction()" style="margin-left: 10px;">Ver descrição</button></th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Resolvido?</th>
-                                    </tr>                                       
+                                    <tr>
+                                        <th>N°</th>
+                                        <th>Tipo de plantio</th>
+                                        <th>Data de reporte</th>
+                                        <th>Descrição do problema</th>
+                                        <th>Resolvido?</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
-                                        <tr role="row" class="odd-13">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                        </tr>
+                                    <!-- Os dados serão inseridos aqui via script -->
                                 </tbody>
                             </table>
                         </div>
@@ -222,48 +212,40 @@
         e.preventDefault(); // Impede o envio padrão do formulário
         const formData = new FormData(this);
         const resultadoDiv = document.getElementById('resultadoRecomendacao');
-        
-        // Mostra um carregando
-        resultadoDiv.innerHTML = '<p>Carregando...</p>';
-        
-        fetch("{% url 'site_cc:detectar_pragas_doencas' %}", {
+    
+        // Envia os dados via AJAX
+        fetch("{% url 'site_cc:salvar_problema' %}", {
             method: 'POST',
             body: formData,
             headers: {
-                'X-Requested-With': 'XMLHttpRequest'
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRFToken': '{{ csrf_token }}'
             }
         })
         .then(response => response.json())
         .then(data => {
-            resultadoDiv.innerHTML = ''; // Limpa o conteúdo anterior
             if (data.success) {
-                resultadoDiv.innerHTML = `
-                    <h3>Doenças:</h3>
-                    ${data.doencas.length ? data.doencas.map(doenca => `
-                        <div class="resultado-info">
-                            <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
-                            <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
-                            <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
-                        </div>
-                    `).join('') : '<p>Nenhuma doença identificada.</p>'}
-                    
-                    <h3>Pragas:</h3>
-                    ${data.pragas.length ? data.pragas.map(praga => `
-                        <div class="resultado-info">
-                            <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
-                            <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
-                            <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
-                        </div>
-                    `).join('') : '<p>Nenhuma praga identificada.</p>'}
-                `;
+                // Atualiza a tabela com os problemas mais recentes
+                const problemas = JSON.parse(data.problemas);
+                const tabelaCorpo = document.querySelector('#sampleTable-13 tbody');
+                tabelaCorpo.innerHTML = problemas.map((problema, index) => `
+                    <tr>
+                        <td>${index + 1}</td>
+                        <td>${problema.fields.plantio}</td>
+                        <td>${new Date(problema.fields.data_reporte).toLocaleString()}</td>
+                        <td>${problema.fields.descricao}</td>
+                        <td>${problema.fields.resolvido ? 'Sim' : 'Não'}</td>
+                    </tr>
+                `).join('');
             } else {
-                resultadoDiv.innerHTML = `<p>${data.message}</p>`;
+                resultadoDiv.innerHTML = '<p>Erro ao salvar os dados.</p>';
             }
         })
         .catch(error => {
             console.error('Erro:', error);
-            resultadoDiv.innerHTML = '<p>Ocorreu um erro ao processar sua solicitação.</p>';
+            resultadoDiv.innerHTML = '<p>Erro ao processar a solicitação.</p>';
         });
     });
+    
 </script>
 {% endblock content %}
