@@ -197,6 +197,84 @@
             font-size: 1.8rem;
         }
     }
+
+   /* Modal de Exclusão */
+    .delete-modal-content {
+        background-color: #f3f3f3;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .delete-modal-title {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: left;
+    }
+
+    .delete-modal-message {
+        font-size: 1rem;
+        color: #666;
+        margin-bottom: 15px;
+    }
+
+    .delete-modal-question {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #444;
+        margin-bottom: 20px;
+    }
+
+    .delete-modal-buttons {
+        display: flex;
+        justify-content: space-around;
+        gap: 10px;
+    }
+
+    .delete-cancel-btn {
+        background-color: #ffffff;
+        border: 1px solid #cccccc;
+        color: #333;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .delete-cancel-btn:hover {
+        background-color: #f0f0f0;
+        border-color: #aaaaaa;
+    }
+
+    .delete-confirm-btn {
+        background-color: #333333;
+        border: 1px solid #000000;
+        color: #ffffff;
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        transition: all 0.3s ease;
+    }
+
+    .delete-confirm-btn:hover {
+        background-color: #444444;
+        border-color: #222222;
+    }
+
+    .delete-modal-message,
+    .delete-modal-question {
+        text-align: left;
+    }
 </style>
 {% endblock extracss %}
 
@@ -421,6 +499,29 @@
             </div>
         </div>
     </div>
+
+    <!-- Modal de Confirmação de Exclusão -->
+    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content delete-modal-content">
+                <div class="modal-body text-center">
+                    <h2 class="delete-modal-title">Excluir cultura</h2>
+                    <p class="delete-modal-message">
+                        O evento que criou está prestes a ser excluído, não haverá como recuperar.
+                    </p>
+                    <p class="delete-modal-question">Gostaria de concluir a ação?</p>
+                    <div class="delete-modal-buttons">
+                        <button type="button" class="btn delete-cancel-btn" data-dismiss="modal">
+                            <i class="bi bi-x-circle"></i> Não, cancele
+                        </button>
+                        <button type="button" class="btn delete-confirm-btn" id="confirmDeleteButton">
+                            <i class="bi bi-trash"></i> Sim, excluir
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <!-- Modal genérico -->
@@ -461,6 +562,7 @@
     
     document.addEventListener('DOMContentLoaded', function() {
         let currentMode = 'eventos';
+        let eventIdToDelete = null;
         function getCookie(name) {
             let cookieValue = null;
             if (document.cookie && document.cookie !== '') {
@@ -876,22 +978,40 @@
             $('#eventModal').modal('show');
         });
 
-        document.getElementById('delete-event-button').addEventListener('click', function() {
-            const eventId = this.getAttribute('data-event-id');
-            if (confirm('Tem certeza que deseja apagar este evento?')) {
-                fetch(`/delete_event/${eventId}/`, {
+        document.getElementById('delete-event-button').addEventListener('click', function () {
+            eventIdToDelete = this.getAttribute('data-event-id'); // Salva o ID do evento
+            $('#detailModal').modal('hide'); // Fecha o modal de detalhes
+            setTimeout(() => {
+                $('#deleteConfirmationModal').modal('show'); // Exibe o modal de exclusão
+            }, 300); // Adiciona um pequeno atraso para evitar sobreposição
+        });
+
+        document.getElementById('confirmDeleteButton').addEventListener('click', function () {
+            if (eventIdToDelete) {
+                fetch(`/delete_event/${eventIdToDelete}/`, {
                     method: 'POST',
                     headers: {
                         'X-CSRFToken': csrftoken,
                         'Content-Type': 'application/json'
                     }
                 })
-                .then(response => response.json())
-                .then(data => {
-                    alert(data.message);
-                    window.location.reload();
-                })
-                .catch(error => console.error('Erro ao excluir evento:', error));
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert(data.message); // Exibe mensagem de sucesso
+                            window.location.reload(); // Recarrega a página
+                        } else {
+                            window.location.reload();
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao excluir evento:', error);
+                        alert('Erro ao excluir o evento. Por favor, tente novamente.');
+                    })
+                    .finally(() => {
+                        $('#deleteConfirmationModal').modal('hide'); // Fecha o modal
+                        eventIdToDelete = null; // Limpa o ID do evento
+                    });
             }
         });
 
