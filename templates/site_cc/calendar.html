@@ -2,16 +2,41 @@
 {% load static %}
 {% block title %}Calendário{% endblock title %}
 
+
 {% block extracss %}
   <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
-  
-  <style>
-    #calendar {
-        border: 1px solid #ccc;
-        border-radius: 8px;
-        overflow: hidden;
+ 
+ 
+<style>
+
+
+    #addEventButton, #modeTempo, #modeFasesLua,#modeEventos{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.6rem;
+        justify-content: center;
+        background-color: #d7d7d7;
     }
+   
+
+
+    #modeEventos, #modeFasesLua, #modeTempo, #addEventButton{
+        width: 200px;  /* Ajuste conforme necessário */
+        padding: 10px;  /* Ajusta o espaçamento interno para botões mais largos */
+        text-align: center;
+    }
+
+
+    #calendar {
+        width: 76%;
+        max-width: 1200px;
+        background: white;
+        padding: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
 
     .fc-event {
         background-color: #4D933E !important;
@@ -22,9 +47,11 @@
         transition: transform 0.2s;
     }
 
+
     .fc-event:hover {
         transform: scale(1.05);
     }
+
 
     .coluna-ongoing {
         background-color: #F2F7F2;
@@ -35,27 +62,33 @@
         overflow-y: scroll;
     }
 
+
     .modal-header {
         background-color: #4D933E !important;
     }
 
+
     .modal-title {
         font-weight: bold;
     }
+
 
     .save-btn {
         background-color: #4D933E;
         border-color: #096d10;
     }
 
+
     .save-btn:hover {
         background-color: #2c5f20 !important;
         border-color: #00570d !important;
     }
 
+
     .btn-primary:hover {
         background-color: #515151;
     }
+
 
     .day-icon, .moon-icon {
         font-size: 100px;
@@ -67,67 +100,69 @@
         color: green !important;
     }
 
+
     .mode-buttons {
         margin-top: 10px;
+        display: flex;
+        gap: 10px;
     }
+
 
     .mode-buttons button.active {
         background-color: #4D933E !important;
         color: white !important;
     }
 
+
     #addEventButtonContainer {
         margin-top: 10px;
+        display: flex;
+        justify-content: flex-end; /* Alinha o botão à direita */
+        width: 100%; /* Garante que o contêiner ocupe toda a largura disponível */
     }
+
+
 </style>
 {% endblock extracss %}
 
-{% block breadcrumb %}
-<h1><i class="fa fa-calendar"></i> Calendário</h1>
 
-<div class="mode-buttons">
-    <button id="modeEventos" class="btn btn-primary active">Eventos</button>
-    <button id="modeTempo" class="btn btn-primary active">Clima</button>
-    <button id="modeFasesLua" class="btn btn-primary active">Fases da Lua</button>
+{% block breadcrumb %}
+<div style="margin: 100px 0 40px 180px;">
+    <button style="width: 110px;" class="btn btn-primary active rounded-5"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
 </div>
+
+
+<div style="width: 76%; max-width: 1200px; margin: 0 auto;">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+        <h1 style="font-size: 4.5rem; margin: 0;">Calendário</h1>
+        <div class="mode-buttons" style="display: flex; gap: 14px;">
+            <button id="modeEventos" class="btn   rounded-5">
+                <i class="fa-solid fa-seedling"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Plantio
+            </button>
+            <button id="modeFasesLua" class="btn   rounded-5">
+                <i class="bi bi-moon-fill"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Fase da Lua
+            </button>
+            <button id="modeTempo" class="btn   rounded-5">
+                <i class="bi bi-brightness-high"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Clima
+            </button>            
+        </div>
+    </div>
+    <div id="addEventButtonContainer" style="text-align: right;">
+        <button id="addEventButton" class="btn rounded-5">
+            <i class="bi bi-plus-circle"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Adicionar Evento
+          </button>
+         
+    </div>
+</div>
+
+
 {% endblock breadcrumb %}
 
+
 {% block content %}
-<div class="row">
-    <div class="coluna-ongoing col-md-3">
-        <h4 class="mb-4">Eventos em andamento</h4>
-        <div id="addEventButtonContainer">
-            <button id="addEventButton" class="btn btn-success">Adicionar Evento</button>
-        </div>
-        {% for event in events_month %}
-            <div class="fc-event" 
-                data-event-id="{{ event.id }}" 
-                data-end-date="{{ event.end_time|date:"Y-m-d" }}" 
-                data-type="{{ event.type }}" 
-                data-cultura="{{ event.cultura }}"> <!-- Adiciona data-cultura -->
-
-                {% if event.end_time|date:"Y-m-d" == today and event.type == "Colheita" %}
-                    <span class="deadline-icon" id="deadlineIcon-{{ event.id }}" style="cursor: pointer;">⚠️</span> <!-- Ícone de prazo final -->
-                {% endif %}
-                
-                <h4>{{ event.title }}</h4>
-                <p><strong>Tipo: </strong>{{ event.type }}</p>
-                <p><strong>Cultura: </strong>{{ event.cultura }}</p>
-                <p><strong>Local: </strong>{{ event.local }}</p>
-                <p><strong>Descrição: </strong>{{ event.description }}</p>
-                <p><strong>Data Início: </strong>{{ event.start_time|date:"d \d\e F \d\e Y" }}</p> 
-                <p><strong>Data Fim: </strong>{{ event.end_time|date:"d \d\e F \d\e Y" }}</p> 
-                <p><strong>Duração: </strong>{{ event.duration }}</p>
-            </div>
-        {% empty %}
-            <p>Nenhuma cultura em andamento</p>
-        {% endfor %}
-
-    </div>
-    <div class="col-md-9">
-        <div id="calendar"></div>
-    </div>
-
+<div class="d-flex justify-content-center align-items-center" style="height: 100vh; margin-top: 140px;">
+    <div id="calendar"></div>
+</div>
     <!-- Modal para Adicionar Plantação -->
     <div class="modal fade" id="eventModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -180,6 +215,7 @@
         </div>
     </div>
 
+
     <!-- Modal para recomendação de colheita -->
     <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -201,7 +237,8 @@
             </div>
         </div>
     </div>
-    
+   
+
 
     <!-- Modal para Detalhes do Evento -->
     <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
@@ -230,6 +267,7 @@
         </div>
     </div>
 
+
     <!-- Modal de Previsão do Tempo -->
     <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -255,6 +293,7 @@
         </div>
     </div>
 
+
     <!-- Modal para Detalhes da Fase da Lua -->
     <div class="modal fade" id="moonPhaseModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
@@ -278,6 +317,7 @@
     </div>
 </div>
 
+
 <!-- Modal genérico -->
 <div class="modal fade" id="genericModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
@@ -299,8 +339,11 @@
 </div>
 
 
+
+
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
+
 
 {% endblock content %}
 {% block extrascripts %}
@@ -313,7 +356,7 @@
         'Batata': 105,
         'Rúcula': 35,
     };
-    
+   
     document.addEventListener('DOMContentLoaded', function() {
         let currentMode = 'eventos';
         function getCookie(name) {
@@ -332,9 +375,11 @@
         }
         const csrftoken = getCookie('csrftoken');
 
+
         const modeEventosButton = document.getElementById('modeEventos');
         const modeTempoButton = document.getElementById('modeTempo');
         const modeFasesLuaButton = document.getElementById('modeFasesLua');
+
 
         modeEventosButton.addEventListener('click', function() {
             currentMode = 'eventos';
@@ -344,6 +389,7 @@
             updateCalendarMode();
         });
 
+
         modeTempoButton.addEventListener('click', function() {
             currentMode = 'tempo';
             modeTempoButton.classList.add('active');
@@ -351,6 +397,7 @@
             modeFasesLuaButton.classList.remove('active');
             updateCalendarMode();
         });
+
 
         modeFasesLuaButton.addEventListener('click', function() {
             currentMode = 'fases_lua';
@@ -360,20 +407,21 @@
             updateCalendarMode();
         });
 
+
         function updateCalendarMode() {
             const ongoingEventsColumn = document.querySelector('.coluna-ongoing');
             const addEventButton = document.getElementById('addEventButton');
-            
+           
             if (currentMode === 'eventos') {
                 calendar.setOption('selectable', false);
-                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'auto'));
                 ongoingEventsColumn.style.display = 'block';
                 addEventButton.style.display = 'inline-block';
                 document.querySelectorAll('.day-icon, .moon-icon').forEach(icon => icon.remove());
             } else if (currentMode === 'tempo') {
                 calendar.setOption('selectable', false);
-                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'none'));
                 ongoingEventsColumn.style.display = 'none';
                 addEventButton.style.display = 'none';
@@ -381,7 +429,7 @@
                 renderWeatherIcons();
             } else if (currentMode === 'fases_lua') {
                 calendar.setOption('selectable', false);
-                calendar.setOption('headerToolbar', { left: 'today', center: 'title', right: 'prev,next' });
+                calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'none'));
                 ongoingEventsColumn.style.display = 'none';
                 addEventButton.style.display = 'none';
@@ -390,6 +438,7 @@
             }
         }
 
+
         document.getElementById('addEventButton').addEventListener('click', function() {
             document.getElementById('id_event_id').value = "";
             document.getElementById('id_start_time').value = "";
@@ -397,19 +446,24 @@
             $('#eventModal').modal('show');
         });
 
+
         $('#recommendationModal').modal({
             backdrop: 'static',
             keyboard: false,
             show: false
         });
 
+
         document.getElementById('eventForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const eventType = document.querySelector('#id_type').value;
 
+
             let url = (eventType === "Plantio") ? "{% url 'site_cc:event_new_plantio' %}" : "{% url 'site_cc:event_new' %}";
 
+
             const formData = new FormData(this);
+
 
             fetch(url, {
                 method: 'POST',
@@ -428,6 +482,7 @@
                 if (data.success) {
                     alert(data.message || "Eventos criados com sucesso!");
 
+
                     calendar.addEvent({
                         id: data.event_id,
                         title: data.title,
@@ -439,14 +494,17 @@
                         local: data.local,
                     });
 
+
                     $('#eventModal').modal('hide');
+
 
                     if (data.open_recommendation_modal) {
                         $('#recommendationModal').modal('show');
                         console.log(data.cultura);
                         const diasColheita = CULTURA_PRAZOS[data.cultura];
-                        document.getElementById('recommendationMessage').textContent = 
+                        document.getElementById('recommendationMessage').textContent =
                             `Recomendação para ${data.cultura}: Avalie a colheita para este período. A colheita ocorrerá em aproximadamente ${diasColheita} dias.`;
+
 
                         document.getElementById('btn-nv-btn').addEventListener('click', function() {
                             fetch(`/event/plantio/${data.event_id}/create_colheita/`, {
@@ -482,6 +540,7 @@
                 }
             });
         });
+
 
         var calendarEl = document.getElementById('calendar');
         var previsoes = JSON.parse(document.getElementById('weatherData').textContent);
@@ -529,13 +588,16 @@
             'Minguante': 'Seiva em baixo',
         };
 
+
         function renderWeatherIcons() {
             document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
                 const dateStr = dayCell.getAttribute('data-date');
                 const forecast = previsoes[dateStr];
 
+
                 const existingIcon = dayCell.querySelector('.day-icon');
                 if (existingIcon) existingIcon.remove();
+
 
                 if (forecast) {
                     const iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
@@ -545,27 +607,33 @@
                     icon.style.color = 'green';
                     icon.style.cursor = 'pointer';
 
+
                     icon.onclick = function(event) {
                         event.stopPropagation();
                         openWeatherModal(dateStr);
                     };
+
 
                     dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
                 }
             });
         }
 
+
         function renderMoonPhaseIcons() {
             document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
                 const dateStr = dayCell.getAttribute('data-date');
                 const moonData = fasesLua[dateStr];
 
+
                 const existingIcon = dayCell.querySelector('.moon-icon');
                 if (existingIcon) existingIcon.remove();
+
 
                 if (moonData) {
                     const phase = moonData.fase_da_lua;
                     let iconClass = moonPhaseIcons[phase] || 'wi wi-moon-alt-new';
+
 
                     const icon = document.createElement('i');
                     icon.className = `${iconClass} moon-icon`;
@@ -573,20 +641,24 @@
                     icon.style.color = 'purple';
                     icon.style.cursor = 'pointer';
 
+
                     icon.onclick = function(event) {
                         event.stopPropagation();
                         openMoonPhaseModal(dateStr);
                     };
+
 
                     dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
                 }
             });
         }
 
+
         function openMoonPhaseModal(dateStr) {
             const moonData = fasesLua[dateStr];
             const faseDaLuaIngles = moonData.fase_da_lua;
             const faseDaLuaPortugues = moonPhaseTranslation[faseDaLuaIngles] || faseDaLuaIngles;
+
 
             if (moonData) {
                 document.getElementById('moonModalDate').textContent = dateStr.split('-').reverse().join('/');
@@ -597,10 +669,11 @@
             }
         }
 
+
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: 'pt-br',
             buttonText: {
-                today: 'Atual'
+                today: 'HOJE'
                 //month: 'Mês',
                 //list: 'Tarefas do dia'
             },
@@ -643,10 +716,13 @@
                     const dateStr = args.date.toISOString().split('T')[0];
                     const forecast = previsoes[dateStr];
 
+
                     if (forecast) {
                         const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
 
+
                         let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
+
 
                         const icon = document.createElement('i');
                         icon.className = `${iconClass} day-icon`;
@@ -654,15 +730,18 @@
                         icon.style.color = 'green';
                         icon.style.cursor = 'pointer';
 
+
                         icon.onclick = function(event) {
                             event.stopPropagation();
                             openWeatherModal(dateStr);
                         };
 
+
                         cellContent.appendChild(icon);
                     }
                 }
             },
+
 
             datesSet: function() {
                 if (currentMode === 'tempo') {
@@ -675,13 +754,16 @@
             }
         });
 
+
         calendar.render();
+
 
         updateCalendarMode();
 
+
         window.openWeatherModal = function(dateStr) {
             const forecast = previsoes[dateStr];
-            
+           
             if (forecast) {
                 document.getElementById('modalDate').textContent = dateStr.split('-').reverse().join('/');
                 document.getElementById('modalDescription').textContent = forecast.descricao;
@@ -694,9 +776,11 @@
             }
         };
 
+
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
             document.getElementById('id_event_id').value = eventId;
+
 
             document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
             document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
@@ -704,11 +788,14 @@
             document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
             document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
 
+
             let startDateStr = document.getElementById('start_event_detail').textContent.trim();
             let endDateStr = document.getElementById('end_event_detail').textContent.trim();
 
+
             let startDate = parseDateBR(startDateStr);
             let endDate = parseDateBR(endDateStr);
+
 
             if (startDate) {
                 document.getElementById('id_start_time').value = startDate.toISOString().slice(0, 19);
@@ -716,15 +803,18 @@
                 console.error("Data de início inválida:", startDateStr);
             }
 
+
             if (endDate) {
                 document.getElementById('id_end_time').value = endDate.toISOString().slice(0, 19);
             } else {
                 console.error("Data de fim inválida:", endDateStr);
             }
 
+
             $('#detailModal').modal('hide');
             $('#eventModal').modal('show');
         });
+
 
         document.getElementById('delete-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
@@ -745,14 +835,17 @@
             }
         });
 
+
         const today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('.fc-event').forEach(event => {
             const endDate = event.getAttribute('data-end-date');
             const eventType = event.getAttribute('data-type');
             const cultura = event.getAttribute('data-cultura'); // Identifica a cultura
 
+
             if (endDate === today && eventType === "Colheita") {
                 let deadlineIcon = event.querySelector('.deadline-icon');
+
 
                 if (!deadlineIcon) {
                     deadlineIcon = document.createElement('span');
@@ -761,6 +854,7 @@
                     deadlineIcon.style.cursor = 'pointer';
                     event.prepend(deadlineIcon);
                 }
+
 
                 // Configura o clique no ícone
                 deadlineIcon.addEventListener('click', function() {
@@ -794,6 +888,9 @@
 
 
 
+
+
+
         // Funções de Utilidade
         function converterDataParaDjangoFormat(data) {
             const dataJS = new Date(data);
@@ -801,14 +898,16 @@
                    `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
         }
 
+
         function formatDateTime(dateTime) {
             return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
         }
 
+
         function parseDateBR(dateStr) {
             let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
             let matches = regex.exec(dateStr);
-            
+           
             if (matches) {
                 let day = parseInt(matches[1], 10);
                 let month = getMonthNumber(matches[2].toLowerCase());
@@ -816,10 +915,12 @@
                 let hours = parseInt(matches[4], 10);
                 let minutes = parseInt(matches[5], 10);
 
+
                 return new Date(year, month - 1, day, hours, minutes);
             }
             return null;
         }
+
 
         function getMonthNumber(monthStr) {
             const months = {
@@ -832,4 +933,8 @@
     });
 </script>
 
+
 {% endblock extrascripts %}
+
+
+

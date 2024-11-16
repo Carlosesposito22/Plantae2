@@ -107,7 +107,7 @@
         <div class="navrest">
             {% if user.is_authenticated %}
             <i class="bi bi-bell"></i>
-            <a href="{% url 'accounts:signout' %}"><button class="btn junte-se">Sair</button></a>
+            <p style="margin: 0;">Olá, Usuário<i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i></p>
             {% else %}
             <a href="{% url 'accounts:signin' %}"><button class="btn junte-se">Junte-se</button></a>
             {% endif %}
