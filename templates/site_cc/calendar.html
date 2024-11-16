@@ -79,6 +79,124 @@
     #addEventButtonContainer {
         margin-top: 10px;
     }
+    /* Estilo do modal */
+    .weather-modal {
+        background-color: #ffffff;
+        border-radius: 15px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Cabeçalho do modal */
+    .weather-modal .modal-header {
+        background-color: #4CAF50;
+        color: white;
+        border-top-left-radius: 15px;
+        border-top-right-radius: 15px;
+        padding: 10px 15px;
+    }
+
+    .weather-modal .modal-title {
+        font-size: 1.2rem;
+        font-weight: bold;
+    }
+
+    .weather-modal .close {
+        font-size: 1.5rem;
+        color: white;
+    }
+
+    /* Seção principal para temperatura e descrição */
+    .main-info {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin: 20px 0;
+        text-align: left;
+    }
+
+    /* Descrição e texto de temperatura */
+    .description {
+        flex: 1;
+        padding-right: 20px;
+    }
+
+    .condition-text {
+        font-size: 1rem;
+        color: #666;
+        margin: 0;
+    }
+
+    .temperature-text {
+        font-size: 2rem;
+        margin: 5px 0 0;
+        color: #333;
+    }
+
+    /* Círculo de temperatura */
+    .temperature-circle {
+        background-color: #f0f0f0;
+        border-radius: 50%;
+        width: 100px;
+        height: 100px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.1);
+        font-size: 1.2rem;
+        color: #333;
+        font-weight: bold;
+    }
+
+    /* Grade de Informações */
+    .weather-info-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .info-item i {
+        font-size: 1.8rem;
+        color: #4CAF50;
+        margin-bottom: 5px;
+    }
+
+    .info-item p {
+        font-size: 0.9rem;
+        color: #666;
+    }
+
+    .info-item strong {
+        font-size: 1.1rem;
+        color: #333;
+    }
+
+    /* Responsividade */
+    @media (max-width: 768px) {
+        .weather-info-grid {
+            grid-template-columns: repeat(1, 1fr);
+        }
+
+        .temperature-circle {
+            width: 80px;
+            height: 80px;
+            font-size: 1rem;
+        }
+
+        .temperature-text {
+            font-size: 1.8rem;
+        }
+    }
 </style>
 {% endblock extracss %}
 
@@ -233,23 +351,50 @@
     <!-- Modal de Previsão do Tempo -->
     <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+            <div class="modal-content weather-modal">
+                <!-- Cabeçalho -->
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalDate"></h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
+                <!-- Corpo do Modal -->
                 <div class="modal-body">
-                    <p><strong>Tempo:</strong> <span id="modalDescription"></span></p>
-                    <p><strong>Temperatura:</strong> <span id="modalTemperature"></span></p>
-                    <p><strong>Umidade:</strong> <span id="modalHumidity"></span></p>
-                    <p><strong>Vento:</strong> <span id="modalWind"></span></p>
-                    <p><strong>Precipitação:</strong> <span id="modalPrecipitation"></span></p>
-                    <p><strong>Índice UV:</strong> <span id="modalUV"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <!-- Linha principal com temperatura e descrição -->
+                    <div class="main-info">
+                        <div class="description">
+                            <p id="modalCondition" class="condition-text"></p>
+                            <h2 id="modalTemperature" class="temperature-text"></h2>
+                        </div>
+                        <div class="temperature-circle">
+                            <p id="modalMainTemperature"></p>
+                        </div>
+                    </div>
+
+                    <!-- Grade de Informações -->
+                    <div class="weather-info-grid">
+                        <div class="info-item">
+                            <i class="bi bi-droplet"></i>
+                            <p>Umidade</p>
+                            <strong id="modalHumidity"></strong>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-wind"></i>
+                            <p>Vento</p>
+                            <strong id="modalWind"></strong>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-sun"></i>
+                            <p>Índice UV</p>
+                            <strong id="modalUV"></strong>
+                        </div>
+                        <div class="info-item">
+                            <i class="bi bi-cloud-drizzle"></i>
+                            <p>Precipitação</p>
+                            <strong id="modalPrecipitation"></strong>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -679,18 +824,23 @@
 
         updateCalendarMode();
 
-        window.openWeatherModal = function(dateStr) {
+        window.openWeatherModal = function (dateStr) {
             const forecast = previsoes[dateStr];
-            
+
             if (forecast) {
                 document.getElementById('modalDate').textContent = dateStr.split('-').reverse().join('/');
-                document.getElementById('modalDescription').textContent = forecast.descricao;
-                document.getElementById('modalTemperature').textContent = `Máx: ${forecast.temperatura_max}°C / Mín: ${forecast.temperatura_min}°C`;
-                document.getElementById('modalHumidity').textContent = `Umidade: ${forecast.umidade}%`;
-                document.getElementById('modalWind').textContent = `Vento: ${forecast.vento} km/h`;
-                document.getElementById('modalPrecipitation').textContent = `Precipitação: ${forecast.precipitacao} mm`;
-                document.getElementById('modalUV').textContent = `Índice UV: ${forecast.indice_uv}`;
+                document.getElementById('modalMainTemperature').textContent = `${forecast.temperatura_max}°C`; // Temperatura dentro do círculo
+                document.getElementById('modalTemperature').textContent = `${forecast.temperatura_max}°C / ${forecast.temperatura_min}°C`;
+                document.getElementById('modalCondition').textContent = forecast.descricao;
+                document.getElementById('modalHumidity').textContent = `${forecast.umidade}%`;
+                document.getElementById('modalWind').textContent = `${forecast.vento} km/h`;
+                document.getElementById('modalPrecipitation').textContent = `${forecast.precipitacao} mm`;
+                document.getElementById('modalUV').textContent = forecast.indice_uv;
+
+                // Exibe o modal
                 $('#weatherModal').modal('show');
+            } else {
+                console.error("Previsão não encontrada para a data:", dateStr);
             }
         };
 
