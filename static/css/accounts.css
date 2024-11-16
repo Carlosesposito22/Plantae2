@@ -1626,18 +1626,6 @@ pre {
     outline: 0;
     -webkit-box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); }
-  .form-control::-webkit-input-placeholder {
-    color: #6c757d;
-    opacity: 1; }
-  .form-control:-ms-input-placeholder {
-    color: #6c757d;
-    opacity: 1; }
-  .form-control::-ms-input-placeholder {
-    color: #6c757d;
-    opacity: 1; }
-  .form-control::placeholder {
-    color: #6c757d;
-    opacity: 1; }
   .form-control:disabled, .form-control[readonly] {
     background-color: #e9ecef;
     opacity: 1; }
@@ -8267,18 +8255,6 @@ h1, h2, h3, h4, h5,
       -webkit-transition: none;
       -o-transition: none;
       transition: none; } }
-  .form-control::-webkit-input-placeholder {
-    /* Chrome/Opera/Safari */
-    color: rgba(0, 0, 0, 0.9) !important; }
-  .form-control::-moz-placeholder {
-    /* Firefox 19+ */
-    color: rgba(0, 0, 0, 0.9) !important; }
-  .form-control:-ms-input-placeholder {
-    /* IE 10+ */
-    color: rgba(0, 0, 0, 0.9) !important; }
-  .form-control:-moz-placeholder {
-    /* Firefox 18- */
-    color: rgba(0, 0, 0, 0.9) !important; }
   .form-control:focus, .form-control:active {
     outline: none !important;
     -webkit-box-shadow: none;
@@ -8418,7 +8394,7 @@ textarea.form-control {
         background: #6807f9;
         color: #fff; }
 
-        .login-register-holder-changer{
+        .login-register-holder-changer {
           display: flex;
           flex-direction: row;
           background-color: #F2F7F2;
@@ -8427,42 +8403,28 @@ textarea.form-control {
           border-radius: 4rem;
           align-items: center;
           margin-bottom: 1rem;
+          width: 100%; /* Garante que o elemento ocupe toda a largura */
+          max-width: 400px; /* Ajuste o tamanho conforme necessário */
+          margin-left: auto;
+          margin-right: auto;
         }
 
-        .loginactive{
+        .loginactive, .registeractive {
           background-color: #AFE507 !important;
           padding: 0.5rem 3rem;
           color: black !important;
           border-radius: 2rem;
           width: 50%;
           text-align: center;
-
         }
+      
 
-        .logininactive{
+        .logininactive, .registerinactive {
           padding-left: 1rem;
           padding-right: 1rem;
           color: #666666 !important;
           width: 50%;
           text-align: center;
-        }
-
-        .registerinactive{
-          padding-left: 1rem;
-          padding-right: 1rem;
-          color: #666666 !important;
-          width: 50%;
-          text-align: center;
-        }
-
-        .registeractive{
-          background-color: #AFE507 !important;
-          padding: 0.5rem 3rem;
-          color: black !important;
-          border-radius: 2rem;
-          width: 50%;
-          text-align: center;
-
         }
 
         .img-holder{

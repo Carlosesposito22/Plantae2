@@ -1,3 +1,18 @@
+<style>
+    ::placeholder {
+        color: #6c757d !important;
+        font-style: italic;
+        opacity: 1 !important;
+    }
+
+    ::-webkit-input-placeholder {
+        color: #6c757d !important;
+    }
+    :-ms-input-placeholder {
+        color: #6c757d !important;
+    }
+</style>
+
 <!DOCTYPE html>
 <html lang="en">
 {% load static %}
@@ -17,8 +32,8 @@
             <p>Acesse o melhor portal do Brasil</p>
 
             <div class="login-register-holder-changer">
-                <a class="loginactive">Login</a>
-                <a class="registerinactive">Cadastro</a>
+                <a class="logininactive" href="{% url 'accounts:signin' %}">Login</a>
+                <a class="registeractive" href="{% url 'accounts:signup' %}">Cadastro</a>
             </div>
 
             <form action="#" method="post" class="signup-form">
