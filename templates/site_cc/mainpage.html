@@ -7,12 +7,13 @@
     }
 
     .container{
-        padding-top: 0;
+        padding-top: 2rem;
         display: flex;
         flex-direction: column;
         gap: 3rem;
         align-items: center;
         justify-content: center;
+    
     }
 
     .card {
@@ -259,7 +260,7 @@
                         </li>
                     </ul>
                 </div>
-                <a href="" class="seta-btn"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
+                <a href="" class="seta-btn" style="transform: rotate(225deg);"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
                 </a>
             </div>
 
@@ -332,7 +333,7 @@
                         </li>
                     </ul>
                 </div>
-                <a href="" class="seta-btn"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
+                <a href="" class="seta-btn" style="transform: rotate(225deg);"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
                 </a>
             </div>
 
@@ -342,7 +343,7 @@
     <div class="btns-holder">
         <a class="gerenciar-culturas" href=""><i class="bi bi-pencil-square" style="margin-right: 1rem;"></i> Gerenciar Culturas</a>
         <div class="botoes-debaixo">
-            <a class="reportar-pragas" href=""><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
+            <a class="reportar-pragas" href="{% url 'site_cc:praga' %}"><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
             <a class="adicionar-cultura" href=""><i class="bi bi-plus-circle" style="margin-right: 0.5rem;"></i> Adicionar Cultura</a>
         </div>
     </div>

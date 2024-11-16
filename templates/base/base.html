@@ -35,7 +35,7 @@
         <aside class="app-sidebar">
             <ul class="app-menu">
                 <li>
-                    <a class="app-menu__item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+                    <a class="app-menu__item {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'site_cc:dashboard' %}">
                         <i class="app-menu__icon fa fa-dashboard"></i><span class="app-menu__label">Painel</span>
                     </a>
                 </li>
