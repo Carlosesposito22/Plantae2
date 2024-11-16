@@ -85,28 +85,32 @@
         <ul class="nav-ul">
             <a href="">
                 <li class="nav-li">
-                    <p class="nav-item">Página Principal</p>
+                    
+                    <a href="{% url 'site_cc:mainpage' %}"><p class="nav-item">Página Principal</p> </a>
+                    
+                </li>
+               
+            </a>
+            <a href="">
+                <li class="nav-li">
+                 <a href="{% url 'site_cc:calendar' %}"><p class="nav-item"><i class="bi bi-calendar" style="margin-right: 0.7rem;"></i>
+                    Acessar Calendário</p> </a>
                 </li>
             </a>
             <a href="">
                 <li class="nav-li">
-                    <p class="nav-item"><i class="bi bi-calendar" style="margin-right: 0.7rem;"></i>
-                        Acessar Calendário</p>
-                </li>
-            </a>
-            <a href="">
-                <li class="nav-li">
-                    <p class="nav-item"><i class="bi bi-clock-history" style="margin-right: 0.7rem;"></i> Histórico de
-                        Plantio</p>
+                    <a href="{% url 'site_cc:dashboard' %}"><p class="nav-item"><i class="bi bi-clock-history" style="margin-right: 0.7rem;"></i> Histórico de
+                        Plantio</p></a>
                 </li>
             </a>
         </ul>
         <div class="navrest">
-            <!-- if... -->
+            {% if user.is_authenticated %}
             <i class="bi bi-bell"></i>
-            <p style="margin: 0;">Olá, Usuário<i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i></p>
-            <!-- else... -->
-            <a href=""><button class="btn junte-se">Junte-se</button></a>
+            <a href="{% url 'accounts:signout' %}"><button class="btn junte-se">Sair</button></a>
+            {% else %}
+            <a href="{% url 'accounts:signin' %}"><button class="btn junte-se">Junte-se</button></a>
+            {% endif %}
         </div>
 
     </nav>

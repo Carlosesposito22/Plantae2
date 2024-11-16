@@ -2,6 +2,7 @@ from django.urls import path
 from . import views
 from .views import mainpage_view 
 from .views import homepage_view
+from  Plantae.views import DashboardView
 
 
 app_name = "site_cc"
@@ -27,5 +28,6 @@ urlpatterns = [
     path('detectar_pragas_doencas/', views.detectar_pragas_doencas, name='detectar_pragas_doencas'),
     path("event/plantio/<int:plantio_event_id>/create_colheita/", views.create_colheita_event, name="create_colheita_event"),
     path('alerta_colheita', views.alerta_colheita, name='alerta_colheita'),
+    path("dashboard/", DashboardView.as_view(), name="dashboard"),
 
 ]
