@@ -29,6 +29,8 @@ urlpatterns = [
     path("event/plantio/<int:plantio_event_id>/create_colheita/", views.create_colheita_event, name="create_colheita_event"),
     path('alerta_colheita', views.alerta_colheita, name='alerta_colheita'),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
+    path('listar-problemas/', views.listar_problemas, name='listar_problemas'),
+
 
 
 ]

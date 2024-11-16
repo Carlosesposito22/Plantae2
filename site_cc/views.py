@@ -712,21 +712,30 @@ def detalhes_problema(request):
         'plantio_selecionado': plantio_selecionado,
     })
 
+from .models import ProblemaReportado
+
 def detectar_pragas_doencas(request):
     if request.method == 'POST':
         try:
             plantio_selecionado = request.POST.get('plantio')
             descricao_problema = request.POST.get('detalhes')
+
+            # Salva o problema no banco de dados
+            problema = ProblemaReportado.objects.create(
+                plantio=plantio_selecionado,
+                descricao=descricao_problema
+            )
+
+            # Simula lógica de detecção (ajuste conforme necessário)
             pragas_encontradas = []
             doencas_encontradas = []
-
             if plantio_selecionado in pragas_doencas:
                 for praga in pragas_doencas[plantio_selecionado]['pragas']:
                     if any(palavra in descricao_problema.lower() for palavra in praga['caracteristicas'].lower().split()):
                         pragas_encontradas.append({
                             'nome': praga.get('nome', 'Nome não disponível'),
                             'descricao': f"{praga.get('descricao', 'Descrição não disponível')} Esta praga é caracterizada por {praga.get('caracteristicas', 'características desconhecidas')}.",
-                            'tratamento': "\n".join(praga.get('tratamento', 'Tratamento não disponível').split(' . '))  # Cada tratamento em uma linha
+                            'tratamento': "\n".join(praga.get('tratamento', 'Tratamento não disponível').split(' . '))
                         })
 
                 for doenca in pragas_doencas[plantio_selecionado]['doencas']:
@@ -734,21 +743,21 @@ def detectar_pragas_doencas(request):
                         doencas_encontradas.append({
                             'nome': doenca.get('nome', 'Nome não disponível'),
                             'descricao': f"{doenca.get('descricao', 'Descrição não disponível')} Esta doença geralmente apresenta {doenca.get('caracteristicas', 'características desconhecidas')}.",
-                            'tratamento': "\n".join(doenca.get('tratamento', 'Tratamento não disponível').split(' . '))  # Cada tratamento em uma linha
+                            'tratamento': "\n".join(doenca.get('tratamento', 'Tratamento não disponível').split(' . '))
                         })
 
-                return JsonResponse({
-                    'success': True,
-                    'plantio': plantio_selecionado,
-                    'pragas': pragas_encontradas,
-                    'doencas': doencas_encontradas,
-                })
-            else:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Plantio não encontrado ou nenhum problema detectado.'
-                })
-
+            return JsonResponse({
+                'success': True,
+                'problema': {
+                    'id': problema.id,
+                    'plantio': problema.plantio,
+                    'descricao': problema.descricao,
+                    'data_reporte': problema.data_reporte.strftime('%d/%m/%Y %H:%M'),
+                    'resolvido': problema.resolvido
+                },
+                'pragas': pragas_encontradas,
+                'doencas': doencas_encontradas
+            })
         except Exception as e:
             print(f"Erro na view detectar_pragas_doencas: {e}")
             return JsonResponse({
@@ -757,6 +766,7 @@ def detectar_pragas_doencas(request):
             }, status=500)
 
     return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
+
 
 
 
@@ -1000,4 +1010,24 @@ def mainpage_view(request):
 
 def homepage_view(request):
     return render(request, "site_cc/homepage.html")  # Substitua pelo caminho correto do template
+
+from django.http import JsonResponse
+from .models import ProblemaReportado
+
+def listar_problemas(request):
+    if request.method == 'GET':
+        # Ordena pela data mais recente primeiro
+        problemas = ProblemaReportado.objects.all().order_by('-data_reporte')  
+        problemas_data = [{
+            'id': problema.id,
+            'plantio': problema.plantio,
+            'descricao': problema.descricao,
+            'data_reporte': problema.data_reporte.strftime('%d/%m/%Y %H:%M'),
+            'resolvido': problema.resolvido
+        } for problema in problemas]
+
+        return JsonResponse({'success': True, 'problemas': problemas_data})
+    return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
+
+
 

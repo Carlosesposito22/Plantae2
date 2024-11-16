@@ -189,23 +189,20 @@
                                         <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 600px;">N°</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Tipo de plantio</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Data de reporte</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">
-                                            Problema descrito
-                                            <button onclick="descricaoFunction()" style="margin-left: 10px;">Ver descrição</button></th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Problema descrito</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Resolvido?</th>
                                     </tr> 
                                 </thead>
                                 <tbody>
                                         <tr role="row" class="odd-13">
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
+                                            <!--sera adicionada aqui pelo js-->
                                         </tr>
                             </table>
+                            <div id="navigation-buttons">
+                                <!-- Se houver mais dados, adicione botões para navegação -->
+                                <button id="prevPage" class="btn btn-secondary">Anterior</button>
+                                <button id="nextPage" class="btn btn-secondary">Próximo</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -214,6 +211,16 @@
     </div>
 </div>
 
+<div id="modalConfirmacao" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="fecharModal()">&times;</span>
+        <h3>Confirmar Seleção</h3>
+        <p id="modalTexto">Você deseja confirmar esta praga ou doença?</p>
+        <button class="btn btn-modal" onclick="confirmarAdicao()">Confirmar</button>
+    </div>
+</div>
+
+
 
 <!-- Script para AJAX -->
 <script>
@@ -221,8 +228,8 @@
         e.preventDefault(); // Impede o envio padrão do formulário
         const formData = new FormData(this);
         const resultadoDiv = document.getElementById('resultadoRecomendacao');
-        
-        // Mostra um carregando
+        const tabelaBody = document.querySelector("#sampleTable-13 tbody"); // Seleciona o corpo da tabela
+    
         resultadoDiv.innerHTML = '<p>Carregando...</p>';
         
         fetch("{% url 'site_cc:detectar_pragas_doencas' %}", {
@@ -236,24 +243,36 @@
         .then(data => {
             resultadoDiv.innerHTML = ''; // Limpa o conteúdo anterior
             if (data.success) {
+                const novaLinha = document.createElement('tr');
+                const problema = data.problema;
+                novaLinha.innerHTML = `
+                    <td>${tabelaBody.children.length + 1}</td>
+                    <td>${problema.plantio}</td>
+                    <td>${problema.data_reporte}</td>
+                    <td>${problema.descricao}</td>
+                    <td>${problema.resolvido ? 'Sim' : 'Não'}</td>
+                `;
+                tabelaBody.insertBefore(novaLinha, tabelaBody.firstChild);
+    
                 resultadoDiv.innerHTML = `
                     <h3>Doenças:</h3>
-                    ${data.doencas.length ? data.doencas.map(doenca => `
-                        <div class="resultado-info">
-                            <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
-                            <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
-                            <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
-                        </div>
-                    `).join('') : '<p>Nenhuma doença identificada.</p>'}
-                    
+            ${data.doencas.length ? data.doencas.map((doenca, index) => `
+                <div class="resultado-info">
+                    <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
+                    <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
+                    <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
+                    <button class="btn btn-confirmar" onclick="abrirModal('doenca', ${index})">Confirmar</button>
+                </div>
+            `).join('') : '<p>Nenhuma doença identificada.</p>'}
                     <h3>Pragas:</h3>
-                    ${data.pragas.length ? data.pragas.map(praga => `
-                        <div class="resultado-info">
-                            <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
-                            <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
-                            <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
-                        </div>
-                    `).join('') : '<p>Nenhuma praga identificada.</p>'}
+            ${data.pragas.length ? data.pragas.map((praga, index) => `
+                <div class="resultado-info">
+                    <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
+                    <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
+                    <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
+                    <button class="btn btn-confirmar" onclick="abrirModal('praga', ${index})">Confirmar</button>
+                </div>
+            `).join('') : '<p>Nenhuma praga identificada.</p>'}
                 `;
             } else {
                 resultadoDiv.innerHTML = `<p>${data.message}</p>`;
@@ -265,7 +284,147 @@
         });
     });
     
+    document.addEventListener('DOMContentLoaded', function() {
+        const tabelaBody = document.querySelector("#sampleTable-13 tbody");
+        let currentPage = 0; // Página inicial
+        const rowsPerPage = 5; // Defina o número de linhas visíveis por vez
+        let problemas = []; // Array para armazenar os problemas carregados e adicionados manualmente
+    
+        // Função para renderizar a página atual
+        function renderPage() {
+            tabelaBody.innerHTML = ''; // Limpa a tabela
+            const start = currentPage * rowsPerPage;
+            const end = start + rowsPerPage;
+            const problemasPagina = problemas.slice(start, end);
+    
+            problemasPagina.forEach((problema, index) => {
+                const novaLinha = document.createElement('tr');
+                novaLinha.innerHTML = `
+                    <td>${start + index + 1}</td>  <!-- Numeração contínua -->
+                    <td>${problema.plantio}</td>
+                    <td>${problema.data_reporte}</td>
+                    <td>${problema.descricao}</td>
+                    <td>${problema.resolvido ? 'Sim' : 'Não'}</td>
+                `;
+                tabelaBody.appendChild(novaLinha);
+            });
+        }
+            fetch("{% url 'site_cc:listar_problemas' %}", {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                problemas = data.problemas; // Armazena os problemas recebidos
+                renderPage(); // Renderiza a primeira página
+            } else {
+                console.error('Erro ao carregar os problemas:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Erro ao carregar os problemas:', error);
+        });
+            document.getElementById('nextPage').addEventListener('click', () => {
+            const totalPages = Math.ceil(problemas.length / rowsPerPage);
+            if (currentPage < totalPages - 1) {
+                currentPage++;
+                renderPage();
+            }
+        });
+            document.getElementById('prevPage').addEventListener('click', () => {
+            if (currentPage > 0) {
+                currentPage--;
+                renderPage();
+            }
+        });
+            function adicionarProblema(problema) {
+            problemas.unshift(problema); // Adiciona o novo problema no começo do array
+            renderPage(); // Re-renderiza a tabela para mostrar o novo problema
+        }
+            function confirmarAdicao() {
+            fecharModal(); 
+    
+            if (!itemAtual.nome || !itemAtual.plantio || !itemAtual.descricaoProblema) {
+                console.error('Dados incompletos para a tabela:', itemAtual);
+                return; 
+            }
+    
+            const novoProblema = {
+                plantio: itemAtual.plantio,
+                descricao: itemAtual.descricaoProblema,
+                data_reporte: new Date().toLocaleDateString(),
+                resolvido: itemAtual.resolvido,
+            };
+    
+            adicionarProblema(novoProblema); // Chama a função para adicionar o novo problema
+            itemAtual = {}; // Reseta o item atual
+            tipoAtual = '';  // Reseta o tipo atual
+        }
+            function fecharModal() {
+            const modal = document.getElementById('modalConfirmacao');
+            modal.style.display = 'none';
+        }
+    });
+    
+    
+    
+    
+    let tipoAtual = '';  // Variável global para o tipo de praga/doença
+    let itemAtual = {};  // Objeto para armazenar os dados da praga/doença confirmada
+    
+    function abrirModal(tipo, index) {
+        const modal = document.getElementById('modalConfirmacao');
+        modal.style.display = 'block';
+    
+        tipoAtual = tipo;
+        itemAtual = tipo === 'doenca' ? data.doencas[index] : data.pragas[index];
+    
+        const plantioSelecionado = document.querySelector(".plantio-name").innerText; // Tipo de plantio selecionado
+        const descricaoProblema = document.getElementById('detalhes').value; // Descrição do problema
+    
+        itemAtual.plantio = plantioSelecionado;
+        itemAtual.descricaoProblema = descricaoProblema;
+        itemAtual.resolvido = false;  // O problema ainda não foi resolvido
+    
+        const modalTexto = document.getElementById('modalTexto');
+        modalTexto.innerHTML = `
+            Você deseja confirmar a ${tipo === 'doenca' ? 'doença' : 'praga'}: <strong>${itemAtual.nome}</strong>?<br>
+            Tipo de Plantio: ${itemAtual.plantio}<br>
+            Descrição do Problema: ${itemAtual.descricaoProblema}
+        `;
+    }
+    
+function fecharModal() {
+    const modal = document.getElementById('modalConfirmacao');
+    modal.style.display = 'none';
+}
+function confirmarAdicao() {
+    fecharModal(); 
+
+    if (!itemAtual.nome || !itemAtual.plantio || !itemAtual.descricaoProblema) {
+        console.error('Dados incompletos para a tabela:', itemAtual);
+        return; 
+    }
+
+    const tabelaBody = document.querySelector("#sampleTable-13 tbody");
+
+    const novaLinha = document.createElement('tr');
+    novaLinha.innerHTML = `
+        <td>${tabelaBody.children.length + 1}</td>
+        <td>${itemAtual.plantio}</td>
+        <td>${new Date().toLocaleDateString()}</td> <!-- Data atual -->
+        <td>${itemAtual.descricaoProblema}</td>
+        <td>${itemAtual.resolvido ? 'Sim' : 'Não'}</td>
+    `;
+
+    tabelaBody.insertBefore(novaLinha, tabelaBody.firstChild);
+
+    itemAtual = {}; // Reseta o item atual
+    tipoAtual = '';  // Reseta o tipo atual
+}
 </script>
 
-</script>
 {% endblock content %}
