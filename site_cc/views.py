@@ -619,7 +619,7 @@ def next_day(request, event_id):
 
 
 def tempo(request):
-    API_KEY = "741f449bc3d44b16b85205922242710"
+    API_KEY = "6d3d2107fd1048258f901644241611"
     cidade = "Carpina"
     
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"
@@ -878,7 +878,7 @@ def calendar_view_new(request, event_id=None):
         for event in events
     ]
 
-    API_KEY = "741f449bc3d44b16b85205922242710"
+    API_KEY = "6d3d2107fd1048258f901644241611"
     cidade = "Carpina"
     link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=30&lang=pt"
     
