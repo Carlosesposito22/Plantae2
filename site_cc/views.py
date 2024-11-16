@@ -1001,28 +1001,3 @@ def mainpage_view(request):
 def homepage_view(request):
     return render(request, "site_cc/homepage.html")  # Substitua pelo caminho correto do template
 
-from django.http import JsonResponse
-from django.shortcuts import render
-from .models import ProblemaReportado
-from django.core.serializers import serialize
-
-def salvar_problema(request):
-    if request.method == 'POST':
-        try:
-            plantio = request.POST.get('plantio')
-            descricao = request.POST.get('detalhes')
-
-            # Salvar o problema no banco de dados
-            problema = ProblemaReportado.objects.create(
-                plantio=plantio,
-                descricao=descricao
-            )
-
-            # Retornar os problemas atualizados
-            problemas_atualizados = ProblemaReportado.objects.all().order_by('-data_reporte')
-            problemas_json = serialize('json', problemas_atualizados)
-
-            return JsonResponse({'success': True, 'problemas': problemas_json})
-        except Exception as e:
-            return JsonResponse({'success': False, 'message': str(e)}, status=500)
-    return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)

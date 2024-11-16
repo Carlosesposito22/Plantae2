@@ -68,13 +68,3 @@ class Event(EventAbstract):
         
         super().save(*args, **kwargs)
 
-from django.db import models
-
-class ProblemaReportado(models.Model):
-    plantio = models.CharField(max_length=100)
-    descricao = models.TextField()
-    data_reporte = models.DateTimeField(auto_now_add=True)
-    resolvido = models.BooleanField(default=False)
-
-    def __str__(self):
-        return f"{self.plantio} - {self.descricao[:30]}..."
