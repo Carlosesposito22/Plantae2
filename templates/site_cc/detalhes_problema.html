@@ -186,7 +186,7 @@
                             <table class="table table-hover table-bordered dataTable no-footer-13" id="sampleTable-13" role="grid" aria-describedby="sampleTable_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" style="width: 600px;">N°</th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">N°</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Tipo de plantio</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Data de reporte</th>
                                         <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Problema descrito</th>
@@ -224,92 +224,32 @@
 
 <!-- Script para AJAX -->
 <script>
-    document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
-        e.preventDefault(); // Impede o envio padrão do formulário
-        const formData = new FormData(this);
-        const resultadoDiv = document.getElementById('resultadoRecomendacao');
-        const tabelaBody = document.querySelector("#sampleTable-13 tbody"); // Seleciona o corpo da tabela
-    
-        resultadoDiv.innerHTML = '<p>Carregando...</p>';
-        
-        fetch("{% url 'site_cc:detectar_pragas_doencas' %}", {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            resultadoDiv.innerHTML = ''; // Limpa o conteúdo anterior
-            if (data.success) {
-                const novaLinha = document.createElement('tr');
-                const problema = data.problema;
-                novaLinha.innerHTML = `
-                    <td>${tabelaBody.children.length + 1}</td>
-                    <td>${problema.plantio}</td>
-                    <td>${problema.data_reporte}</td>
-                    <td>${problema.descricao}</td>
-                    <td>${problema.resolvido ? 'Sim' : 'Não'}</td>
-                `;
-                tabelaBody.insertBefore(novaLinha, tabelaBody.firstChild);
-    
-                resultadoDiv.innerHTML = `
-                    <h3>Doenças:</h3>
-            ${data.doencas.length ? data.doencas.map((doenca, index) => `
-                <div class="resultado-info">
-                    <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
-                    <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
-                    <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
-                    <button class="btn btn-confirmar" onclick="abrirModal('doenca', ${index})">Confirmar</button>
-                </div>
-            `).join('') : '<p>Nenhuma doença identificada.</p>'}
-                    <h3>Pragas:</h3>
-            ${data.pragas.length ? data.pragas.map((praga, index) => `
-                <div class="resultado-info">
-                    <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
-                    <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
-                    <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
-                    <button class="btn btn-confirmar" onclick="abrirModal('praga', ${index})">Confirmar</button>
-                </div>
-            `).join('') : '<p>Nenhuma praga identificada.</p>'}
-                `;
-            } else {
-                resultadoDiv.innerHTML = `<p>${data.message}</p>`;
-            }
-        })
-        .catch(error => {
-            console.error('Erro:', error);
-            resultadoDiv.innerHTML = '<p>Ocorreu um erro ao processar sua solicitação.</p>';
-        });
-    });
-    
     document.addEventListener('DOMContentLoaded', function() {
         const tabelaBody = document.querySelector("#sampleTable-13 tbody");
         let currentPage = 0; // Página inicial
-        const rowsPerPage = 5; // Defina o número de linhas visíveis por vez
+        const rowsPerPage = 5; // Número de linhas visíveis por vez
         let problemas = []; // Array para armazenar os problemas carregados e adicionados manualmente
     
-        // Função para renderizar a página atual
+        // Função para renderizar a página
         function renderPage() {
-            tabelaBody.innerHTML = ''; // Limpa a tabela
+            tabelaBody.innerHTML = ''; // Limpa a tabela antes de renderizar novos dados
             const start = currentPage * rowsPerPage;
             const end = start + rowsPerPage;
             const problemasPagina = problemas.slice(start, end);
     
             problemasPagina.forEach((problema, index) => {
                 const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = `
-                    <td>${start + index + 1}</td>  <!-- Numeração contínua -->
-                    <td>${problema.plantio}</td>
-                    <td>${problema.data_reporte}</td>
-                    <td>${problema.descricao}</td>
-                    <td>${problema.resolvido ? 'Sim' : 'Não'}</td>
-                `;
+                novaLinha.innerHTML = 
+                    `<td>${start + index + 1}</td>`  // Numeração contínua
+                    + `<td>${problema.plantio}</td>`
+                    + `<td>${problema.data_reporte}</td>`
+                    + `<td>${problema.descricao}</td>`
+                    + `<td>${problema.resolvido ? 'Sim' : 'Não'}</td>`;
                 tabelaBody.appendChild(novaLinha);
             });
         }
-            fetch("{% url 'site_cc:listar_problemas' %}", {
+    
+        fetch("{% url 'site_cc:listar_problemas' %}", {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
@@ -327,24 +267,28 @@
         .catch(error => {
             console.error('Erro ao carregar os problemas:', error);
         });
-            document.getElementById('nextPage').addEventListener('click', () => {
+    
+        document.getElementById('nextPage').addEventListener('click', () => {
             const totalPages = Math.ceil(problemas.length / rowsPerPage);
             if (currentPage < totalPages - 1) {
                 currentPage++;
                 renderPage();
             }
         });
-            document.getElementById('prevPage').addEventListener('click', () => {
+    
+        document.getElementById('prevPage').addEventListener('click', () => {
             if (currentPage > 0) {
                 currentPage--;
                 renderPage();
             }
         });
-            function adicionarProblema(problema) {
+    
+        function adicionarProblema(problema) {
             problemas.unshift(problema); // Adiciona o novo problema no começo do array
             renderPage(); // Re-renderiza a tabela para mostrar o novo problema
         }
-            function confirmarAdicao() {
+    
+        function confirmarAdicao() {
             fecharModal(); 
     
             if (!itemAtual.nome || !itemAtual.plantio || !itemAtual.descricaoProblema) {
@@ -359,72 +303,96 @@
                 resolvido: itemAtual.resolvido,
             };
     
-            adicionarProblema(novoProblema); // Chama a função para adicionar o novo problema
+            adicionarProblema(novoProblema); // Adiciona o novo problema
             itemAtual = {}; // Reseta o item atual
             tipoAtual = '';  // Reseta o tipo atual
         }
-            function fecharModal() {
+    
+        function abrirModal(tipo, index) {
+            const modal = document.getElementById('modalConfirmacao');
+            modal.style.display = 'block';
+    
+            tipoAtual = tipo;
+            itemAtual = tipo === 'doenca' ? data.doencas[index] : data.pragas[index];
+    
+            const plantioSelecionado = document.querySelector(".plantio-name").innerText; // Tipo de plantio selecionado
+            const descricaoProblema = document.getElementById('detalhes').value; // Descrição do problema
+    
+            itemAtual.plantio = plantioSelecionado;
+            itemAtual.descricaoProblema = descricaoProblema;
+            itemAtual.resolvido = false;  // O problema ainda não foi resolvido
+    
+            const modalTexto = document.getElementById('modalTexto');
+            modalTexto.innerHTML = 
+                `Você deseja confirmar a ${tipo === 'doenca' ? 'doença' : 'praga'}: <strong>${itemAtual.nome}</strong>?<br>
+                Tipo de Plantio: ${itemAtual.plantio}<br>
+                Descrição do Problema: ${itemAtual.descricaoProblema}`;
+        }
+    
+        function fecharModal() {
             const modal = document.getElementById('modalConfirmacao');
             modal.style.display = 'none';
         }
+    
+        document.querySelector('.btn-modal').addEventListener('click', confirmarAdicao);
+    
+        // Configura o formulário de envio AJAX
+        document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const resultadoDiv = document.getElementById('resultadoRecomendacao');
+    
+            resultadoDiv.innerHTML = '<p>Carregando...</p>';
+    
+            fetch("{% url 'site_cc:detectar_pragas_doencas' %}", {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                resultadoDiv.innerHTML = '';
+                if (data.success) {
+                    const problema = data.problema;
+                    adicionarProblema({
+                        plantio: problema.plantio,
+                        descricao: problema.descricao,
+                        data_reporte: problema.data_reporte,
+                        resolvido: problema.resolvido
+                    });
+    
+                    resultadoDiv.innerHTML = 
+                        `<h3>Doenças:</h3>`
+                        + `${data.doencas.length ? data.doencas.map((doenca, index) => 
+                            `<div class="resultado-info">
+                                <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
+                                <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
+                                <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
+                                <button class="btn btn-confirmar" onclick="abrirModal('doenca', ${index})">Confirmar</button>
+                            </div>`
+                        ).join('') : '<p>Nenhuma doença identificada.</p>'}`
+                        + `<h3>Pragas:</h3>`
+                        + `${data.pragas.length ? data.pragas.map((praga, index) => 
+                            `<div class="resultado-info">
+                                <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
+                                <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
+                                <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
+                                <button class="btn btn-confirmar" onclick="abrirModal('praga', ${index})">Confirmar</button>
+                            </div>`
+                        ).join('') : '<p>Nenhuma praga identificada.</p>'}`;
+                } else {
+                    resultadoDiv.innerHTML = `<p>${data.message}</p>`;
+                }
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                resultadoDiv.innerHTML = '<p>Ocorreu um erro ao processar sua solicitação.</p>';
+            });
+        });
     });
     
-    
-    
-    
-    let tipoAtual = '';  // Variável global para o tipo de praga/doença
-    let itemAtual = {};  // Objeto para armazenar os dados da praga/doença confirmada
-    
-    function abrirModal(tipo, index) {
-        const modal = document.getElementById('modalConfirmacao');
-        modal.style.display = 'block';
-    
-        tipoAtual = tipo;
-        itemAtual = tipo === 'doenca' ? data.doencas[index] : data.pragas[index];
-    
-        const plantioSelecionado = document.querySelector(".plantio-name").innerText; // Tipo de plantio selecionado
-        const descricaoProblema = document.getElementById('detalhes').value; // Descrição do problema
-    
-        itemAtual.plantio = plantioSelecionado;
-        itemAtual.descricaoProblema = descricaoProblema;
-        itemAtual.resolvido = false;  // O problema ainda não foi resolvido
-    
-        const modalTexto = document.getElementById('modalTexto');
-        modalTexto.innerHTML = `
-            Você deseja confirmar a ${tipo === 'doenca' ? 'doença' : 'praga'}: <strong>${itemAtual.nome}</strong>?<br>
-            Tipo de Plantio: ${itemAtual.plantio}<br>
-            Descrição do Problema: ${itemAtual.descricaoProblema}
-        `;
-    }
-    
-function fecharModal() {
-    const modal = document.getElementById('modalConfirmacao');
-    modal.style.display = 'none';
-}
-function confirmarAdicao() {
-    fecharModal(); 
-
-    if (!itemAtual.nome || !itemAtual.plantio || !itemAtual.descricaoProblema) {
-        console.error('Dados incompletos para a tabela:', itemAtual);
-        return; 
-    }
-
-    const tabelaBody = document.querySelector("#sampleTable-13 tbody");
-
-    const novaLinha = document.createElement('tr');
-    novaLinha.innerHTML = `
-        <td>${tabelaBody.children.length + 1}</td>
-        <td>${itemAtual.plantio}</td>
-        <td>${new Date().toLocaleDateString()}</td> <!-- Data atual -->
-        <td>${itemAtual.descricaoProblema}</td>
-        <td>${itemAtual.resolvido ? 'Sim' : 'Não'}</td>
-    `;
-
-    tabelaBody.insertBefore(novaLinha, tabelaBody.firstChild);
-
-    itemAtual = {}; // Reseta o item atual
-    tipoAtual = '';  // Reseta o tipo atual
-}
-</script>
+</script>    
 
 {% endblock content %}

@@ -713,7 +713,12 @@ def detalhes_problema(request):
     })
 
 from .models import ProblemaReportado
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+from django.http import JsonResponse
+import json
 
+@login_required
 def detectar_pragas_doencas(request):
     if request.method == 'POST':
         try:
@@ -723,7 +728,8 @@ def detectar_pragas_doencas(request):
             # Salva o problema no banco de dados
             problema = ProblemaReportado.objects.create(
                 plantio=plantio_selecionado,
-                descricao=descricao_problema
+                descricao=descricao_problema,
+                usuario=request.user
             )
 
             # Simula lógica de detecção (ajuste conforme necessário)
@@ -1011,13 +1017,13 @@ def mainpage_view(request):
 def homepage_view(request):
     return render(request, "site_cc/homepage.html")  # Substitua pelo caminho correto do template
 
+from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
-from .models import ProblemaReportado
 
+@login_required
 def listar_problemas(request):
     if request.method == 'GET':
-        # Ordena pela data mais recente primeiro
-        problemas = ProblemaReportado.objects.all().order_by('-data_reporte')  
+        problemas = ProblemaReportado.objects.filter(usuario=request.user).order_by('-data_reporte')  # Filtra por usuário
         problemas_data = [{
             'id': problema.id,
             'plantio': problema.plantio,
