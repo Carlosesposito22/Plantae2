@@ -384,12 +384,44 @@
             problemasPagina.forEach((problema, index) => {
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = 
-                    `<td>${start + index + 1}</td>`  // Numeração contínua
-                    + `<td>${problema.plantio}</td>`
-                    + `<td>${problema.data_reporte}</td>`
-                    + `<td><button class="btn-verde" onclick="mostrarDetalhes('${problema.plantio}', '${problema.data_reporte}', '${problema.descricao}')">Ver Detalhes</button></td>`
-                    + `<td>${problema.resolvido ? 'Sim' : 'Não'}</td>`;
+                    `<td>${start + index + 1}</td>` +
+                    `<td>${problema.plantio}</td>` +
+                    `<td>${problema.data_reporte}</td>` +
+                    `<td><button class="btn-verde" onclick="mostrarDetalhes('${problema.plantio}', '${problema.data_reporte}', '${problema.descricao}')">Ver Detalhes</button></td>` +
+                    `<td>
+                        <input type="checkbox" class="checkbox-resolvido" data-id="${problema.id}" ${problema.resolvido ? 'checked' : ''}>
+                    </td>`;
                 tabelaBody.appendChild(novaLinha);
+            });
+    
+            adicionarEventosCheckbox(); // Adiciona eventos aos checkboxes
+        }
+    
+        function adicionarEventosCheckbox() {
+            const checkboxes = document.querySelectorAll('.checkbox-resolvido');
+            checkboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const problemaId = this.dataset.id;
+                    const resolvido = this.checked;
+    
+                    fetch("{% url 'site_cc:listar_problemas' %}", {
+                        method: 'POST',
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest',
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({ id: problemaId, resolvido })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (!data.success) {
+                            console.error('Erro ao atualizar o status:', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Erro ao atualizar o status:', error);
+                    });
+                });
             });
         }
     
@@ -432,7 +464,7 @@
             renderPage(); // Re-renderiza a tabela para mostrar o novo problema
         }
     
-            document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
+        document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             const resultadoDiv = document.getElementById('resultadoRecomendacao');
@@ -459,16 +491,16 @@
                     });
     
                     resultadoDiv.innerHTML = 
-                        `<h3>Doenças:</h3>`
-                        + `${data.doencas.length ? data.doencas.map((doenca, index) => 
+                        `<h3>Doenças:</h3>` +
+                        `${data.doencas.length ? data.doencas.map(doenca => 
                             `<div class="resultado-info">
                                 <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
                                 <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
                             </div>`
-                        ).join('') : '<p>Nenhuma doença identificada.</p>'}`
-                        + `<h3>Pragas:</h3>`
-                        + `${data.pragas.length ? data.pragas.map((praga, index) => 
+                        ).join('') : '<p>Nenhuma doença identificada.</p>'}` +
+                        `<h3>Pragas:</h3>` +
+                        `${data.pragas.length ? data.pragas.map(praga => 
                             `<div class="resultado-info">
                                 <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
@@ -485,6 +517,7 @@
             });
         });
     });
+    
 </script>
 
 {% endblock content %}

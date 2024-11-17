@@ -1019,11 +1019,13 @@ def homepage_view(request):
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
+@csrf_exempt
 @login_required
 def listar_problemas(request):
     if request.method == 'GET':
-        problemas = ProblemaReportado.objects.filter(usuario=request.user).order_by('-data_reporte')  # Filtra por usuário
+        problemas = ProblemaReportado.objects.filter(usuario=request.user).order_by('-data_reporte')
         problemas_data = [{
             'id': problema.id,
             'plantio': problema.plantio,
@@ -1031,9 +1033,21 @@ def listar_problemas(request):
             'data_reporte': problema.data_reporte.strftime('%d/%m/%Y %H:%M'),
             'resolvido': problema.resolvido
         } for problema in problemas]
-
         return JsonResponse({'success': True, 'problemas': problemas_data})
+    
+    if request.method == 'POST':
+        problema_id = request.POST.get('id')
+        resolvido = request.POST.get('resolvido') == 'true'
+        try:
+            problema = ProblemaReportado.objects.get(id=problema_id, usuario=request.user)
+            problema.resolvido = resolvido
+            problema.save()
+            return JsonResponse({'success': True})
+        except ProblemaReportado.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Problema não encontrado.'}, status=404)
+    
     return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
+
 
 
 
