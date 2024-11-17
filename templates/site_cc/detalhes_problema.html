@@ -140,6 +140,66 @@
         color: #333; /* Verde para os dados */
         font-weight: bold; /* Texto em negrito */
     }
+    .modal {
+        display: none; /* Escondido por padrão */
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.4); /* Fundo escurecido */
+        display: flex;
+        justify-content: center;
+        align-items: center; /* Centraliza verticalmente */
+    }
+    
+    .modal-content {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 50%;
+        max-width: 500px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
+    }
+    
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 20px;
+        font-size: 20px;
+        cursor: pointer;
+        color: #aaa;
+    }
+    
+    .close:hover {
+        color: #000;
+    }
+
+    .btn-verde {
+        background-color: #28a745; /* Verde */
+        border: none; /* Remove borda */
+        color: #fff; /* Texto branco */
+        padding: 10px 20px;
+        font-size: 14px;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    
+    .btn-verde:hover {
+        background-color: #218838; /* Verde mais escuro no hover */
+        transform: scale(1.05);
+    }
+    
+    .btn-verde:active {
+        background-color: #1e7e34; /* Verde ainda mais escuro ao clicar */
+        transform: scale(0.95);
+    }
+    
+    
+    
 </style>
 {% endblock extracss %}
 
@@ -211,15 +271,36 @@
     </div>
 </div>
 
-<div id="modalConfirmacao" class="modal" style="display: none;">
+<div id="modalDetalhes" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" onclick="fecharModal()">&times;</span>
-        <h3>Confirmar Seleção</h3>
-        <p id="modalTexto">Você deseja confirmar esta praga ou doença?</p>
-        <button class="btn btn-modal" onclick="confirmarAdicao()">Confirmar</button>
+        <h3>Detalhes do Problema</h3>
+        <div id="detalhesProblema">
+            <!-- Detalhes serão inseridos dinamicamente -->
+        </div>
     </div>
 </div>
 
+
+<script>
+    function mostrarDetalhes(plantio, data_reporte, descricao) {
+        const detalhesDiv = document.getElementById('detalhesProblema');
+        detalhesDiv.innerHTML = `
+            <p><strong>Tipo de Plantio:</strong> ${plantio}</p>
+            <p><strong>Data de Reporte:</strong> ${data_reporte}</p>
+            <p><strong>Descrição:</strong> ${descricao}</p>
+        `;
+    
+        const modal = document.getElementById('modalDetalhes');
+        modal.style.display = 'flex'; // Mostra o modal
+    }
+    
+    function fecharModal() {
+        const modal = document.getElementById('modalDetalhes');
+        modal.style.display = 'none'; // Esconde o modal
+    }
+    
+</script>
 
 
 <!-- Script para AJAX -->
@@ -230,7 +311,6 @@
         const rowsPerPage = 5; // Número de linhas visíveis por vez
         let problemas = []; // Array para armazenar os problemas carregados e adicionados manualmente
     
-        // Função para renderizar a página
         function renderPage() {
             tabelaBody.innerHTML = ''; // Limpa a tabela antes de renderizar novos dados
             const start = currentPage * rowsPerPage;
@@ -243,7 +323,7 @@
                     `<td>${start + index + 1}</td>`  // Numeração contínua
                     + `<td>${problema.plantio}</td>`
                     + `<td>${problema.data_reporte}</td>`
-                    + `<td>${problema.descricao}</td>`
+                    + `<td><button class="btn-verde" onclick="mostrarDetalhes('${problema.plantio}', '${problema.data_reporte}', '${problema.descricao}')">Ver Detalhes</button></td>`
                     + `<td>${problema.resolvido ? 'Sim' : 'Não'}</td>`;
                 tabelaBody.appendChild(novaLinha);
             });
@@ -288,56 +368,7 @@
             renderPage(); // Re-renderiza a tabela para mostrar o novo problema
         }
     
-        function confirmarAdicao() {
-            fecharModal(); 
-    
-            if (!itemAtual.nome || !itemAtual.plantio || !itemAtual.descricaoProblema) {
-                console.error('Dados incompletos para a tabela:', itemAtual);
-                return; 
-            }
-    
-            const novoProblema = {
-                plantio: itemAtual.plantio,
-                descricao: itemAtual.descricaoProblema,
-                data_reporte: new Date().toLocaleDateString(),
-                resolvido: itemAtual.resolvido,
-            };
-    
-            adicionarProblema(novoProblema); // Adiciona o novo problema
-            itemAtual = {}; // Reseta o item atual
-            tipoAtual = '';  // Reseta o tipo atual
-        }
-    
-        function abrirModal(tipo, index) {
-            const modal = document.getElementById('modalConfirmacao');
-            modal.style.display = 'block';
-    
-            tipoAtual = tipo;
-            itemAtual = tipo === 'doenca' ? data.doencas[index] : data.pragas[index];
-    
-            const plantioSelecionado = document.querySelector(".plantio-name").innerText; // Tipo de plantio selecionado
-            const descricaoProblema = document.getElementById('detalhes').value; // Descrição do problema
-    
-            itemAtual.plantio = plantioSelecionado;
-            itemAtual.descricaoProblema = descricaoProblema;
-            itemAtual.resolvido = false;  // O problema ainda não foi resolvido
-    
-            const modalTexto = document.getElementById('modalTexto');
-            modalTexto.innerHTML = 
-                `Você deseja confirmar a ${tipo === 'doenca' ? 'doença' : 'praga'}: <strong>${itemAtual.nome}</strong>?<br>
-                Tipo de Plantio: ${itemAtual.plantio}<br>
-                Descrição do Problema: ${itemAtual.descricaoProblema}`;
-        }
-    
-        function fecharModal() {
-            const modal = document.getElementById('modalConfirmacao');
-            modal.style.display = 'none';
-        }
-    
-        document.querySelector('.btn-modal').addEventListener('click', confirmarAdicao);
-    
-        // Configura o formulário de envio AJAX
-        document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
+            document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const formData = new FormData(this);
             const resultadoDiv = document.getElementById('resultadoRecomendacao');
@@ -370,7 +401,6 @@
                                 <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
                                 <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
-                                <button class="btn btn-confirmar" onclick="abrirModal('doenca', ${index})">Confirmar</button>
                             </div>`
                         ).join('') : '<p>Nenhuma doença identificada.</p>'}`
                         + `<h3>Pragas:</h3>`
@@ -379,7 +409,6 @@
                                 <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
                                 <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
-                                <button class="btn btn-confirmar" onclick="abrirModal('praga', ${index})">Confirmar</button>
                             </div>`
                         ).join('') : '<p>Nenhuma praga identificada.</p>'}`;
                 } else {
@@ -392,7 +421,7 @@
             });
         });
     });
-    
-</script>    
+</script>
+   
 
 {% endblock content %}
