@@ -233,8 +233,73 @@
         <div id="resultadoRecomendacao" class="resultado">
             <!-- O resultado será inserido aqui pelo script -->
         </div>
+        <button 
+    id="confirmarDoencasPragas" 
+    type="button" 
+    class="btn btn-submit" 
+    style="margin-top: auto; align-self: center; margin-bottom: 10px;">
+    Confirmar doenças/pragas <i class="bi bi-bug-fill" style="margin-left: 0.8rem;"></i>
+</button>
+        </div>
+</div>
+
+<!--modal de confirmar praga/doenca-->
+<div id="modalDoencasPragas" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close" onclick="fecharModalDoencasPragas()">&times;</span>
+        <h3>Confirmar doenças e pragas<br></h3>
+        <div id="conteudoDoencasPragas">
+            <!-- Informações serão adicionadas aqui via JavaScript -->
+        </div>
     </div>
 </div>
+<!--script desse modal-->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const botaoConfirmar = document.getElementById('confirmarDoencasPragas');
+        const modalDoencasPragas = document.getElementById('modalDoencasPragas');
+        const conteudoDoencasPragas = document.getElementById('conteudoDoencasPragas');
+    
+        botaoConfirmar.addEventListener('click', function () {
+            const resultadoDiv = document.getElementById('resultadoRecomendacao');
+            const doencasPragasHTML = resultadoDiv.innerHTML.trim(); // Obtém o conteúdo das doenças e pragas
+            if (doencasPragasHTML) {
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = doencasPragasHTML;
+                const nomes = tempDiv.querySelectorAll('.resultado-info .resultado-item strong');
+                const nomesFiltrados = Array.from(nomes)
+                    .filter(el => el.innerText === 'Nome:') // Filtra apenas os campos "Nome:"
+                    .map(el => el.nextSibling.textContent.trim()); // Obtém o texto ao lado
+                const tratamentos = Array.from(nomes)
+                    .filter(el => el.innerText === 'Tratamento:') // Filtra apenas os campos "Tratamento:"
+                    .map(el => el.nextSibling.textContent.trim()); // Obtém o texto ao lado
+                if (nomesFiltrados.length || tratamentos.length) {
+                    let conteudoHTML = '<ul>';
+                    nomesFiltrados.forEach((nome, index) => {
+                        const tratamento = tratamentos[index] || 'Não especificado'; // Adiciona tratamento, se disponível
+                        conteudoHTML += `<li><strong>Nome:</strong> ${nome} | <br><strong>Tratamento:</strong> ${tratamento}</li>`;
+                    });
+                    conteudoHTML += '</ul>';
+                    conteudoDoencasPragas.innerHTML = conteudoHTML;
+                } else {
+                    conteudoDoencasPragas.innerHTML = '<p>Nenhuma doença ou praga encontrada.</p>';
+                }
+            } else {
+                conteudoDoencasPragas.innerHTML = '<p>Nenhuma informação disponível no momento.</p>';
+            }
+            modalDoencasPragas.style.display = 'flex'; // Mostra o modal
+        });
+    
+        window.fecharModalDoencasPragas = function () {
+            modalDoencasPragas.style.display = 'none';
+        };
+        window.onclick = function (event) {
+            if (event.target === modalDoencasPragas) {
+                modalDoencasPragas.style.display = 'none';
+            }
+        };
+    });
+</script>
 
 <div class="col-md-13">
     <div class="tile-13">
@@ -270,7 +335,7 @@
         </div>
     </div>
 </div>
-
+<!--modal para ver descricao-->
 <div id="modalDetalhes" class="modal" style="display: none;">
     <div class="modal-content">
         <span class="close" onclick="fecharModal()">&times;</span>
@@ -280,8 +345,7 @@
         </div>
     </div>
 </div>
-
-
+<!--script desse modal-->
 <script>
     function mostrarDetalhes(plantio, data_reporte, descricao) {
         const detalhesDiv = document.getElementById('detalhesProblema');
@@ -303,7 +367,7 @@
 </script>
 
 
-<!-- Script para AJAX -->
+<!-- Script para AJAX, geral-->
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const tabelaBody = document.querySelector("#sampleTable-13 tbody");
@@ -422,6 +486,5 @@
         });
     });
 </script>
-   
 
 {% endblock content %}
