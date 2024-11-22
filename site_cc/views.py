@@ -588,10 +588,10 @@ def delete_event(request, event_id):
         try:
             event = Event.objects.get(id=event_id)
             event.delete()
-            return JsonResponse({'message': 'Evento excluído com sucesso!'})
+            return JsonResponse({'success': True, 'message': 'Evento excluído com sucesso!'})
         except Event.DoesNotExist:
-            return JsonResponse({'message': 'Evento não encontrado!'}, status=404)
-    return JsonResponse({'message': 'Método não permitido!'}, status=405)
+            return JsonResponse({'success': False, 'message': 'Evento não encontrado!'}, status=404)
+    return JsonResponse({'success': False, 'message': 'Método não permitido!'}, status=405)
 
 def next_week(request, event_id):
     event = get_object_or_404(Event, id=event_id)

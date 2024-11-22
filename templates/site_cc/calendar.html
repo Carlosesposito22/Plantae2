@@ -263,8 +263,9 @@
     }
 
     .delete-cancel-btn:hover {
-        background-color: #f0f0f0;
-        border-color: #aaaaaa;
+        background-color: #367A29;
+        border-color: #2A5E21 !important;
+        color: #ffffff !important;
     }
 
     .delete-confirm-btn {
@@ -282,8 +283,9 @@
     }
 
     .delete-confirm-btn:hover {
-        background-color: #444444;
-        border-color: #222222;
+        background-color: #367A29;
+        border-color: #2A5E21 !important;
+        color: #ffffff !important;
     }
 
     .delete-modal-message,
@@ -539,6 +541,34 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal "Excluindo cultura" -->
+<div id="deletingModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p>Excluindo cultura...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal "Cultura excluída com sucesso" -->
+<div id="successModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; background-color: #F4F4F4; padding: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+            <div class="modal-body">
+                <i class="bi bi-check-circle-fill" style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 15px;"></i>
+                <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Cultura excluída com sucesso</h4>
+                <p style="color: #777; font-size: 1rem;">Pronto, já pode acessar suas alterações!</p>
+                <button type="button" class="btn btn-dark" onclick="window.location.href='/gerenciar-culturas/'" 
+                        style="border-radius: 8px; margin-top: 20px; padding: 10px 20px; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-pencil-square"></i> Gerenciar culturas
+                </button>
             </div>
         </div>
     </div>
@@ -978,39 +1008,49 @@
         });
 
         document.getElementById('delete-event-button').addEventListener('click', function () {
-            eventIdToDelete = this.getAttribute('data-event-id'); // Salva o ID do evento
-            $('#detailModal').modal('hide'); // Fecha o modal de detalhes
+            eventIdToDelete = this.getAttribute('data-event-id');
+            $('#detailModal').modal('hide');
             setTimeout(() => {
-                $('#deleteConfirmationModal').modal('show'); // Exibe o modal de exclusão
-            }, 300); // Adiciona um pequeno atraso para evitar sobreposição
+                $('#deleteConfirmationModal').modal('show');
+            }, 300);
         });
 
         document.getElementById('confirmDeleteButton').addEventListener('click', function () {
             if (eventIdToDelete) {
-                fetch(`/delete_event/${eventIdToDelete}/`, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRFToken': csrftoken,
-                        'Content-Type': 'application/json'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            alert(data.message); // Exibe mensagem de sucesso
-                            window.location.reload(); // Recarrega a página
-                        } else {
-                            window.location.reload();
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao excluir evento:', error);
-                        alert('Erro ao excluir o evento. Por favor, tente novamente.');
-                    })
-                    .finally(() => {
-                        $('#deleteConfirmationModal').modal('hide'); // Fecha o modal
-                        eventIdToDelete = null; // Limpa o ID do evento
-                    });
+                $('#deleteConfirmationModal').modal('hide');
+
+                setTimeout(() => {
+                    $('#deletingModal').modal('show');
+
+                    setTimeout(() => {
+                        fetch(`/delete_event/${eventIdToDelete}/`, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken,
+                                'Content-Type': 'application/json'
+                            }
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            $('#deletingModal').modal('hide');
+
+                            if (data.success) {
+                                setTimeout(() => {
+                                    $('#successModal').modal('show');
+                                }, 300);
+                            } else {
+                                alert('Erro ao excluir o evento. Por favor, tente novamente.');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao excluir evento:', error);
+                            alert('Erro ao excluir o evento. Por favor, tente novamente.');
+                        })
+                        .finally(() => {
+                            eventIdToDelete = null;
+                        });
+                    }, 2000);
+                }, 300);
             }
         });
 
