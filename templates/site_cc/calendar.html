@@ -292,6 +292,58 @@
     .delete-modal-question {
         text-align: left;
     }
+
+    #suggestionModal .modal-content {
+        border-radius: 16px;
+        background-color: #F4F4F4;
+        padding: 24px;
+        text-align: center;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    #suggestionModal .modal-body {
+        padding: 20px;
+        font-family: 'Arial', sans-serif;
+    }
+
+    #suggestionModal .modal-title {
+        font-weight: bold;
+        font-size: larger;
+        font-size: 1.5rem;
+        color: #333;
+    }
+
+    #suggestionModal .modal-body p {
+        color: #777;
+        font-size: 1rem;
+        margin-bottom: 15px;
+    }
+
+    #suggestionModal .modal-body span {
+        font-weight: bold;
+        color: #333;
+    }
+
+    #suggestionModal .btn {
+        border-radius: 8px;
+        padding: 10px 20px;
+        font-size: 1rem;
+    }
+
+    #suggestionModal .btn-dark {
+        background-color: #333333;
+        color: #ffffff;
+    }
+
+    #suggestionModal .btn-outline-dark {
+        color: #333333;
+        border: 1px solid #cccccc;
+    }
+
+    #suggestionModal .btn-outline-dark:hover {
+        background-color: #f5f5f5;
+        border-color: #aaaaaa;
+    }
 </style>
 {% endblock extracss %}
 
@@ -317,7 +369,7 @@
     </div>
     <div id="addEventButtonContainer" style="text-align: right;">
         <button id="addEventButton" class="btn rounded-5">
-            <i class="bi bi-plus-circle"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Adicionar Evento
+            <i class="bi bi-plus-circle"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;"> |</span> Adicionar Evento
         </button>  
     </div>
 </div>
@@ -574,6 +626,58 @@
     </div>
 </div>
 
+<!-- Modal de Processamento -->
+<div id="processingModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <p>Processando nova cultura...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Sucesso -->
+<div id="successAddModal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; background-color: #F4F4F4; padding: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+            <div class="modal-body">
+                <i class="bi bi-check-circle-fill" style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 15px;"></i>
+                <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Cultura adicionada com sucesso</h4>
+                <p style="color: #777; font-size: 1rem;">Pronto, já pode acessar sua nova cultura!</p>
+                <button type="button" class="btn btn-dark" onclick="window.location.href='/dashboard/'" 
+                        style="border-radius: 8px; margin-top: 20px; padding: 10px 20px; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+                    <i class="bi bi-pencil-square"></i> Gerenciar culturas
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Sugestão -->
+<div class="modal fade" id="suggestionModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content" style="border-radius: 16px; background-color: #F4F4F4; padding: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
+            <div class="modal-body">
+                <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Sugestão</h4>
+                <p style="color: #777; font-size: 1rem; margin-bottom: 15px;">
+                    Sua cultura será plantada no dia <span id="suggestionPlantingDate"></span>, <br>
+                    sugerimos que a colheita seja no dia <span id="suggestionHarvestDate"></span>.
+                </p>
+                <p style="font-weight: bold; font-size: 1rem; color: #444;">Gostaria de aceitar nossa sugestão?</p>
+                <div class="d-flex justify-content-center gap-3 mt-4">
+                    <button type="button" id="rejectSuggestion" class="btn btn-outline-dark" style="border-radius: 8px; padding: 10px 20px; font-size: 1rem;">
+                        <i class="bi bi-x-circle"></i> Não, estou ciente
+                    </button>
+                    <button type="button" id="acceptSuggestion" class="btn btn-dark" style="border-radius: 8px; padding: 10px 20px; font-size: 1rem;">
+                        <i class="bi bi-check-circle"></i> Sim, aceito
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
 {% endblock content %}
@@ -679,84 +783,211 @@
             show: false
         });
 
-        document.getElementById('eventForm').addEventListener('submit', function(event) {
+        function resetEventForm() {
+            document.getElementById('eventForm').reset();
+            document.getElementById('id_event_id').value = "";
+        }
+
+        document.getElementById('addEventButton').addEventListener('click', function () {
+            resetEventForm();
+            $('#eventModal').modal('show');
+        });
+
+        $('#eventModal').on('hidden.bs.modal', function () {
+            resetEventForm();
+        });
+
+
+        document.getElementById('eventForm').addEventListener('submit', function (event) {
             event.preventDefault();
+
             const eventType = document.querySelector('#id_type').value;
-
-            let url = (eventType === "Plantio") ? "{% url 'site_cc:event_new_plantio' %}" : "{% url 'site_cc:event_new' %}";
-
+            const url = (eventType === "Plantio") ? "{% url 'site_cc:event_new_plantio' %}" : "{% url 'site_cc:event_new' %}";
             const formData = new FormData(this);
 
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken
-                },
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    return response.text().then(text => { throw new Error(text); });
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    alert(data.message || "Eventos criados com sucesso!");
+            $('#eventModal').modal('hide');
 
-                    calendar.addEvent({
-                        id: data.event_id,
-                        title: data.title,
-                        description: data.description,
-                        start: data.start_time,
-                        end: data.end_time,
-                        type: data.type,
-                        cultura: data.cultura,
-                        local: data.local,
-                    });
+            if (eventType === "Plantio") {
+                setTimeout(() => {
+                    const diasColheita = CULTURA_PRAZOS[formData.get('cultura')];
+                    const dataInicio = new Date(formData.get('start_time'));
+                    const dataColheita = new Date(dataInicio.getTime() + diasColheita * 24 * 60 * 60 * 1000);
+                    const dataColheitaFormatada = dataColheita.toLocaleDateString('pt-BR');
 
-                    $('#eventModal').modal('hide');
+                    document.getElementById('suggestionPlantingDate').textContent = dataInicio.toLocaleDateString('pt-BR');
+                    document.getElementById('suggestionHarvestDate').textContent = dataColheitaFormatada;
 
-                    if (data.open_recommendation_modal) {
-                        $('#recommendationModal').modal('show');
-                        console.log(data.cultura);
-                        const diasColheita = CULTURA_PRAZOS[data.cultura];
-                        document.getElementById('recommendationMessage').textContent = 
-                            `Recomendação para ${data.cultura}: Avalie a colheita para este período. A colheita ocorrerá em aproximadamente ${diasColheita} dias.`;
+                    document.getElementById('acceptSuggestion').onclick = function () {
+                        $('#suggestionModal').modal('hide');
+                        setTimeout(() => {
+                            $('#processingModal').modal('show');
+                        }, 300);
 
-                        document.getElementById('btn-nv-btn').addEventListener('click', function() {
-                            fetch(`/event/plantio/${data.event_id}/create_colheita/`, {
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRFToken': csrftoken
+                            },
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) {
+                                return response.text().then(text => { throw new Error(text); });
+                            }
+                            return response.json();
+                        })
+                        .then(data => {
+                            if (data.success) {
+                                calendar.addEvent({
+                                    id: data.event_id,
+                                    title: data.title,
+                                    description: data.description,
+                                    start: data.start_time,
+                                    end: data.end_time,
+                                    type: data.type,
+                                    cultura: data.cultura,
+                                    local: data.local,
+                                });
+
+                                fetch(`/event/plantio/${data.event_id}/create_colheita/`, {
+                                    method: 'POST',
+                                    headers: {
+                                        'X-CSRFToken': csrftoken
+                                    }
+                                })
+                                .then(response => response.json())
+                                .then(colheitaData => {
+                                    if (colheitaData.success) {
+                                        calendar.addEvent({
+                                            id: colheitaData.colheita_event_id,
+                                            title: `${data.title} - Colheita`,
+                                            start: dataColheita,
+                                            end: dataColheita,
+                                            type: "Colheita",
+                                            cultura: data.cultura,
+                                            local: data.local,
+                                        });
+
+                                        setTimeout(() => {
+                                            $('#processingModal').modal('hide');
+                                            setTimeout(() => {
+                                                $('#successAddModal').modal('show');
+                                            }, 500);
+                                        }, 2000);
+                                    } else {
+                                        alert("Erro ao criar colheita: " + colheitaData.message);
+                                    }
+                                })
+                                .catch(error => {
+                                    console.error('Erro ao criar evento de colheita:', error);
+                                    alert("Erro ao criar colheita. Tente novamente.");
+                                });
+                            } else {
+                                throw new Error("Erro ao salvar o evento.");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao processar a solicitação:', error);
+                            alert("Erro ao adicionar cultura. Verifique os dados e tente novamente.");
+                        });
+                    };
+
+                    document.getElementById('rejectSuggestion').onclick = function () {
+                        $('#suggestionModal').modal('hide');
+                        setTimeout(() => {
+                            $('#processingModal').modal('show');
+
+                            fetch(url, {
                                 method: 'POST',
                                 headers: {
                                     'X-CSRFToken': csrftoken
-                                }
+                                },
+                                body: formData
                             })
-                            .then(response => response.json())
-                            .then(colheitaData => {
-                                if (colheitaData.success) {
-                                    alert(colheitaData.message);
+                            .then(response => {
+                                if (!response.ok) {
+                                    return response.text().then(text => { throw new Error(text); });
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                if (data.success) {
                                     calendar.addEvent({
-                                        id: colheitaData.colheita_event_id,
-                                        title: `${data.title} - Colheita`,
-                                        start: new Date(new Date(data.start_time).getTime() + (diasColheita * 24 * 60 * 60 * 1000)),
-                                        end: new Date(new Date(data.end_time).getTime() + (diasColheita * 24 * 60 * 60 * 1000)),
-                                        type: "Colheita",
+                                        id: data.event_id,
+                                        title: data.title,
+                                        description: data.description,
+                                        start: data.start_time,
+                                        end: data.end_time,
+                                        type: data.type,
                                         cultura: data.cultura,
                                         local: data.local,
                                     });
+
+                                    setTimeout(() => {
+                                        $('#processingModal').modal('hide');
+                                        setTimeout(() => {
+                                            $('#successAddModal').modal('show');
+                                        }, 500);
+                                    }, 2000);
                                 } else {
-                                    alert("Erro: " + colheitaData.message);
+                                    throw new Error("Erro ao salvar o evento.");
                                 }
                             })
-                            .catch(error => console.error('Erro ao criar evento de colheita:', error));
-                        });
-                    } else {
-                        window.location.href = "{% url 'site_cc:calendar' %}";
+                            .catch(error => {
+                                console.error('Erro ao processar a solicitação:', error);
+                                alert("Erro ao adicionar cultura. Verifique os dados e tente novamente.");
+                            });
+                        }, 300);
+                    };
+
+                    $('#suggestionModal').modal('show');
+                }, 500);
+            } else {
+                setTimeout(() => {
+                    $('#processingModal').modal('show');
+                }, 300);
+
+                fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        return response.text().then(text => { throw new Error(text); });
                     }
-                } else if (data.errors) {
-                    alert("Erro ao salvar o evento: " + JSON.stringify(data.errors));
-                }
-            });
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        calendar.addEvent({
+                            id: data.event_id,
+                            title: data.title,
+                            description: data.description,
+                            start: data.start_time,
+                            end: data.end_time,
+                            type: data.type,
+                            cultura: data.cultura,
+                            local: data.local,
+                        });
+
+                        setTimeout(() => {
+                            $('#processingModal').modal('hide');
+                            setTimeout(() => {
+                                $('#successAddModal').modal('show');
+                            }, 500);
+                        }, 2000);
+                    } else {
+                        throw new Error("Erro ao salvar o evento.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro ao processar a solicitação:', error);
+                    alert("Erro ao adicionar cultura. Verifique os dados e tente novamente.");
+                });
+            }
         });
 
         var calendarEl = document.getElementById('calendar');
