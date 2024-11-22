@@ -2,15 +2,11 @@
 {% load static %}
 {% block title %}Calendário{% endblock title %}
 
-
 {% block extracss %}
-  <link href="{% static 'calender/main.css' %}" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
- 
- 
+<link href="{% static 'calender/main.css' %}" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
+
 <style>
-
-
     #addEventButton, #modeTempo, #modeFasesLua,#modeEventos{
         display: flex;
         flex-direction: row;
@@ -19,15 +15,12 @@
         justify-content: center;
         background-color: #d7d7d7;
     }
-   
-
 
     #modeEventos, #modeFasesLua, #modeTempo, #addEventButton{
-        width: 200px;  /* Ajuste conforme necessário */
-        padding: 10px;  /* Ajusta o espaçamento interno para botões mais largos */
+        width: 200px;
+        padding: 10px;
         text-align: center;
     }
-
 
     #calendar {
         width: 76%;
@@ -36,7 +29,6 @@
         padding: 20px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
-
 
     .fc-event {
         background-color: #4D933E !important;
@@ -47,11 +39,9 @@
         transition: transform 0.2s;
     }
 
-
     .fc-event:hover {
         transform: scale(1.05);
     }
-
 
     .coluna-ongoing {
         background-color: #F2F7F2;
@@ -62,33 +52,27 @@
         overflow-y: scroll;
     }
 
-
     .modal-header {
         background-color: #4D933E !important;
     }
 
-
     .modal-title {
         font-weight: bold;
     }
-
 
     .save-btn {
         background-color: #4D933E;
         border-color: #096d10;
     }
 
-
     .save-btn:hover {
         background-color: #2c5f20 !important;
         border-color: #00570d !important;
     }
 
-
     .btn-primary:hover {
         background-color: #515151;
     }
-
 
     .day-icon, .moon-icon {
         font-size: 100px;
@@ -100,27 +84,24 @@
         color: green !important;
     }
 
-
     .mode-buttons {
         margin-top: 10px;
         display: flex;
         gap: 10px;
     }
 
-
     .mode-buttons button.active {
         background-color: #4D933E !important;
         color: white !important;
     }
 
-
     #addEventButtonContainer {
         margin-top: 10px;
         display: flex;
-        justify-content: flex-end; /* Alinha o botão à direita */
-        width: 100%; /* Garante que o contêiner ocupe toda a largura disponível */
+        justify-content: flex-end;
+        width: 100%;
     }
-    /* Estilo do modal */
+
     .weather-modal {
         background-color: #ffffff;
         border-radius: 15px;
@@ -128,7 +109,6 @@
         text-align: center;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
-
     /* Cabeçalho do modal */
     .weather-modal .modal-header {
         background-color: #4CAF50;
@@ -147,7 +127,6 @@
         font-size: 1.5rem;
         color: white;
     }
-
     /* Seção principal para temperatura e descrição */
     .main-info {
         display: flex;
@@ -156,7 +135,6 @@
         margin: 20px 0;
         text-align: left;
     }
-
     /* Descrição e texto de temperatura */
     .description {
         flex: 1;
@@ -174,7 +152,6 @@
         margin: 5px 0 0;
         color: #333;
     }
-
     /* Círculo de temperatura */
     .temperature-circle {
         background-color: #f0f0f0;
@@ -189,7 +166,6 @@
         color: #333;
         font-weight: bold;
     }
-
     /* Grade de Informações */
     .weather-info-grid {
         display: grid;
@@ -221,7 +197,6 @@
         font-size: 1.1rem;
         color: #333;
     }
-
     /* Responsividade */
     @media (max-width: 768px) {
         .weather-info-grid {
@@ -238,8 +213,7 @@
             font-size: 1.8rem;
         }
     }
-
-   /* Modal de Exclusão */
+    /* Modal de Exclusão */
     .delete-modal-content {
         background-color: #f3f3f3;
         border-radius: 15px;
@@ -319,12 +293,10 @@
 </style>
 {% endblock extracss %}
 
-
 {% block breadcrumb %}
 <div style="margin: 100px 0 40px 180px;">
     <button style="width: 110px;" class="btn btn-primary active rounded-5"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
 </div>
-
 
 <div style="width: 76%; max-width: 1200px; margin: 0 auto;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
@@ -344,216 +316,162 @@
     <div id="addEventButtonContainer" style="text-align: right;">
         <button id="addEventButton" class="btn rounded-5">
             <i class="bi bi-plus-circle"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Adicionar Evento
-          </button>
-         
+        </button>  
     </div>
 </div>
-
-
 {% endblock breadcrumb %}
-
 
 {% block content %}
 <div class="d-flex justify-content-center align-items-center" style="height: 100vh; margin-top: 140px;">
     <div id="calendar"></div>
 </div>
-    <!-- Modal para Adicionar Plantação -->
-    <div class="modal fade" id="eventModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white">Adicionar Plantação</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <form method="post" id="eventForm">
-                    {% csrf_token %}
-                    <input type="hidden" id="id_event_id" name="event_id">
-                    <div class="modal-body">
-                        <div class="form-group">
-                            <label>Evento:</label>
-                            {{ form.title }}
-                        </div>
-                        <div class="form-group">
-                            <label>Tipo:</label>
-                            {{ form.type }}
-                        </div>
-                        <div class="form-group">
-                            <label>Cultura:</label>
-                            {{ form.cultura }}
-                        </div>
-                        <div class="form-group">
-                            <label>Local:</label>
-                            {{ form.local }}
-                        </div>
-                        <div class="form-group">
-                            <label>Descrição:</label>
-                            {{ form.description }}
-                        </div>
-                        <div class="form-group">
-                            <label>Início:</label>
-                            {{ form.start_time }}
-                        </div>
-                        <div class="form-group">
-                            <label>Fim:</label>
-                            {{ form.end_time }}
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                        <button type="submit" class="btn btn-primary save-btn">Salvar</button>
-                    </div>
-                </form>
+
+<!-- Modal para Adicionar Plantação -->
+<div class="modal fade" id="eventModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">Adicionar Plantação</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
             </div>
-        </div>
-    </div>
-
-
-    <!-- Modal para recomendação de colheita -->
-    <div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white">Recomendação de Colheita</h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
+            <form method="post" id="eventForm">
+                {% csrf_token %}
+                <input type="hidden" id="id_event_id" name="event_id">
                 <div class="modal-body">
-                    <p id="recommendationMessage" style="font-weight: bold; color: #333;"></p>
-                    <p>Sugestão: Avalie a colheita para este período.</p>
+                    <div class="form-group">
+                        <label>Evento:</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo:</label>
+                        {{ form.type }}
+                    </div>
+                    <div class="form-group">
+                        <label>Cultura:</label>
+                        {{ form.cultura }}
+                    </div>
+                    <div class="form-group">
+                        <label>Local:</label>
+                        {{ form.local }}
+                    </div>
+                    <div class="form-group">
+                        <label>Descrição:</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="form-group">
+                        <label>Início:</label>
+                        {{ form.start_time }}
+                    </div>
+                    <div class="form-group">
+                        <label>Fim:</label>
+                        {{ form.end_time }}
+                    </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-nv-btn">Criar</button>
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary save-btn">Salvar</button>
                 </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para recomendação de colheita -->
+<div class="modal fade" id="recommendationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white">Recomendação de Colheita</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="recommendationMessage" style="font-weight: bold; color: #333;"></p>
+                <p>Sugestão: Avalie a colheita para este período.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" id="btn-nv-btn">Criar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
-   
+</div>
 
-
-    <!-- Modal para Detalhes do Evento -->
-    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-white" id="title_event_detail"></h5>
-                    <button type="button" class="close" data-dismiss="modal">
-                        <span>&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
-                    <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p>
-                    <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
-                    <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
-                    <p><strong>Data Início:</strong> <span id="start_event_detail"></span></p>
-                    <p><strong>Data Fim:</strong> <span id="end_event_detail"></span></p>
-                    <p><strong>Duração:</strong> <span id="duration_readable_event_detail"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
-                    <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
-                </div>
+<!-- Modal para Detalhes do Evento -->
+<div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="title_event_detail"></h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
+                <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p>
+                <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
+                <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
+                <p><strong>Data Início:</strong> <span id="start_event_detail"></span></p>
+                <p><strong>Data Fim:</strong> <span id="end_event_detail"></span></p>
+                <p><strong>Duração:</strong> <span id="duration_readable_event_detail"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
+                <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
             </div>
         </div>
     </div>
+</div>
 
-
-    <!-- Modal de Previsão do Tempo -->
-    <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content weather-modal">
-                <!-- Cabeçalho -->
-                <div class="modal-header">
-                    <h5 class="modal-title" id="modalDate"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <!-- Corpo do Modal -->
-                <div class="modal-body">
-                    <!-- Linha principal com temperatura e descrição -->
-                    <div class="main-info">
-                        <div class="description">
-                            <p id="modalCondition" class="condition-text"></p>
-                            <h2 id="modalTemperature" class="temperature-text"></h2>
-                        </div>
-                        <div class="temperature-circle">
-                            <p id="modalMainTemperature"></p>
-                        </div>
+<!-- Modal de Previsão do Tempo -->
+<div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content weather-modal">
+            <!-- Cabeçalho -->
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDate"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- Corpo do Modal -->
+            <div class="modal-body">
+                <!-- Linha principal com temperatura e descrição -->
+                <div class="main-info">
+                    <div class="description">
+                        <p id="modalCondition" class="condition-text"></p>
+                        <h2 id="modalTemperature" class="temperature-text"></h2>
                     </div>
-
-                    <!-- Grade de Informações -->
-                    <div class="weather-info-grid">
-                        <div class="info-item">
-                            <i class="bi bi-droplet"></i>
-                            <p>Umidade</p>
-                            <strong id="modalHumidity"></strong>
-                        </div>
-                        <div class="info-item">
-                            <i class="bi bi-wind"></i>
-                            <p>Vento</p>
-                            <strong id="modalWind"></strong>
-                        </div>
-                        <div class="info-item">
-                            <i class="bi bi-sun"></i>
-                            <p>Índice UV</p>
-                            <strong id="modalUV"></strong>
-                        </div>
-                        <div class="info-item">
-                            <i class="bi bi-cloud-drizzle"></i>
-                            <p>Precipitação</p>
-                            <strong id="modalPrecipitation"></strong>
-                        </div>
+                    <div class="temperature-circle">
+                        <p id="modalMainTemperature"></p>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
-
-    <!-- Modal para Detalhes da Fase da Lua -->
-    <div class="modal fade" id="moonPhaseModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="moonModalDate"></h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p><strong>Fase da Lua:</strong> <span id="moonModalPhase"></span></p>
-                    <p><strong>Iluminação:</strong> <span id="moonModalIllumination"></span>%</p>
-                    <p><strong>Fluxo da Seiva:</strong> <span id="moonModalSapFlow"></span></p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Modal de Confirmação de Exclusão -->
-    <div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content delete-modal-content">
-                <div class="modal-body text-center">
-                    <h2 class="delete-modal-title">Excluir cultura</h2>
-                    <p class="delete-modal-message">
-                        O evento que criou está prestes a ser excluído, não haverá como recuperar.
-                    </p>
-                    <p class="delete-modal-question">Gostaria de concluir a ação?</p>
-                    <div class="delete-modal-buttons">
-                        <button type="button" class="btn delete-cancel-btn" data-dismiss="modal">
-                            <i class="bi bi-x-circle"></i> Não, cancele
-                        </button>
-                        <button type="button" class="btn delete-confirm-btn" id="confirmDeleteButton">
-                            <i class="bi bi-trash"></i> Sim, excluir
-                        </button>
+                <!-- Grade de Informações -->
+                <div class="weather-info-grid">
+                    <div class="info-item">
+                        <i class="bi bi-droplet"></i>
+                        <p>Umidade</p>
+                        <strong id="modalHumidity"></strong>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-wind"></i>
+                        <p>Vento</p>
+                        <strong id="modalWind"></strong>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-sun"></i>
+                        <p>Índice UV</p>
+                        <strong id="modalUV"></strong>
+                    </div>
+                    <div class="info-item">
+                        <i class="bi bi-cloud-drizzle"></i>
+                        <p>Precipitação</p>
+                        <strong id="modalPrecipitation"></strong>
                     </div>
                 </div>
             </div>
@@ -561,6 +479,50 @@
     </div>
 </div>
 
+<!-- Modal para Detalhes da Fase da Lua -->
+<div class="modal fade" id="moonPhaseModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="moonModalDate"></h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Fase da Lua:</strong> <span id="moonModalPhase"></span></p>
+                <p><strong>Iluminação:</strong> <span id="moonModalIllumination"></span>%</p>
+                <p><strong>Fluxo da Seiva:</strong> <span id="moonModalSapFlow"></span></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Confirmação de Exclusão -->
+<div class="modal fade" id="deleteConfirmationModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content delete-modal-content">
+            <div class="modal-body text-center">
+                <h2 class="delete-modal-title">Excluir cultura</h2>
+                <p class="delete-modal-message">
+                    O evento que criou está prestes a ser excluído, não haverá como recuperar.
+                </p>
+                <p class="delete-modal-question">Gostaria de concluir a ação?</p>
+                <div class="delete-modal-buttons">
+                    <button type="button" class="btn delete-cancel-btn" data-dismiss="modal">
+                        <i class="bi bi-x-circle"></i> Não, cancele
+                    </button>
+                    <button type="button" class="btn delete-confirm-btn" id="confirmDeleteButton">
+                        <i class="bi bi-trash"></i> Sim, excluir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 <!-- Modal genérico -->
 <div class="modal fade" id="genericModal" tabindex="-1" role="dialog">
@@ -582,14 +544,10 @@
     </div>
 </div>
 
-
-
-
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
-
-
 {% endblock content %}
+
 {% block extrascripts %}
 <script src="{% static 'calender/main.js' %}"></script>
 <script>
@@ -600,7 +558,7 @@
         'Batata': 105,
         'Rúcula': 35,
     };
-   
+    
     document.addEventListener('DOMContentLoaded', function() {
         let currentMode = 'eventos';
         let eventIdToDelete = null;
@@ -620,11 +578,9 @@
         }
         const csrftoken = getCookie('csrftoken');
 
-
         const modeEventosButton = document.getElementById('modeEventos');
         const modeTempoButton = document.getElementById('modeTempo');
         const modeFasesLuaButton = document.getElementById('modeFasesLua');
-
 
         modeEventosButton.addEventListener('click', function() {
             currentMode = 'eventos';
@@ -634,7 +590,6 @@
             updateCalendarMode();
         });
 
-
         modeTempoButton.addEventListener('click', function() {
             currentMode = 'tempo';
             modeTempoButton.classList.add('active');
@@ -642,7 +597,6 @@
             modeFasesLuaButton.classList.remove('active');
             updateCalendarMode();
         });
-
 
         modeFasesLuaButton.addEventListener('click', function() {
             currentMode = 'fases_lua';
@@ -652,23 +606,22 @@
             updateCalendarMode();
         });
 
-
         function updateCalendarMode() {
-            const ongoingEventsColumn = document.querySelector('.coluna-ongoing');
+            //const ongoingEventsColumn = document.querySelector('.coluna-ongoing');
             const addEventButton = document.getElementById('addEventButton');
-           
+            
             if (currentMode === 'eventos') {
                 calendar.setOption('selectable', false);
                 calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'auto'));
-                ongoingEventsColumn.style.display = 'block';
+                //ongoingEventsColumn.style.display = 'block';
                 addEventButton.style.display = 'inline-block';
                 document.querySelectorAll('.day-icon, .moon-icon').forEach(icon => icon.remove());
             } else if (currentMode === 'tempo') {
                 calendar.setOption('selectable', false);
                 calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'none'));
-                ongoingEventsColumn.style.display = 'none';
+                //ongoingEventsColumn.style.display = 'none';
                 addEventButton.style.display = 'none';
                 document.querySelectorAll('.moon-icon').forEach(icon => icon.remove());
                 renderWeatherIcons();
@@ -676,13 +629,12 @@
                 calendar.setOption('selectable', false);
                 calendar.setOption('headerToolbar', { left: 'prev,next today', center: 'title', right: '' });
                 calendar.getEvents().forEach(event => event.setProp('display', 'none'));
-                ongoingEventsColumn.style.display = 'none';
+                //ongoingEventsColumn.style.display = 'none';
                 addEventButton.style.display = 'none';
                 document.querySelectorAll('.day-icon').forEach(icon => icon.remove());
                 renderMoonPhaseIcons();
             }
         }
-
 
         document.getElementById('addEventButton').addEventListener('click', function() {
             document.getElementById('id_event_id').value = "";
@@ -691,24 +643,19 @@
             $('#eventModal').modal('show');
         });
 
-
         $('#recommendationModal').modal({
             backdrop: 'static',
             keyboard: false,
             show: false
         });
 
-
         document.getElementById('eventForm').addEventListener('submit', function(event) {
             event.preventDefault();
             const eventType = document.querySelector('#id_type').value;
 
-
             let url = (eventType === "Plantio") ? "{% url 'site_cc:event_new_plantio' %}" : "{% url 'site_cc:event_new' %}";
 
-
             const formData = new FormData(this);
-
 
             fetch(url, {
                 method: 'POST',
@@ -727,7 +674,6 @@
                 if (data.success) {
                     alert(data.message || "Eventos criados com sucesso!");
 
-
                     calendar.addEvent({
                         id: data.event_id,
                         title: data.title,
@@ -739,17 +685,14 @@
                         local: data.local,
                     });
 
-
                     $('#eventModal').modal('hide');
-
 
                     if (data.open_recommendation_modal) {
                         $('#recommendationModal').modal('show');
                         console.log(data.cultura);
                         const diasColheita = CULTURA_PRAZOS[data.cultura];
-                        document.getElementById('recommendationMessage').textContent =
+                        document.getElementById('recommendationMessage').textContent = 
                             `Recomendação para ${data.cultura}: Avalie a colheita para este período. A colheita ocorrerá em aproximadamente ${diasColheita} dias.`;
-
 
                         document.getElementById('btn-nv-btn').addEventListener('click', function() {
                             fetch(`/event/plantio/${data.event_id}/create_colheita/`, {
@@ -785,7 +728,6 @@
                 }
             });
         });
-
 
         var calendarEl = document.getElementById('calendar');
         var previsoes = JSON.parse(document.getElementById('weatherData').textContent);
@@ -833,16 +775,13 @@
             'Minguante': 'Seiva em baixo',
         };
 
-
         function renderWeatherIcons() {
             document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
                 const dateStr = dayCell.getAttribute('data-date');
                 const forecast = previsoes[dateStr];
 
-
                 const existingIcon = dayCell.querySelector('.day-icon');
                 if (existingIcon) existingIcon.remove();
-
 
                 if (forecast) {
                     const iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
@@ -852,33 +791,27 @@
                     icon.style.color = 'green';
                     icon.style.cursor = 'pointer';
 
-
                     icon.onclick = function(event) {
                         event.stopPropagation();
                         openWeatherModal(dateStr);
                     };
-
 
                     dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
                 }
             });
         }
 
-
         function renderMoonPhaseIcons() {
             document.querySelectorAll('.fc-daygrid-day').forEach(dayCell => {
                 const dateStr = dayCell.getAttribute('data-date');
                 const moonData = fasesLua[dateStr];
 
-
                 const existingIcon = dayCell.querySelector('.moon-icon');
                 if (existingIcon) existingIcon.remove();
-
 
                 if (moonData) {
                     const phase = moonData.fase_da_lua;
                     let iconClass = moonPhaseIcons[phase] || 'wi wi-moon-alt-new';
-
 
                     const icon = document.createElement('i');
                     icon.className = `${iconClass} moon-icon`;
@@ -886,24 +819,20 @@
                     icon.style.color = 'purple';
                     icon.style.cursor = 'pointer';
 
-
                     icon.onclick = function(event) {
                         event.stopPropagation();
                         openMoonPhaseModal(dateStr);
                     };
-
 
                     dayCell.querySelector('.fc-daygrid-day-frame').appendChild(icon);
                 }
             });
         }
 
-
         function openMoonPhaseModal(dateStr) {
             const moonData = fasesLua[dateStr];
             const faseDaLuaIngles = moonData.fase_da_lua;
             const faseDaLuaPortugues = moonPhaseTranslation[faseDaLuaIngles] || faseDaLuaIngles;
-
 
             if (moonData) {
                 document.getElementById('moonModalDate').textContent = dateStr.split('-').reverse().join('/');
@@ -913,7 +842,6 @@
                 $('#moonPhaseModal').modal('show');
             }
         }
-
 
         var calendar = new FullCalendar.Calendar(calendarEl, {
             locale: 'pt-br',
@@ -961,13 +889,10 @@
                     const dateStr = args.date.toISOString().split('T')[0];
                     const forecast = previsoes[dateStr];
 
-
                     if (forecast) {
                         const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
 
-
                         let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
-
 
                         const icon = document.createElement('i');
                         icon.className = `${iconClass} day-icon`;
@@ -975,18 +900,15 @@
                         icon.style.color = 'green';
                         icon.style.cursor = 'pointer';
 
-
                         icon.onclick = function(event) {
                             event.stopPropagation();
                             openWeatherModal(dateStr);
                         };
 
-
                         cellContent.appendChild(icon);
                     }
                 }
             },
-
 
             datesSet: function() {
                 if (currentMode === 'tempo') {
@@ -999,9 +921,7 @@
             }
         });
 
-
         calendar.render();
-
 
         updateCalendarMode();
 
@@ -1025,11 +945,9 @@
             }
         };
 
-
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
             document.getElementById('id_event_id').value = eventId;
-
 
             document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
             document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
@@ -1037,14 +955,11 @@
             document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
             document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
 
-
             let startDateStr = document.getElementById('start_event_detail').textContent.trim();
             let endDateStr = document.getElementById('end_event_detail').textContent.trim();
 
-
             let startDate = parseDateBR(startDateStr);
             let endDate = parseDateBR(endDateStr);
-
 
             if (startDate) {
                 document.getElementById('id_start_time').value = startDate.toISOString().slice(0, 19);
@@ -1052,13 +967,11 @@
                 console.error("Data de início inválida:", startDateStr);
             }
 
-
             if (endDate) {
                 document.getElementById('id_end_time').value = endDate.toISOString().slice(0, 19);
             } else {
                 console.error("Data de fim inválida:", endDateStr);
             }
-
 
             $('#detailModal').modal('hide');
             $('#eventModal').modal('show');
@@ -1101,17 +1014,14 @@
             }
         });
 
-
         const today = new Date().toISOString().split('T')[0];
         document.querySelectorAll('.fc-event').forEach(event => {
             const endDate = event.getAttribute('data-end-date');
             const eventType = event.getAttribute('data-type');
             const cultura = event.getAttribute('data-cultura'); // Identifica a cultura
 
-
             if (endDate === today && eventType === "Colheita") {
                 let deadlineIcon = event.querySelector('.deadline-icon');
-
 
                 if (!deadlineIcon) {
                     deadlineIcon = document.createElement('span');
@@ -1120,7 +1030,6 @@
                     deadlineIcon.style.cursor = 'pointer';
                     event.prepend(deadlineIcon);
                 }
-
 
                 // Configura o clique no ícone
                 deadlineIcon.addEventListener('click', function() {
@@ -1154,9 +1063,6 @@
 
 
 
-
-
-
         // Funções de Utilidade
         function converterDataParaDjangoFormat(data) {
             const dataJS = new Date(data);
@@ -1164,16 +1070,14 @@
                    `${dataJS.getHours().toString().padStart(2, '0')}:${dataJS.getMinutes().toString().padStart(2, '0')}:${dataJS.getSeconds().toString().padStart(2, '0')}`;
         }
 
-
         function formatDateTime(dateTime) {
             return new Date(dateTime).toLocaleString('pt-BR', { dateStyle: 'full', timeStyle: 'short' });
         }
 
-
         function parseDateBR(dateStr) {
             let regex = /(\d{1,2}) de (\w+) de (\d{4}) às (\d{2}):(\d{2})/;
             let matches = regex.exec(dateStr);
-           
+            
             if (matches) {
                 let day = parseInt(matches[1], 10);
                 let month = getMonthNumber(matches[2].toLowerCase());
@@ -1181,12 +1085,10 @@
                 let hours = parseInt(matches[4], 10);
                 let minutes = parseInt(matches[5], 10);
 
-
                 return new Date(year, month - 1, day, hours, minutes);
             }
             return null;
         }
-
 
         function getMonthNumber(monthStr) {
             const months = {
@@ -1199,8 +1101,4 @@
     });
 </script>
 
-
 {% endblock extrascripts %}
-
-
-
