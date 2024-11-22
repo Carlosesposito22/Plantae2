@@ -565,7 +565,7 @@
                 <i class="bi bi-check-circle-fill" style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 15px;"></i>
                 <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Cultura excluída com sucesso</h4>
                 <p style="color: #777; font-size: 1rem;">Pronto, já pode acessar suas alterações!</p>
-                <button type="button" class="btn btn-dark" onclick="window.location.href='/gerenciar-culturas/'" 
+                <button type="button" class="btn btn-dark" onclick="window.location.href='/dashboard/'" 
                         style="border-radius: 8px; margin-top: 20px; padding: 10px 20px; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-pencil-square"></i> Gerenciar culturas
                 </button>
@@ -1035,6 +1035,11 @@
                             $('#deletingModal').modal('hide');
 
                             if (data.success) {
+                                const event = calendar.getEventById(eventIdToDelete);
+                                if (event) {
+                                    event.remove();
+                                }
+
                                 setTimeout(() => {
                                     $('#successModal').modal('show');
                                 }, 300);
