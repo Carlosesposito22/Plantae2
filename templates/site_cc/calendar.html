@@ -30,18 +30,7 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-    .fc-event {
-        background-color: #4D933E !important;
-        color: white;
-        border-radius: 5px;
-        padding: 10px;
-        margin: 5px 0;
-        transition: transform 0.2s;
-    }
 
-    .fc-event:hover {
-        transform: scale(1.05);
-    }
 
     .coluna-ongoing {
         background-color: #F2F7F2;
@@ -343,6 +332,20 @@
     #suggestionModal .btn-outline-dark:hover {
         background-color: #f5f5f5;
         border-color: #aaaaaa;
+    }
+
+    .fc-event {
+        background: none !important;
+        background-color: var(--custom-bg-color, #4D933E) !important;
+        border-color: inherit !important;
+        color: inherit !important;
+        border-radius: 5px;
+        transition: transform 0.2s;
+    }
+
+    .fc-event:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 </style>
 {% endblock extracss %}
@@ -691,6 +694,13 @@
         'Alface': 38,
         'Batata': 105,
         'Rúcula': 35,
+    };
+    const culturaCores = {
+        'Tomate': '#ff0000',
+        'Cenoura': '#FFA500',
+        'Alface': '#228B22',
+        'Batata': '#E9CBA5',
+        'Rúcula': '#800080',
     };
     
     document.addEventListener('DOMContentLoaded', function() {
@@ -1140,6 +1150,17 @@
             dayMaxEvents: true,
             events: {{ events|safe }},
             eventDidMount: function(info) {
+                const cultura = info.event.extendedProps.cultura;
+                if (cultura && culturaCores[cultura]) {
+                    info.el.style.setProperty('--custom-bg-color', culturaCores[cultura]);
+                    info.el.style.backgroundColor = culturaCores[cultura];
+                    info.el.style.borderColor = culturaCores[cultura];
+                    info.el.style.color = 'white';
+                } else {
+                    console.warn('Cultura ou cor não definida para o evento:', info.event);
+                }
+                info.el.style.removeProperty('background');
+
                 var eventType = info.event.extendedProps.type;
                 if (eventType) {
                     info.el.classList.add(eventType);
