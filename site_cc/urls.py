@@ -2,6 +2,8 @@ from django.urls import path
 from . import views
 from .views import mainpage_view 
 from .views import homepage_view
+from .views import  salvar_selecao_modal
+
 from  Plantae.views import DashboardView
 
 
@@ -30,6 +32,8 @@ urlpatterns = [
     path('alerta_colheita', views.alerta_colheita, name='alerta_colheita'),
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path('listar-problemas/', views.listar_problemas, name='listar_problemas'),
+    path('url-salvar-selecao-modal/', salvar_selecao_modal, name='salvar_selecao_modal'),
+
 
 
 
