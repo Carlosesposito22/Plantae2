@@ -54,6 +54,7 @@ html {
   line-height: 1.15;
   -webkit-text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  overflow-x: hidden;
 }
 
 article, aside, figcaption, figure, footer, header, hgroup, main, nav, section {
@@ -595,14 +596,40 @@ pre code {
   margin-left: auto;
 }
 
+.cardsholderdashboard{
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  justify-content: right;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.painelholder{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 90%;
+  margin-top: 6rem;
+}
+
+.tilecol{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
 .row {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-wrap: wrap;
       flex-wrap: wrap;
-  margin-right: -15px;
-  margin-left: -15px;
+  align-items: center;
+  justify-content: center !important;
 }
 
 .no-gutters {
@@ -15542,6 +15569,7 @@ be a descendant of the grid when it is being dragged.
   -webkit-transition: all 0.3s ease-in-out;
   -o-transition: all 0.3s ease-in-out;
   transition: all 0.3s ease-in-out;
+  width: 90%;
 }
 
 @media print {
