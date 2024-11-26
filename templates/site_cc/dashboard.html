@@ -3,33 +3,34 @@
 
 {% block title %}Painel de Eventos{% endblock title %}
 
-{% block breadcrumb %}
-    <div>
-        <h1><i class="fa fa-dashboard"></i> Painel</h1>
-    </div>
-{% endblock breadcrumb %}
 
 {% block content %}
+
 <div class="row">
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small primary coloured-icon">
-            <i class="icon fa fa-leaf fa-3x"></i>
-            <div class="info">
-                <h4>Plantações Concluídas</h4>
-                <p><b>{{ total_event }}</b></p>
+    <div class="col-md-12 tilecol">
+        <div class="painelholder">
+            <h1 style="width: 20%;"><i class="fa fa-dashboard"></i> Painel</h1>
+            <div class="cardsholderdashboard">
+                <div class="col-md-6 col-lg-3" style="padding: 0; margin: 0;">
+                    <div class="widget-small primary coloured-icon">
+                        <i class="icon fa fa-leaf fa-3x"></i>
+                        <div class="info">
+                            <h4>Plantações Concluídas</h4>
+                            <p><b>{{ total_event }}</b></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-lg-3" style="padding: 0; margin: 0;">
+                    <div class="widget-small info coloured-icon">
+                        <i class="icon fa fa fa-spinner fa-3x"></i>
+                        <div class="info">
+                            <h4>Plantações em Andamento</h4>
+                            <p><b>{{ running_events.count }}</b></p>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="col-md-6 col-lg-3">
-        <div class="widget-small info coloured-icon">
-            <i class="icon fa fa fa-spinner fa-3x"></i>
-            <div class="info">
-                <h4>Plantações em Andamento</h4>
-                <p><b>{{ running_events.count }}</b></p>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-12">
         <div class="tile">
             <div class="tile-body">
                 <div class="table-responsive">

@@ -107,14 +107,14 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
 <ul>
     <li> 
     <a  href="https://www.figma.com/proto/9YfudFBdVCbdnRiEKH5Hyq/Planta%C3%AA---Projetos-2-%F0%9F%8C%B1?node-id=445-961&node-type=canvas&t=Jy6oyuCezfvJPfJX-0&scaling=min-zoom&content-scaling=fixed&page-id=214%3A436&starting-point-node-id=445%3A961"
-      >Protótipo de Lo-Fi no Figma</a>
+      >Protótipo de média fidelidade no Figma</a>
   </li>
     <li>
         <a  href=""
       >Diagrama de atividades</a>
   </li>
    <li>
-    <a href="" 
+    <a href="https://youtu.be/MBdUUXCJv1w" 
       >Screencast - Figma</a>
   </li>
   <li>

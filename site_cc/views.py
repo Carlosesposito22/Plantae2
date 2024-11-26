@@ -724,6 +724,8 @@ def detectar_pragas_doencas(request):
         try:
             plantio_selecionado = request.POST.get('plantio')
             descricao_problema = request.POST.get('detalhes')
+            print(f"Plantio selecionado: {plantio_selecionado}")
+            print(f"Descrição do problema: {descricao_problema}")
 
             # Salva o problema no banco de dados
             problema = ProblemaReportado.objects.create(
@@ -731,11 +733,14 @@ def detectar_pragas_doencas(request):
                 descricao=descricao_problema,
                 usuario=request.user
             )
+            print(f"Problema salvo com ID: {problema.id}")
 
-            # Simula lógica de detecção (ajuste conforme necessário)
+            # Simula lógica de detecção
             pragas_encontradas = []
             doencas_encontradas = []
+
             if plantio_selecionado in pragas_doencas:
+                print(f"Pragas e doenças detectadas para o plantio: {plantio_selecionado}")
                 for praga in pragas_doencas[plantio_selecionado]['pragas']:
                     if any(palavra in descricao_problema.lower() for palavra in praga['caracteristicas'].lower().split()):
                         pragas_encontradas.append({
@@ -751,6 +756,9 @@ def detectar_pragas_doencas(request):
                             'descricao': f"{doenca.get('descricao', 'Descrição não disponível')} Esta doença geralmente apresenta {doenca.get('caracteristicas', 'características desconhecidas')}.",
                             'tratamento': "\n".join(doenca.get('tratamento', 'Tratamento não disponível').split(' . '))
                         })
+
+            print(f"Pragas encontradas: {pragas_encontradas}")
+            print(f"Doenças encontradas: {doencas_encontradas}")
 
             return JsonResponse({
                 'success': True,
@@ -772,6 +780,7 @@ def detectar_pragas_doencas(request):
             }, status=500)
 
     return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
+
 
 
 
@@ -1050,4 +1059,30 @@ def listar_problemas(request):
 
 
 
+@login_required
+def salvar_selecao_modal(request):
+    if request.method == 'POST':
+        try:
+            problema_id = request.POST.get('problema_id')  # Obtém o ID do problema
+            selecoes = request.POST.getlist('selecoes[]')  # Obtém as seleções feitas no modal
+
+            # Valida se o problema existe
+            problema = ProblemaReportado.objects.get(id=problema_id, usuario=request.user)
+
+            # Substitui o campo 'descricao' pelo texto das seleções feitas no modal
+            if selecoes:
+                problema.descricao = f"Problemas relatados: {', '.join(selecoes)}"
+            else:
+                problema.descricao = "Problemas relatados: Nenhuma seleção feita."
+
+            # Salva a descrição atualizada no banco
+            problema.save()
+
+            return JsonResponse({'success': True, 'message': 'Seleções salvas e descrição atualizada com sucesso!'})
+        except ProblemaReportado.DoesNotExist:
+            return JsonResponse({'success': False, 'message': 'Problema não encontrado.'}, status=404)
+        except Exception as e:
+            return JsonResponse({'success': False, 'message': f'Erro: {str(e)}'}, status=500)
+
+    return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
 

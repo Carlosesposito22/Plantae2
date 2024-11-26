@@ -205,7 +205,7 @@
 
 {% block content %}
 <div class="container-flex">
-    <form id="detalheProblemaForm" class="problem-form" method="post">
+    <form id="detalheProblemaForm" class="problem-form" method="post" data-problema-id="{{ problema.id|default:'' }}">
         {% csrf_token %}
         <div class="plantio-info">
             {% if plantio_selecionado == "Batata" %}
@@ -243,14 +243,18 @@
         </div>
 </div>
 
-<!--modal de confirmar praga/doenca-->
-<div id="modalDoencasPragas" class="modal" style="display: none;">
+<div id="modalDoencasPragas" class="modal">
     <div class="modal-content">
-        <span class="close" onclick="fecharModalDoencasPragas()">&times;</span>
-        <h3>Confirmar doenças e pragas<br></h3>
-        <div id="conteudoDoencasPragas">
-            <!-- Informações serão adicionadas aqui via JavaScript -->
-        </div>
+        <span class="close" onclick="document.getElementById('modalDoencasPragas').style.display='none'">&times;</span>
+        <h3>Confirmar doenças e pragas</h3>
+        <form id="modalForm">
+            <div id="conteudoDoencasPragas">
+                <!-- As opções serão adicionadas dinamicamente -->
+            </div>
+            <button type="button" id="salvarSelecoes" class="btn btn-submit">
+                Salvar Seleções
+            </button>
+        </form>
     </div>
 </div>
 <!--script desse modal-->
@@ -259,45 +263,76 @@
         const botaoConfirmar = document.getElementById('confirmarDoencasPragas');
         const modalDoencasPragas = document.getElementById('modalDoencasPragas');
         const conteudoDoencasPragas = document.getElementById('conteudoDoencasPragas');
-    
+        const salvarSelecoes = document.getElementById('salvarSelecoes');
+        const resultadoRecomendacao = document.getElementById('resultadoRecomendacao');
+
         botaoConfirmar.addEventListener('click', function () {
-            const resultadoDiv = document.getElementById('resultadoRecomendacao');
-            const doencasPragasHTML = resultadoDiv.innerHTML.trim(); // Obtém o conteúdo das doenças e pragas
-            if (doencasPragasHTML) {
-                const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = doencasPragasHTML;
-                const nomes = tempDiv.querySelectorAll('.resultado-info .resultado-item strong');
-                const nomesFiltrados = Array.from(nomes)
-                    .filter(el => el.innerText === 'Nome:') // Filtra apenas os campos "Nome:"
-                    .map(el => el.nextSibling.textContent.trim()); // Obtém o texto ao lado
-                const tratamentos = Array.from(nomes)
-                    .filter(el => el.innerText === 'Tratamento:') // Filtra apenas os campos "Tratamento:"
-                    .map(el => el.nextSibling.textContent.trim()); // Obtém o texto ao lado
-                if (nomesFiltrados.length || tratamentos.length) {
-                    let conteudoHTML = '<ul>';
-                    nomesFiltrados.forEach((nome, index) => {
-                        const tratamento = tratamentos[index] || 'Não especificado'; // Adiciona tratamento, se disponível
-                        conteudoHTML += `<li><strong>Nome:</strong> ${nome} | <br><strong>Tratamento:</strong> ${tratamento}</li>`;
-                    });
-                    conteudoHTML += '</ul>';
-                    conteudoDoencasPragas.innerHTML = conteudoHTML;
-                } else {
-                    conteudoDoencasPragas.innerHTML = '<p>Nenhuma doença ou praga encontrada.</p>';
-                }
+            const resultadoHTML = resultadoRecomendacao.innerHTML.trim();
+            if (resultadoHTML) {
+                const pragas = Array.from(document.querySelectorAll('.resultado-info'))
+                    .map(info => info.querySelector('.resultado-item strong').nextSibling.textContent.trim());
+
+                conteudoDoencasPragas.innerHTML = pragas.map(praga => `
+                    <div>
+                        <input type="checkbox" id="praga_${praga}" name="selecoes[]" value="${praga}">
+                        <label for="praga_${praga}">${praga}</label>
+                    </div>
+                `).join('');
             } else {
-                conteudoDoencasPragas.innerHTML = '<p>Nenhuma informação disponível no momento.</p>';
+                conteudoDoencasPragas.innerHTML = '<p>Nenhuma praga ou doença encontrada.</p>';
             }
-            modalDoencasPragas.style.display = 'flex'; // Mostra o modal
+            modalDoencasPragas.style.display = 'flex';
         });
-    
-        window.fecharModalDoencasPragas = function () {
-            modalDoencasPragas.style.display = 'none';
-        };
-        window.onclick = function (event) {
-            if (event.target === modalDoencasPragas) {
-                modalDoencasPragas.style.display = 'none';
+
+        salvarSelecoes.addEventListener('click', async function () {
+            const checkboxes = Array.from(document.querySelectorAll('#conteudoDoencasPragas input[type="checkbox"]:checked'));
+            const selecoes = checkboxes.map(cb => cb.value);
+            const detalheProblemaForm = document.getElementById('detalheProblemaForm');
+            const problemaId = detalheProblemaForm.getAttribute('data-problema-id');
+
+            if (!problemaId) {
+                alert('Erro: ID do problema não encontrado.');
+                return;
             }
-        };
+
+            try {
+                const response = await fetch("{% url 'site_cc:salvar_selecao_modal' %}", {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        problema_id: problemaId,
+                        'selecoes[]': selecoes // Envia as seleções como array
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    alert('Seleções salvas com sucesso!');
+                    modalDoencasPragas.style.display = 'none';
+
+                    // Atualize o campo na tabela diretamente
+                    const linhaTabela = document.querySelector(`#sampleTable-13 tr[data-id="${problemaId}"]`);
+                    if (linhaTabela) {
+                        const celulaDescricao = linhaTabela.querySelector('.descricao-coluna');
+                        if (celulaDescricao) {
+                            celulaDescricao.textContent = `Confirmações: ${selecoes.join(', ')}`;
+                        }
+                    }
+                } else {
+                    alert(data.message || 'Erro desconhecido.');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar seleções:', error);
+                alert('Erro ao salvar no servidor.');
+            }
+        });
+
+
+
+
     });
 </script>
 
@@ -319,9 +354,21 @@
                                     </tr> 
                                 </thead>
                                 <tbody>
-                                        <tr role="row" class="odd-13">
-                                            <!--sera adicionada aqui pelo js-->
-                                        </tr>
+                                    {% for problema in problemas %}
+                                    <tr data-id="{{ problema.id }}">
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{ problema.plantio }}</td>
+                                        <td>{{ problema.data_reporte }}</td>
+                                        <td class="descricao-coluna">{{ problema.descricao|default:"Nenhuma descrição disponível" }}</td>
+                                        <td>
+                                            <input type="checkbox" class="checkbox-resolvido" data-id="{{ problema.id }}" {{ problema.resolvido|yesno:"checked," }}>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                                
+                               
+                                      
                             </table>
                             <div id="navigation-buttons">
                                 <!-- Se houver mais dados, adicione botões para navegação -->
@@ -349,15 +396,22 @@
 <script>
     function mostrarDetalhes(plantio, data_reporte, descricao) {
         const detalhesDiv = document.getElementById('detalhesProblema');
+        
+        // Evite problemas de quebra de string ao escapar aspas
+        const descricaoSegura = descricao.replace(/'/g, "\\'").replace(/"/g, '\\"');
+
         detalhesDiv.innerHTML = `
             <p><strong>Tipo de Plantio:</strong> ${plantio}</p>
             <p><strong>Data de Reporte:</strong> ${data_reporte}</p>
-            <p><strong>Descrição:</strong> ${descricao}</p>
+            <p><strong>Descrição:</strong> ${descricaoSegura}</p>
         `;
-    
+
         const modal = document.getElementById('modalDetalhes');
         modal.style.display = 'flex'; // Mostra o modal
     }
+
+
+    
     
     function fecharModal() {
         const modal = document.getElementById('modalDetalhes');
@@ -374,36 +428,43 @@
         let currentPage = 0; // Página inicial
         const rowsPerPage = 5; // Número de linhas visíveis por vez
         let problemas = []; // Array para armazenar os problemas carregados e adicionados manualmente
-    
+
+        
         function renderPage() {
             tabelaBody.innerHTML = ''; // Limpa a tabela antes de renderizar novos dados
             const start = currentPage * rowsPerPage;
             const end = start + rowsPerPage;
             const problemasPagina = problemas.slice(start, end);
-    
+
             problemasPagina.forEach((problema, index) => {
                 const novaLinha = document.createElement('tr');
                 novaLinha.innerHTML = 
                     `<td>${start + index + 1}</td>` +
                     `<td>${problema.plantio}</td>` +
                     `<td>${problema.data_reporte}</td>` +
-                    `<td><button class="btn-verde" onclick="mostrarDetalhes('${problema.plantio}', '${problema.data_reporte}', '${problema.descricao}')">Ver Detalhes</button></td>` +
+                    `<td class="descricao-coluna">${problema.descricao || 'Nenhuma descrição disponível'}</td>` +
                     `<td>
                         <input type="checkbox" class="checkbox-resolvido" data-id="${problema.id}" ${problema.resolvido ? 'checked' : ''}>
                     </td>`;
                 tabelaBody.appendChild(novaLinha);
             });
-    
+
             adicionarEventosCheckbox(); // Adiciona eventos aos checkboxes
         }
+
+
+
+        
+        
     
         function adicionarEventosCheckbox() {
             const checkboxes = document.querySelectorAll('.checkbox-resolvido');
             checkboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', function() {
-                    const problemaId = this.dataset.id;
-                    const resolvido = this.checked;
-    
+                    const problemaId = this.dataset.id; // Captura o ID do problema associado ao checkbox
+                    const resolvido = this.checked; // Verifica se está marcado ou não
+
+                    // Envia a atualização para o servidor
                     fetch("{% url 'site_cc:listar_problemas' %}", {
                         method: 'POST',
                         headers: {
@@ -424,6 +485,7 @@
                 });
             });
         }
+
     
         fetch("{% url 'site_cc:listar_problemas' %}", {
             method: 'GET',
@@ -443,6 +505,7 @@
         .catch(error => {
             console.error('Erro ao carregar os problemas:', error);
         });
+
     
         document.getElementById('nextPage').addEventListener('click', () => {
             const totalPages = Math.ceil(problemas.length / rowsPerPage);
@@ -482,13 +545,8 @@
             .then(data => {
                 resultadoDiv.innerHTML = '';
                 if (data.success) {
-                    const problema = data.problema;
-                    adicionarProblema({
-                        plantio: problema.plantio,
-                        descricao: problema.descricao,
-                        data_reporte: problema.data_reporte,
-                        resolvido: problema.resolvido
-                    });
+                    document.getElementById('detalheProblemaForm').setAttribute('data-problema-id', data.problema.id);
+
     
                     resultadoDiv.innerHTML = 
                         `<h3>Doenças:</h3>` +
@@ -521,3 +579,5 @@
 </script>
 
 {% endblock content %}
+
+
