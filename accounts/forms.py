@@ -52,6 +52,7 @@ class SignUpForm(forms.ModelForm):
                 attrs={
                     "class": "form-control",
                     "placeholder": "Digite seu email",
+                    "id": "email-usuario",
                 }
             )
         }
