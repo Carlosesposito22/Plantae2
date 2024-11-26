@@ -92,7 +92,7 @@
                
             </a>
             <a href="">
-                <li class="nav-li">
+                <li class="nav-li" name="btn_calendario">
                  <a href="{% url 'site_cc:calendar' %}"><p class="nav-item"><i class="bi bi-calendar" style="margin-right: 0.7rem;"></i>
                     Acessar Calendário</p> </a>
                 </li>
@@ -109,7 +109,7 @@
             <i class="bi bi-bell"></i>
             <p style="margin: 0;">Olá, Usuário<i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i></p>
             {% else %}
-            <a href="{% url 'accounts:signin' %}"><button class="btn junte-se">Junte-se</button></a>
+            <a href="{% url 'accounts:signin' %}" name="btn_junta_se"><button class="btn junte-se">Junte-se</button></a>
             {% endif %}
         </div>
 
