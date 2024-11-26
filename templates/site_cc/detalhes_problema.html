@@ -223,12 +223,12 @@
         </div>  
         <input type="hidden" name="plantio" value="{{ plantio_selecionado }}">
         <textarea id="detalhes" name="detalhes" rows="6" placeholder="Descreva o problema..." class="form-textarea"></textarea>
-        <button type="submit" class="btn btn-submit">Resolva meu problema <i class="bi bi-send-fill" style="margin-left: 0.8rem;"></i></button>
+        <button type="submit" class="btn btn-submit" name="botao_resolver">Resolva meu problema <i class="bi bi-send-fill" style="margin-left: 0.8rem;"></i></button>
     </form>
 
     <div class="resultado-container">
         <div class="plantio-info">
-            <p class="plantio-name"><i class="fas fa-lightbulb icon2"></i> Possíveis pragas e doenças encontradas:</p>
+            <p class="plantio-name" name="possivel"><i class="fas fa-lightbulb icon2"></i> Possíveis pragas e doenças encontradas:</p>
         </div>
         <div id="resultadoRecomendacao" class="resultado">
             <!-- O resultado será inserido aqui pelo script -->
