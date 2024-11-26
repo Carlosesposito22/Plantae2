@@ -7,4 +7,4 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         User = get_user_model()  
         User.objects.all().delete() 
-        self.stdout.write(self.style.SUCCESS('Todos os usuários foram deletados com sucesso.'))
+        self.stdout.write(self.style.ERROR('Todos os usuários foram deletados com sucesso.'))
