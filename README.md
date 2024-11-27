@@ -125,6 +125,10 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
     <a href=""
       >Screencast - Testes Automatizados</a>
   </li>
+          <li>
+    <a href=""
+      > CI/CD </a>
+  </li>
 </ul>
 
 ***Deployment das histórias produzidas:***
