@@ -15,7 +15,7 @@ from .forms import EventForm
 from .models import Event, EventMember
 from .forms import EventForm  
 
-API_KEY = 'AIzaSyDF834PQjSJFlpv0KjtJXgmefEVmIWlNTY'
+API_KEY = 'AIzaSyAB_SXUAAl0dTtSrFJzn6o7gDprXiet6E0'
 genai.configure(api_key=API_KEY)
 
 pragas_doencas = {
