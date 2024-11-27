@@ -23,6 +23,8 @@ import os
 import subprocess
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.alert import Alert
+from unittest.mock import patch
+from site_cc.views import calendar_view_new
 
 
 class AdicionarCulturaTest(LiveServerTestCase):
@@ -33,7 +35,8 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1280,720")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -151,10 +154,12 @@ class AdicionarCulturaTest(LiveServerTestCase):
 
         print("Finalizado o passo a passo de preenchimento incremental.")
         salvar_btn.click()
-        time.sleep(5)
+        time.sleep(8)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
-        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        btn_gerenciarCultura = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, "btn_gerenciarCultura"))
+        )
         btn_gerenciarCultura.click()
         time.sleep(3)
         assert "Nome teste para a cultura" in driver.page_source
@@ -170,7 +175,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -362,7 +367,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -561,7 +566,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -696,7 +701,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -863,7 +868,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -934,10 +939,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
         btn_calendar.click()
         time.sleep(3)
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
-        btn_calendar = driver.find_element(By.NAME, "possivel")
-        btn_calendar.click()
-        time.sleep(1)
+       
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
@@ -977,10 +979,725 @@ class AdicionarPragasTest(LiveServerTestCase):
         time.sleep(2)
 
 
+class SolucoesPragasTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    def teste_Cultura(self):
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Batata")))
+        btn_calendar = driver.find_element(By.NAME, "Batata")
+        btn_calendar.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("minha batata esta amarelada")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        time.sleep(2)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "cenoura")))
+        btn_calendar = driver.find_element(By.NAME, "cenoura")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("minha cenoura esta verde")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+       
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "tomate")))
+        btn_calendar = driver.find_element(By.NAME, "tomate")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o tomate esta com cheiro de estragado")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Alface")))
+        btn_calendar = driver.find_element(By.NAME, "Alface")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "rucula")))
+        btn_calendar = driver.find_element(By.NAME, "rucula")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        botao_resolver = driver.find_element(By.NAME, "botao_resolver")
+
+        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", botao_resolver)
+        time.sleep(2)
+
+        botao_resolver.click()
+        time.sleep(3)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        
+class DashboardTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    def testeDashboard(self):
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
+        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
+        btn_addEvento.click()
+
+        time.sleep(3)
+
+        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
+        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
+        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
+        local_cultura = driver.find_element(By.ID, "id_local")
+        descricao_cultura = driver.find_element(By.ID, "id_description")
+        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
+        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+
+        nomeEvento_cultura.send_keys("Teste para DashBoard")
+        time.sleep(1)
+        tipo_cultura.select_by_visible_text("Outros")
+        time.sleep(1)
+        cultura_cultura.select_by_visible_text("Batata")
+        time.sleep(1)
+        local_cultura.send_keys("Lote 110 - linha 17")
+        time.sleep(1)
+        descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
+        time.sleep(1)
+        dataInicio_cultura.send_keys("20/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("20/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("12:00")
+        time.sleep(1)
+
+        salvar_btn.click()
+        time.sleep(6)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        btn_gerenciarCultura.click()
+        time.sleep(5)
+        assert "Teste para DashBoard" in driver.page_source
+
+        # Verifica e printa as informações carregadas na dashboard
+        rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
+        for row in rows:
+            columns = row.find_elements(By.TAG_NAME, "td")
+            data = {
+                "SL": columns[0].text,
+                "Nome do Evento": columns[1].text,
+                "Tipo": columns[2].text,
+                "Cultura": columns[3].text,
+                "Local": columns[4].text,
+                "Data de Início": columns[5].text,
+                "Data de Término": columns[6].text,
+            }
+            print("Informações do Evento na Dashboard:", data)
+        assert len(rows) > 0, "Nenhum evento encontrado na dashboard."
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
+        cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
+        cultura_excluida.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "edit-event-button")))
+        btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
+        btn_editarCultura.click()
+
+        nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
+        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+
+        time.sleep(2)
+        nomeEvento_culturaEditar.clear()
+        time.sleep(1)
+        nomeEvento_culturaEditar.send_keys("Novo nome para o evento")
+        time.sleep(2)
+
+        salvar_btn.click()
+        time.sleep(5)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        btn_gerenciarCultura.click()
+        time.sleep(5)
+        assert "Novo nome para o evento" in driver.page_source
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
+        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
+        btn_addEvento.click()
+
+        time.sleep(3)
+
+        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
+        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
+        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
+        local_cultura = driver.find_element(By.ID, "id_local")
+        descricao_cultura = driver.find_element(By.ID, "id_description")
+        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
+        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+
+        nomeEvento_cultura.send_keys("Outra culura no DashBoard - Agora em andamento")
+        time.sleep(1)
+        tipo_cultura.select_by_visible_text("Preparo")
+        time.sleep(1)
+        cultura_cultura.select_by_visible_text("Rúcula")
+        time.sleep(1)
+        local_cultura.send_keys("Lote 1 - linha 2")
+        time.sleep(1)
+        descricao_cultura.send_keys("Descrição teste para o plantio de Rúcula")
+        time.sleep(1)
+        dataInicio_cultura.send_keys("29/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("30/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("12:00")
+        time.sleep(1)
+
+        salvar_btn.click()
+        time.sleep(6)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        btn_gerenciarCultura.click()
+        time.sleep(5)
+        assert "Outra culura no DashBoard - Agora em andamento" in driver.page_source
+
+        # Verifica e printa as informações carregadas na dashboard
+        rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
+        for row in rows:
+            columns = row.find_elements(By.TAG_NAME, "td")
+            data = {
+                "SL": columns[0].text,
+                "Nome do Evento": columns[1].text,
+                "Tipo": columns[2].text,
+                "Cultura": columns[3].text,
+                "Local": columns[4].text,
+                "Data de Início": columns[5].text,
+                "Data de Término": columns[6].text,
+            }
+            print("Informações do Evento na Dashboard:", data)
+        assert len(rows) > 0, "Nenhum evento encontrado na dashboard."
 
 
+class AlertaCriticoTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    @patch('site_cc.views.requests.get')
+    def testeAlertaCritico(self, mock_get):
+        mock_response = {
+            'forecast': {
+                'forecastday': [
+                    {
+                        'date': '22/11//2024',
+                        'day': {
+                            'maxtemp_c': 30,
+                            'mintemp_c': 18,
+                            'condition': {'text': 'Ensolarado', 'icon': '//cdn.weatherapi.com/weather/64x64/day/113.png'},
+                            'avghumidity': 60,
+                            'maxwind_kph': 15,
+                            'totalprecip_mm': 0,
+                            'uv': 7,
+                        },
+                        'astro': {
+                            'moon_phase': 'Full Moon',
+                            'moon_illumination': '100'
+                        }
+                    }
+                ]
+            }
+        }
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = mock_response
+
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "modeTempo")))
+        btn_Clima = driver.find_element(By.ID, "modeTempo")
+        btn_Clima.click()
+
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        # Clicar no ícone do clima
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".day-icon")))
+        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".day-icon")
+        icone_climaTeste.click()
+
+        time.sleep(4)
+
+        # Verificar se o alerta crítico está visível
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "weatherModal")))
+        alerta_critico = driver.find_element(By.ID, "criticalWarning")
+        self.assertTrue(alerta_critico.is_displayed())
+
+        # Fechar o modal
+        fechar_modal = driver.find_element(By.ID, "fecharmodalClima")
+        fechar_modal.click()
+        time.sleep(2)
 
 
+class InformarPlantios(LiveServerTestCase):
+    
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    def teste_Culturo(self):
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "recomendacao")))
+        btn_calendar = driver.find_element(By.NAME, "recomendacao")
+        btn_calendar.click()
+        time.sleep(1)
+
+        select_element = driver.find_element(By.ID, "planta2")
+
+        # Cria um objeto Select para manipular o dropdown
+        dropdown = Select(select_element)
+
+        # Seleciona a primeira opção (que não é o placeholder 'Escolha uma opção')
+        dropdown.select_by_index(1)
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "submit")))
+        btn_calendar = driver.find_element(By.NAME, "submit")
+        btn_calendar.click()
+      
+
+        
+        select_element = driver.find_element(By.ID, "planta2")
+        time.sleep(4)
+
+        # Cria um objeto Select para manipular o dropdown
+        dropdown = Select(select_element)
+
+        # Seleciona a primeira opção (que não é o placeholder 'Escolha uma opção')
+        dropdown.select_by_index(2)
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "submit")))
+        btn_calendar = driver.find_element(By.NAME, "submit")
+        btn_calendar.click()
+       
+
+        select_element = driver.find_element(By.ID, "planta2")
+        time.sleep(4)
+
+        # Cria um objeto Select para manipular o dropdown
+        dropdown = Select(select_element)
+
+        # Seleciona a primeira opção (que não é o placeholder 'Escolha uma opção')
+        dropdown.select_by_index(3)
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "submit")))
+        btn_calendar = driver.find_element(By.NAME, "submit")
+        btn_calendar.click()
+        
+
+        select_element = driver.find_element(By.ID, "planta2")
+
+        time.sleep(4)
+
+        # Cria um objeto Select para manipular o dropdown
+        dropdown = Select(select_element)
+
+        # Seleciona a primeira opção (que não é o placeholder 'Escolha uma opção')
+        dropdown.select_by_index(4)
+
+        
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "submit")))
+        btn_calendar = driver.find_element(By.NAME, "submit")
+        btn_calendar.click()
+        
+        select_element = driver.find_element(By.ID, "planta2")
+
+        time.sleep(4)
+
+        dropdown = Select(select_element)
+
+        # Seleciona a primeira opção (que não é o placeholder 'Escolha uma opção')
+
+        
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "submit")))
+        btn_calendar = driver.find_element(By.NAME, "submit")
+        btn_calendar.click()
+        
+        select_element = driver.find_element(By.ID, "planta2")
+
+        time.sleep(4)
+        
+
+       
 
 
 
