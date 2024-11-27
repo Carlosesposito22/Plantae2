@@ -523,6 +523,32 @@
         </div>
     </div>
 </div>
+<!--script da barra de pesquisa-->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const searchInput = document.querySelector('.form-control.me-2');
+            const searchButton = document.querySelector('.btn.btn-outline-success');
+            const tabelaBody = document.querySelector("#sampleTable-13 tbody");
+        
+            searchButton.addEventListener('click', (e) => {
+                e.preventDefault(); 
+                const searchTerm = searchInput.value.trim().toLowerCase();
+        
+                Array.from(tabelaBody.querySelectorAll('tr')).forEach(row => {
+                    const plantioCell = row.querySelector('td:nth-child(2)'); 
+                    if (plantioCell) {
+                        const plantioText = plantioCell.textContent.trim().toLowerCase();
+                        if (plantioText.includes(searchTerm)) {
+                            row.style.display = ''; 
+                        } else {
+                            row.style.display = 'none'; 
+                        }
+                    }
+                });
+            });
+        });
+         
+</script>
 <!--modal para ver descricao-->
 <div id="modalDetalhes" class="modal" style="display: none;">
     <div class="modal-content">
