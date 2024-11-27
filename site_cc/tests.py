@@ -1678,10 +1678,3 @@ class InformarPlantios(LiveServerTestCase):
 
         time.sleep(4)
         
-
-       
-
-
-
-
-
