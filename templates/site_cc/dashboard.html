@@ -17,13 +17,27 @@
         padding-top: 3rem;
     }
 
+    .historicodoplantio{
+        color: #316722 !important;
+        font-weight: bold !important;
+    }
+
+    th{
+        background-color: #2D3C29 !important;
+        color: white !important;
+        border-color: #FBFBFB !important;
+    }
+
+    td{
+        background-color: #EEF8E3 !important;
+    }
 
 </style>
 
 <div class="row">
     <div class="col-md-12 tilecol">
         <div class="painelholder">
-            <h1 style="width: fit-content;"><i class="fa fa-dashboard"></i> Histórico do Plantio</h1>
+            <h1 style="width: fit-content;" class="historicodoplantio"><i class="fa fa-dashboard"></i> Histórico do Plantio</h1>
             <div class="cardsholderdashboard">
                 <div class="col-md-6 col-lg-3" style="padding: 0; margin: 0;">
                     <div class="widget-small primary coloured-icon">
@@ -57,7 +71,7 @@
                 <div class="table-responsive">
                     <div id="sampleTable_wrapper" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                         <div class="row">
-                            <div class="col-sm-12">
+                            <div class="col-sm-12 tableholder">
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">

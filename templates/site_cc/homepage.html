@@ -1,9 +1,10 @@
-{% include 'navbar.html' %}
+{% include 'navbar2.html' %}
+{% load static %}
 {% block content %}
 <title>Plantaê</title>
 <style>
   .container-nav {
-    background-color: #e0e0e0;
+    background-color: #AFE507 ;
   }
 
   .logo {
@@ -42,7 +43,13 @@
   .hero-image {
     height: 25rem;
     width: 22rem;
-    background-color: red;
+    background-color: #F46718;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: baseline;
   }
 
   .hero h1 {
@@ -85,9 +92,13 @@
   }
 
   .img-sobre {
-    width: 22rem;
+    height: fit-content;
+    width: fit-content;
+  }
+
+  .imgsobre2{
     height: 22rem;
-    background-color: red;
+    width: 22rem;
   }
 
   .cards-sec {
@@ -177,41 +188,48 @@
     padding: 2rem;
   }
 
+  .velhofdp{
+    height: 32rem;
+    margin-left: -18.3rem;
+  }
+
 </style>
 </head>
 
 <body>
-  <section class="hero">
+  <section class="hero" style="background-color: #AFE507;">
     <div class="hero-text">
-      <h1 style="font-size: 3rem;"><strong>Seu plantio, <br> Nossa tecnologia</strong></h1>
-      <p class="subtitle">Gerencie seu cultivo de forma simples e eficiente.</p>
-      <p>Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</p>
+      <h1 style="font-size: 3rem; color: #316722;"><strong>Seu plantio, <br> Nossa tecnologia</strong></h1>
+      <p class="subtitle" style="color: #316722;">Gerencie seu cultivo de forma simples e eficiente.</p>
+      <p style="color: #316722;">Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</p>
       <a href="{% url 'accounts:signin' %}">
-        <button class="cta-btn">Experimente agora</button>
+        <button class="cta-btn" style="background-color: #316722;">Experimente agora</button>
       </a>
     </div>
     <div class="hero-image">
+      <img class="velhofdp" src="{% static 'images\3d-portrait-farmer1.png' %}"></img>
     </div>
   </section>
 
   <section class="about" id="sobre">
     <div class="about-text">
-      <h2><strong>Sobre o Plantaê</strong></h2>
-      <p>O <strong>Plantaê</strong> é uma plataforma desenvolvida para apoiar pequenos agricultores, facilitando o
+      <h2 style="color: #316722;"><strong>Sobre o Plantaê</strong></h2>
+      <p style="color: #316722;">O <strong>Plantaê</strong> é uma plataforma desenvolvida para apoiar pequenos agricultores, facilitando o
         planejamento e manejo de plantios e colheitas.</p>
       <br>
-      <p>Criada para atender às necessidades identificadas em parceria com o coletivo CAIS, onde os pequenos produtores
+      <p style="color: #316722;">Criada para atender às necessidades identificadas em parceria com o coletivo CAIS, onde os pequenos produtores
         dizem qual a sua necessidade de plantio e recebem ajuda para gerenciar suas culturas de forma simples.</p>
     </div>
 
     <div class="img-sobre">
+      <img class="imgsobre2" src="{% static 'images\close-up-picture-hand-holding-planting-sapling-plant 2.png' %}"></img>
     </div>
 
   </section>
 
-  <section class="cards-sec">
+  <section class="cards-sec" style="background-color: #316722;">
 
-    <p class="cards-header"><strong>Plantaê</strong> simboliza a força da agricultura familiar e a conexão com a terra.
+    <p class="cards-header" style="color: #F3F6F8;"><strong>Plantaê</strong> simboliza a força da agricultura familiar e a conexão com a terra.
     </p>
 
     <ul class="cardsul">
