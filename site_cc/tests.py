@@ -153,7 +153,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
 
         print("Finalizado o passo a passo de preenchimento incremental.")
         salvar_btn.click()
-        time.sleep(5)
+        time.sleep(8)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
         btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
