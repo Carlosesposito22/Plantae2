@@ -121,6 +121,10 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
     <a href=""
       >Screencast - Azure</a>
   </li>
+      <li>
+    <a href=""
+      >Screencast - Testes Automatizados</a>
+  </li>
 </ul>
 
 ***Deployment das histórias produzidas:***
