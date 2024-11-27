@@ -1079,6 +1079,8 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         time.sleep(2)
 
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
         btn_calendar.click()
@@ -1116,6 +1118,9 @@ class SolucoesPragasTest(LiveServerTestCase):
 
 
         driver.get("http://127.0.0.1:8000/mainpage/")
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
 
         
 
@@ -1157,6 +1162,9 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(3)
 
         driver.get("http://127.0.0.1:8000/mainpage/")
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
 
         
 
@@ -1200,6 +1208,9 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(3)
 
         driver.get("http://127.0.0.1:8000/mainpage/")
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
 
        
 
