@@ -1553,7 +1553,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         time.sleep(2)
 
 
-class InformarPlantios(LiveServerTestCase):
+class InformarPlantiosTest(LiveServerTestCase):
     
     @classmethod
     def setUpClass(cls):
@@ -1694,6 +1694,152 @@ class InformarPlantios(LiveServerTestCase):
 
         time.sleep(4)
         
+
+
+class ModalNotificacaoTest(LiveServerTestCase):
+
+    
+    @classmethod
+    def setUpClass(cls):
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+      
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--window-size=1920,1080")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+    
+    def teste_cultura(self):
+
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
+        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
+        btn_addEvento.click()
+
+        time.sleep(3)
+
+        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
+        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
+        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
+        local_cultura = driver.find_element(By.ID, "id_local")
+        descricao_cultura = driver.find_element(By.ID, "id_description")
+        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
+        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+
+        nomeEvento_cultura.send_keys("Teste para excluir cultura")
+        time.sleep(1)
+        tipo_cultura.select_by_visible_text("Colheita")
+        time.sleep(1)
+        cultura_cultura.select_by_visible_text("Batata")
+        time.sleep(1)
+        local_cultura.send_keys("Lote 230 - linha 90")
+        time.sleep(1)
+        descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
+        time.sleep(1)
+        dataInicio_cultura.send_keys("25/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("27/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("20:00")
+        time.sleep(1)
+
+        salvar_btn.click()
+        time.sleep(6)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        btn_gerenciarCultura.click()
+        time.sleep(3)
+        assert "Teste para excluir cultura" in driver.page_source
+
+
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
+        cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
+        cultura_excluida.click()
+
+        time.sleep(3)
+
+        try:
+            
+            warning_icon = driver.find_element(By.CLASS_NAME, "warning-icon")
+            
+            # Clique no ícone
+            warning_icon.click()
+            
+            print("Ícone de alerta clicado com sucesso!")
+        except Exception as e:
+            print(f"Erro ao tentar clicar no ícone: {e}")
+
+        
+        
+        time.sleep(8)
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "genericModalMessage")))
+        btn_calendar = driver.find_element(By.ID, "genericModalMessage")
+        btn_calendar.click()    
+
+        
+
+
+
 
        
 
