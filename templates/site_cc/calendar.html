@@ -347,6 +347,37 @@
         transform: scale(1.05);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
+
+    .critical-warning {
+        background-color: #ffcccc;
+        border-left: 6px solid red;
+        color: red;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+        animation: pulse 1.5s infinite;
+        font-size: 1rem;
+        padding: 0.5rem 0.5rem;
+    }
+
+    .critical-warning i {
+        margin-right: 10px;
+        font-size: 24px;
+    }
+
+    @keyframes pulse {
+        0% {
+            transform: scale(0.9);
+        }
+        50% {
+            transform: scale(0.95);
+        }
+        100% {
+            transform: scale(0.9);
+        }
+    }
 </style>
 {% endblock extracss %}
 
@@ -506,6 +537,12 @@
                     <div class="temperature-circle">
                         <p id="modalMainTemperature"></p>
                     </div>
+                </div>
+
+                <!-- Alerta de Clima Crítico -->
+                <div id="criticalWarning" class="critical-warning" style="display: none;">
+                    <i class="fa fa-exclamation-triangle"></i>
+                    Atenção: Temperatura fora do ideal (20-25ºC)
                 </div>
 
                 <!-- Grade de Informações -->
@@ -725,6 +762,16 @@
         const modeEventosButton = document.getElementById('modeEventos');
         const modeTempoButton = document.getElementById('modeTempo');
         const modeFasesLuaButton = document.getElementById('modeFasesLua');
+
+        const temperatureElement = document.getElementById('modalTemperature');
+        const criticalWarning = document.getElementById('criticalWarning');
+        const temperature = parseFloat(temperatureElement.innerText) || 28;
+
+        if (temperature > 25 || temperature < 20) {
+            criticalWarning.style.display = 'block';
+        } else {
+            criticalWarning.style.display = 'none';
+        }
 
         modeEventosButton.addEventListener('click', function() {
             currentMode = 'eventos';
