@@ -35,7 +35,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -172,7 +172,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -364,7 +364,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -563,7 +563,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -698,7 +698,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -865,7 +865,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -984,7 +984,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1224,7 +1224,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1446,7 +1446,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        # chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1560,7 +1560,7 @@ class InformarPlantios(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
