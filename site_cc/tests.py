@@ -1054,10 +1054,8 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
-        # Role para baixo dentro da seção específica usando JavaScript
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
 
         time.sleep(3)
@@ -1075,8 +1073,6 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_logar.send_keys(Keys.ENTER)
         time.sleep(1)
 
-
-
         time.sleep(2)
 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -1092,10 +1088,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "cenoura")
         btn_calendar.click()
 
-       
-
         time.sleep(3)
-
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
@@ -1107,16 +1100,12 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
         btn_calendar.click()
         time.sleep(3)
-
        
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
-        # Role para baixo dentro da seção específica usando JavaScript
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
 
         time.sleep(3)
-
-
 
         driver.get("http://127.0.0.1:8000/mainpage/")
         time.sleep(1)
@@ -1124,15 +1113,9 @@ class SolucoesPragasTest(LiveServerTestCase):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
 
-        
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
         btn_calendar.click()
-
-
-        
-       
 
         time.sleep(1)
 
@@ -1141,7 +1124,6 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
 
         time.sleep(3)
-
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
@@ -1154,11 +1136,8 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-       
-
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
-        # Role para baixo dentro da seção específica usando JavaScript
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
 
         time.sleep(3)
@@ -1169,19 +1148,9 @@ class SolucoesPragasTest(LiveServerTestCase):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
 
-        
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
         btn_calendar.click()
-
-
-       
-
-          
-        
-
-        
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Alface")))
         btn_calendar = driver.find_element(By.NAME, "Alface")
@@ -1189,7 +1158,6 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         time.sleep(3)
 
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
         btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
@@ -1201,11 +1169,8 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-        
-
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
-        # Role para baixo dentro da seção específica usando JavaScript
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
 
         time.sleep(3)
@@ -1216,18 +1181,11 @@ class SolucoesPragasTest(LiveServerTestCase):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(1)
 
-       
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
         btn_calendar.click()
 
         time.sleep(1)
-
-       
-
-            
-       
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "rucula")))
         btn_calendar = driver.find_element(By.NAME, "rucula")
@@ -1235,26 +1193,27 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         time.sleep(3)
 
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
         btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
         time.sleep(1)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)    
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
-        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
-        time.sleep(3)
 
-      
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        botao_resolver = driver.find_element(By.NAME, "botao_resolver")
+
+        driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", botao_resolver)
+        time.sleep(2)
+
+        botao_resolver.click()
+        time.sleep(3)
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
-        # Role para baixo dentro da seção específica usando JavaScript
         driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
 
         time.sleep(3)
+
+        
 class DashboardTest(LiveServerTestCase):
 
     @classmethod
