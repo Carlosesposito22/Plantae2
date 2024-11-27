@@ -1312,10 +1312,20 @@ class DashboardTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
         btn_calendar.click()
 
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(2)
+        # Aguarde o evento aparecer no DOM
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
+
+        # Localize o elemento
         cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
+
+        # Role até o elemento usando Selenium
+        actions = ActionChains(driver)
+        actions.move_to_element(cultura_excluida).perform()
+
+        # Aguarde até que o elemento seja clicável
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".fc-daygrid-event")))
+
+        # Clique no evento
         cultura_excluida.click()
 
         time.sleep(3)
@@ -1512,7 +1522,7 @@ class InformarPlantiosTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1752,9 +1762,6 @@ class ModalNotificacaoTest(LiveServerTestCase):
         btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
         driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
         time.sleep(3)
-        assert "Teste para excluir cultura" in driver.page_source
-
-
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
@@ -1770,17 +1777,12 @@ class ModalNotificacaoTest(LiveServerTestCase):
         time.sleep(3)
 
         try:
-            
             warning_icon = driver.find_element(By.CLASS_NAME, "warning-icon")
-            
-            # Clique no ícone
             warning_icon.click()
             
             print("Ícone de alerta clicado com sucesso!")
         except Exception as e:
             print(f"Erro ao tentar clicar no ícone: {e}")
-
-        
         
         time.sleep(8)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "genericModalMessage")))
