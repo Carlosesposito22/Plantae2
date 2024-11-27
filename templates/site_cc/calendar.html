@@ -43,6 +43,7 @@
 
     .modal-header {
         background-color: #4D933E !important;
+        width: 100% !important;
     }
 
     .modal-title {
@@ -87,14 +88,16 @@
     #addEventButtonContainer {
         margin-top: 10px;
         display: flex;
-        justify-content: flex-end;
+        flex-direction: row;
+        justify-content: space-between;
         width: 100%;
+        align-items: center;
+        gap: 2rem;
     }
 
     .weather-modal {
         background-color: #ffffff;
         border-radius: 15px;
-        padding: 20px;
         text-align: center;
         box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     }
@@ -102,8 +105,8 @@
     .weather-modal .modal-header {
         background-color: #4CAF50;
         color: white;
-        border-top-left-radius: 15px;
-        border-top-right-radius: 15px;
+        border-top-left-radius: inherit;
+        border-top-right-radius: inherit;
         padding: 10px 15px;
     }
 
@@ -308,6 +311,11 @@
         margin-bottom: 15px;
     }
 
+    .modal-body{
+        padding: 60px !important;
+        padding-top: 10px !important;
+    }
+
     #suggestionModal .modal-body span {
         font-weight: bold;
         color: #333;
@@ -347,6 +355,7 @@
         transform: scale(1.05);
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
+
 </style>
 {% endblock extracss %}
 
@@ -371,6 +380,17 @@
         </div>
     </div>
     <div id="addEventButtonContainer" style="text-align: right;">
+        <div class="input-group mb-3" style="width: 50%;">
+            <label class="input-group-text" for="inputGroupSelect01">Filtrar</label>
+            <select class="form-select" id="inputGroupSelect01">
+                <option selected>Escolha uma opção</option>
+                <option value="1">Batata</option>
+                <option value="2">Cenoura</option>
+                <option value="3">Tomate</option>
+                <option value="4">Rúcula</option>
+                <option value="5">Tomate</option>
+            </select>
+        </div>
         <button id="addEventButton" name="btn_addEvento" class="btn rounded-5">
             <i class="bi bi-plus-circle"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;"> |</span> Adicionar Evento
         </button>  
@@ -541,7 +561,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="moonModalDate"></h5>
+                <h5 class="modal-title" id="moonModalDate" style="color: white;"></h5>
                 <button type="button" id="fecharmodalClima1" class="close" data-dismiss="modal" aria-label="Fechar">
                     <span aria-hidden="true">&times;</span>
                 </button>

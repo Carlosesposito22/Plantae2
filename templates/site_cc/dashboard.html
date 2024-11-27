@@ -6,10 +6,24 @@
 
 {% block content %}
 
+<style>
+
+    .iconsholder{
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        margin-left: -43rem;
+        padding-bottom: 1rem;
+        padding-top: 3rem;
+    }
+
+
+</style>
+
 <div class="row">
     <div class="col-md-12 tilecol">
         <div class="painelholder">
-            <h1 style="width: 20%;"><i class="fa fa-dashboard"></i> Painel</h1>
+            <h1 style="width: fit-content;"><i class="fa fa-dashboard"></i> Histórico do Plantio</h1>
             <div class="cardsholderdashboard">
                 <div class="col-md-6 col-lg-3" style="padding: 0; margin: 0;">
                     <div class="widget-small primary coloured-icon">
@@ -30,6 +44,13 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="iconsholder">
+            <p class="concluded-n-icon"><i class="bi bi-check-circle-fill" style="color: rgb(0, 213, 0); margin-right: 0.3rem; font-weight: bold;"></i> Concluído</p>
+            <p class="ready-n-icon"><i class="bi bi-arrow-up-circle" style="color: rgb(0, 149, 255); margin-right: 0.3rem; font-weight: bold;"></i> Pronto pra colher</p>
+            <p class="ongoing-n-icon"><i class="bi bi-clock-history" style="color: rgb(255, 187, 0); margin-right: 0.3rem; font-weight: bold;"></i> Em Andamento</p>
+            <p class="agendado-n-icon"><i class="bi bi-calendar-week" style="color: rgb(231, 0, 173); margin-right: 0.3rem; font-weight: bold;"></i> Agendado</p>
+            <p class="critical-n-icon"><i class="bi bi-exclamation-triangle" style="color: red; margin-right: 0.3rem; font-weight: bold;"></i> Situação Crítica</p>
         </div>
         <div class="tile">
             <div class="tile-body">
