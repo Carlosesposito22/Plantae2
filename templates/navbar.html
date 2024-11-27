@@ -25,7 +25,7 @@
     }
 
     .navbar {
-        background-color: white;
+        background-color: rgb(175, 229, 7);
         width: 80%;
         display: flex;
         flex-direction: row;
@@ -35,8 +35,7 @@
         border-radius: 3rem;
         z-index: 999;
         position: fixed;
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding: 0.8rem 1rem;
     }
 
     .nav-ul {
@@ -49,7 +48,7 @@
     }
 
     .nav-li {
-        background-color: black;
+        background-color: rgb(45, 60, 41);
         padding: 0.6rem 1.5rem;
         border-radius: 1.5rem;
     }
@@ -113,7 +112,7 @@
         <div class="navrest">
             {% if user.is_authenticated %}
             <i class="bi bi-bell"></i>
-            <p style="margin: 0;">Olá, Usuário<i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i></p>
+            <p style="margin: 0; color: rgb(45, 60, 41);">Olá, Usuário<i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i></p>
             {% else %}
             <a href="{% url 'accounts:signin' %}" name="btn_junta_se"><button class="btn junte-se">Junte-se</button></a>
             {% endif %}

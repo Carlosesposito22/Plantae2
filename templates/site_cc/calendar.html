@@ -7,13 +7,24 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.10/css/weather-icons.min.css">
 
 <style>
-    #addEventButton, #modeTempo, #modeFasesLua,#modeEventos{
+    #modeTempo, #modeFasesLua,#modeEventos{
         display: flex;
         flex-direction: row;
         align-items: center;
         gap: 0.6rem;
         justify-content: center;
-        background-color: #d7d7d7;
+        background-color: #D5EDBB;
+        color: #6A8463;
+    }
+
+    #addEventButton{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 0.6rem;
+        justify-content: center;
+        background-color: #F46718;
+        color:  white;
     }
 
     #modeEventos, #modeFasesLua, #modeTempo, #addEventButton{
@@ -42,7 +53,6 @@
     }
 
     .modal-header {
-        background-color: #4D933E !important;
         width: 100% !important;
     }
 
@@ -81,8 +91,9 @@
     }
 
     .mode-buttons button.active {
-        background-color: #4D933E !important;
-        color: white !important;
+        background-color: #316722 !important;
+        color: #F3F6F8 !important;
+        border: none !important;
     }
 
     #addEventButtonContainer {
@@ -113,6 +124,8 @@
     .weather-modal .modal-title {
         font-size: 1.2rem;
         font-weight: bold;
+        background-color: none;
+        color: rgb(45, 60, 41);
     }
 
     .weather-modal .close {
@@ -356,17 +369,41 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
+    .voltar{
+        background-color: #E9F3DD !important;
+        color: #6A8463 !important;
+        border: none !important;
+    }
+
+    .gerenciar-btnmodal{
+        width: 100%;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #316722 !important;
+        border-radius: 30px !important;
+        border: none !important;
+    }
+
+    .gerenciar-btnmodal:hover{
+        background-color: #28531c !important;
+    }
+
+    #modal-success{
+        padding: 2rem !important;
+    }
+
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
 <div style="margin: 100px 0 40px 180px;">
-    <button style="width: 110px;" class="btn btn-primary active rounded-5"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
+    <button style="width: 110px;" class="btn btn-primary active rounded-5 voltar"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
 </div>
 
 <div style="width: 76%; max-width: 1200px; margin: 0 auto;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-        <h1 style="font-size: 4.5rem; margin: 0;">Calendário</h1>
+        <h1 style="font-size: 4.5rem; margin: 0; color: #316722;">Calendário</h1>
         <div class="mode-buttons" style="display: flex; gap: 14px;">
             <button id="modeEventos" class="btn   rounded-5">
                 <i class="fa-solid fa-seedling"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Plantio
@@ -381,7 +418,7 @@
     </div>
     <div id="addEventButtonContainer" style="text-align: right;">
         <div class="input-group mb-3" style="width: 50%;">
-            <label class="input-group-text" for="inputGroupSelect01">Filtrar</label>
+            <label class="input-group-text" for="inputGroupSelect01" style="border: none; background: none; ">Filtrar por:</label>
             <select class="form-select" id="inputGroupSelect01">
                 <option selected>Escolha uma opção</option>
                 <option value="1">Batata</option>
@@ -408,7 +445,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-white">Adicionar Plantação</h5>
+                <h5 class="modal-title">Adicionar Plantação</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -482,7 +519,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title text-white" id="title_event_detail"></h5>
+                <h5 class="modal-title" id="title_event_detail"></h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -493,12 +530,18 @@
                     <span id="type_event_detail"></span> 
                     <span id="warning-icon-container"></span>
                 </p>
-                <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p>
-                <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
-                <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
-                <p><strong>Data Início:</strong> <span id="start_event_detail"></span></p>
-                <p><strong>Data Fim:</strong> <span id="end_event_detail"></span></p>
-                <p><strong>Duração:</strong> <span id="duration_readable_event_detail"></span></p>
+                <p><strong>Cultura:</strong></p>
+                <p style="display: flex; flex-direction: row; align-items: center;"><i class="bi bi-circle-fill" style="margin-right: 0.5rem;"></i><span id="cultura_event_detail"></span></p>
+                <p><strong>Local:</strong></p>
+                <span id="local_event_detail"></span>
+                <p><strong>Descrição:</strong></p>
+                <span id="description_event_detail"></span>
+                <p><strong>Data Início:</strong></p>
+                <span id="start_event_detail"></span>
+                <p><strong>Data Fim:</strong></p>
+                <span id="end_event_detail"></span>
+                <p><strong>Duração:</strong></p>
+                <span id="duration_readable_event_detail"></span>
             </div>
             <div class="modal-footer">
                 <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
@@ -675,11 +718,11 @@
 <div id="successAddModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px; background-color: #F4F4F4; padding: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
-            <div class="modal-body">
+            <div class="modal-body" id="modal-success">
                 <i class="bi bi-check-circle-fill" style="font-size: 3.5rem; color: #4CAF50; margin-bottom: 15px;"></i>
                 <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Cultura adicionada com sucesso</h4>
                 <p style="color: #777; font-size: 1rem;">Pronto, já pode acessar sua nova cultura!</p>
-                <button type="button" name="btn_gerenciarCultura" class="btn btn-dark" onclick="window.location.href='/dashboard/'" 
+                <button type="button" name="btn_gerenciarCultura" class="btn btn-dark gerenciar-btnmodal" onclick="window.location.href='/dashboard/'" 
                         style="border-radius: 8px; margin-top: 20px; padding: 10px 20px; font-size: 1rem; display: inline-flex; align-items: center; gap: 0.5rem;">
                     <i class="bi bi-pencil-square"></i> Gerenciar culturas
                 </button>
