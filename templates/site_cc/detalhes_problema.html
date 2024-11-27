@@ -1,159 +1,225 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block breadcrumb %}
-<div>
-    <h1><i class="app-menu__icon fa fa-bug"></i> Detalhe o problema da sua plantação</h1>
-</div>
-{% endblock breadcrumb %}
-
 {% block extracss %}
 <link rel="stylesheet" href="{% static 'css/cards.css' %}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <style>
     body {
-        background-color: #f5f5f5; /* Fundo mais agradável visualmente */
+        background-color: #f5f5f5;
+        /* Fundo mais agradável visualmente */
     }
 
     .container-flex {
         display: flex;
-        justify-content: space-between;
+        flex-direction: column;
+        justify-content: left !important;
+        align-items: center;
         gap: 20px;
         max-width: 1200px;
         margin: 30px auto;
+        margin-top: 6rem;
     }
 
     .problem-form,
     .resultado-container {
-        background-color: #ffffff; /* Cor de fundo */
-        border: 2px solid #28a745; /* Borda verde */
-        border-radius: 15px; /* Cantos arredondados */
-        padding: 30px; /* Espaçamento interno */
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1); /* Sombra suave */
+        background-color: #ffffff;
+        /* Cor de fundo */
+        border: 2px solid #28a745;
+        /* Borda verde */
+        border-radius: 15px;
+        /* Cantos arredondados */
+        padding: 30px;
+        /* Espaçamento interno */
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        /* Sombra suave */
         display: flex;
-        flex-direction: column; /* Permite o alinhamento vertical */
-        flex: 1; /* Faz as duas áreas ocuparem a mesma altura */
-        height: 640px; /* Altura fixa para o contêiner */
-        overflow: hidden; /* Esconde qualquer conteúdo que ultrapasse a altura */
+        flex-direction: column;
+        /* Permite o alinhamento vertical */
+        flex: 1;
+        /* Faz as duas áreas ocuparem a mesma altura */
+        height: 640px;
+        /* Altura fixa para o contêiner */
+        overflow: hidden;
+        /* Esconde qualquer conteúdo que ultrapasse a altura */
     }
 
     .form-textarea {
-        flex: 1; /* Faz o textarea crescer para ocupar espaço */
-        width: 100%; /* Largura completa do textarea */
-        border: 1px solid #ccc; /* Borda cinza */
-        border-radius: 8px; /* Cantos arredondados */
-        padding: 15px; /* Espaçamento interno */
-        font-size: 18px; /* Tamanho da fonte aumentado */
-        resize: none; /* Não permite redimensionar */
-        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1); /* Sombra interna */
-        margin-bottom: 15px; /* Margem inferior */
+        flex: 1;
+        /* Faz o textarea crescer para ocupar espaço */
+        width: 100%;
+        /* Largura completa do textarea */
+        border: 1px solid #ccc;
+        /* Borda cinza */
+        border-radius: 8px;
+        /* Cantos arredondados */
+        padding: 15px;
+        /* Espaçamento interno */
+        font-size: 18px;
+        /* Tamanho da fonte aumentado */
+        resize: none;
+        /* Não permite redimensionar */
+        box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        /* Sombra interna */
+        margin-bottom: 15px;
+        /* Margem inferior */
     }
 
     .resultado-container {
-        overflow-y: auto; /* Adiciona rolagem vertical */
+        overflow-y: auto;
+        /* Adiciona rolagem vertical */
     }
 
     .section-title {
-        text-align: center; /* Centraliza o título da seção */
-        font-size: 28px; /* Tamanho da fonte do título */
-        margin-bottom: 20px; /* Margem inferior */
-        color: #333; /* Cor do texto */
+        text-align: center;
+        /* Centraliza o título da seção */
+        font-size: 28px;
+        /* Tamanho da fonte do título */
+        margin-bottom: 20px;
+        /* Margem inferior */
+        color: #333;
+        /* Cor do texto */
     }
 
     .plantio-info {
-        background-color: #e9f5e9; /* Fundo leve para destacar */
-        border: 1px solid #28a745; /* Borda verde */
-        border-radius: 10px; /* Cantos arredondados */
-        padding: 15px; /* Espaçamento interno */
-        margin-bottom: 20px; /* Margem inferior */
-        display: flex; /* Usa flexbox para melhor alinhamento */
-        align-items: center; /* Alinha os itens verticalmente ao centro */
-        justify-content: flex-start; /* Alinha os itens à esquerda */
-        height: 80px; /* Defina uma altura fixa desejada */
+        background-color: #e9f5e9;
+        /* Fundo leve para destacar */
+        border: 1px solid #28a745;
+        /* Borda verde */
+        border-radius: 10px;
+        /* Cantos arredondados */
+        padding: 15px;
+        /* Espaçamento interno */
+        margin-bottom: 20px;
+        /* Margem inferior */
+        display: flex;
+        /* Usa flexbox para melhor alinhamento */
+        align-items: center;
+        /* Alinha os itens verticalmente ao centro */
+        justify-content: flex-start;
+        /* Alinha os itens à esquerda */
+        height: 80px;
+        /* Defina uma altura fixa desejada */
     }
 
     .plantio-info i.icon {
-        font-size: 2em; /* Aumenta o tamanho do ícone */
-        margin-right: 10px; /* Espaço entre o ícone e o texto */
-        color: #28a745; /* Cor verde para o ícone */
+        font-size: 2em;
+        /* Aumenta o tamanho do ícone */
+        margin-right: 10px;
+        /* Espaço entre o ícone e o texto */
+        color: #28a745;
+        /* Cor verde para o ícone */
     }
 
     .plantio-info .icon2 {
-        font-size: 1.4em; /* Aumenta o tamanho do ícone */
-        margin-right: 10px; /* Espaço entre o ícone e o texto */
-        color: #28a745; /* Cor verde para o ícone */
+        font-size: 1.4em;
+        /* Aumenta o tamanho do ícone */
+        margin-right: 10px;
+        /* Espaço entre o ícone e o texto */
+        color: #28a745;
+        /* Cor verde para o ícone */
     }
 
     .plantio-name {
-        font-weight: bold; /* Texto em negrito */
-        font-size: 20px; /* Tamanho da fonte do plantio selecionado */
-        color: #28a745; /* Cor verde */
-        margin: 0; /* Remove margens para melhor alinhamento */
+        font-weight: bold;
+        /* Texto em negrito */
+        font-size: 20px;
+        /* Tamanho da fonte do plantio selecionado */
+        color: #28a745;
+        /* Cor verde */
+        margin: 0;
+        /* Remove margens para melhor alinhamento */
     }
 
     .btn-submit {
-        background-color: #28a745; /* Cor do botão */
-        color: white; /* Cor do texto do botão */
-        border: none; /* Remove a borda */
-        border-radius: 2rem; /* Cantos arredondados */
-        padding: 12px 25px; /* Espaçamento interno do botão */
-        font-size: 20px; /* Tamanho da fonte do botão */
-        cursor: pointer; /* Muda o cursor ao passar o mouse */
-        transition: background-color 0.3s, transform 0.2s; /* Transições suaves */
+        background-color: #28a745;
+        /* Cor do botão */
+        color: white;
+        /* Cor do texto do botão */
+        border: none;
+        /* Remove a borda */
+        border-radius: 2rem;
+        /* Cantos arredondados */
+        padding: 12px 25px;
+        /* Espaçamento interno do botão */
+        font-size: 20px;
+        /* Tamanho da fonte do botão */
+        cursor: pointer;
+        /* Muda o cursor ao passar o mouse */
+        transition: background-color 0.3s, transform 0.2s;
+        /* Transições suaves */
     }
 
     .btn-submit:hover {
-        background-color: #218838; /* Cor do botão ao passar o mouse */
-        transform: translateY(-2px); /* Levanta o botão ao passar o mouse */
+        background-color: #218838;
+        /* Cor do botão ao passar o mouse */
+        transform: translateY(-2px);
+        /* Levanta o botão ao passar o mouse */
         color: white;
     }
 
     .btn-submit:active {
-        transform: translateY(1px); /* Efeito de pressão ao clicar */
+        transform: translateY(1px);
+        /* Efeito de pressão ao clicar */
     }
 
     .resultado-container h3 {
-        margin-bottom: 10px; /* Margem inferior */
-        color: #28a745; /* Cor do título */
+        margin-bottom: 10px;
+        /* Margem inferior */
+        color: #28a745;
+        /* Cor do título */
     }
 
     .resultado-container p {
-        font-size: 18px; /* Tamanho da fonte dos parágrafos */
-        margin: 5px 0; /* Margem vertical */
+        font-size: 18px;
+        /* Tamanho da fonte dos parágrafos */
+        margin: 5px 0;
+        /* Margem vertical */
     }
 
     .resultado-info {
-        margin-top: 15px; /* Margem superior */
+        margin-top: 15px;
+        /* Margem superior */
     }
 
     .resultado-item {
-        font-size: 18px; /* Tamanho da fonte */
-        margin: 10px 0; /* Margens verticais */
-        color: #333; /* Cor do texto principal */
+        font-size: 18px;
+        /* Tamanho da fonte */
+        margin: 10px 0;
+        /* Margens verticais */
+        color: #333;
+        /* Cor do texto principal */
     }
 
     .resultado-item strong {
-        color: #28a745; /* Verde para os rótulos */
+        color: #28a745;
+        /* Verde para os rótulos */
     }
 
     .resultado-dado {
-        color: #333; /* Verde para os dados */
-        font-weight: bold; /* Texto em negrito */
+        color: #333;
+        /* Verde para os dados */
+        font-weight: bold;
+        /* Texto em negrito */
     }
+
     .modal {
-        display: none; /* Escondido por padrão */
+        display: none;
+        /* Escondido por padrão */
         position: fixed;
         z-index: 1000;
         left: 0;
         top: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.4); /* Fundo escurecido */
+        background-color: rgba(0, 0, 0, 0.4);
+        /* Fundo escurecido */
         display: flex;
         justify-content: center;
-        align-items: center; /* Centraliza verticalmente */
+        align-items: center;
+        /* Centraliza verticalmente */
     }
-    
+
     .modal-content {
         background-color: #fff;
         padding: 20px;
@@ -163,7 +229,7 @@
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         position: relative;
     }
-    
+
     .close {
         position: absolute;
         top: 10px;
@@ -172,75 +238,135 @@
         cursor: pointer;
         color: #aaa;
     }
-    
+
     .close:hover {
         color: #000;
     }
 
     .btn-verde {
-        background-color: #28a745; /* Verde */
-        border: none; /* Remove borda */
-        color: #fff; /* Texto branco */
+        background-color: #28a745;
+        /* Verde */
+        border: none;
+        /* Remove borda */
+        color: #fff;
+        /* Texto branco */
         padding: 10px 20px;
         font-size: 14px;
         border-radius: 5px;
         cursor: pointer;
         transition: background-color 0.3s ease, transform 0.2s ease;
     }
-    
+
     .btn-verde:hover {
-        background-color: #218838; /* Verde mais escuro no hover */
+        background-color: #218838;
+        /* Verde mais escuro no hover */
         transform: scale(1.05);
     }
-    
+
     .btn-verde:active {
-        background-color: #1e7e34; /* Verde ainda mais escuro ao clicar */
+        background-color: #1e7e34;
+        /* Verde ainda mais escuro ao clicar */
         transform: scale(0.95);
     }
-    
-    
-    
+
+    .fieldsholder {
+        display: flex;
+        flex-direction: row;
+        gap: 1rem;
+        width: 100%;
+    }
+
+    #detalheProblemaForm{
+        width: 100%;
+    }
+
+    #resultadoID{
+        width: 100%;
+    }
+
+    .headertext{
+        display: flex;
+        flex-direction: row;
+        gap: 2rem;
+        align-items: center;
+        justify-content: center;
+        margin-left: -28rem;
+    }
+
+    .resolva-btn{
+        background-color: black !important;
+        color: white !important;
+        border-radius: 20px !important;
+    }
+
+    .resolva-btn:hover{
+        color: white !important;
+    }
+
+    #confirmarDoencasPragas{
+        width: 100%;
+        color: white;
+        background-color: black;
+        border-radius: 20px;
+    }
+
+    .hold-header-search{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .sorting{
+        background-color: #000 !important;
+        color: white !important;
+    }
+
+    #sampleTable_wrapper-13{
+        margin-top: 6rem !important;
+    }
 </style>
 {% endblock extracss %}
 
 {% block content %}
 <div class="container-flex">
-    <form id="detalheProblemaForm" class="problem-form" method="post" data-problema-id="{{ problema.id|default:'' }}">
-        {% csrf_token %}
-        <div class="plantio-info">
-            {% if plantio_selecionado == "Batata" %}
+    <div class="fieldsholder">
+        <form id="detalheProblemaForm" class="problem-form" method="post"
+            data-problema-id="{{ problema.id|default:'' }}">
+            {% csrf_token %}
+            <div class="plantio-info">
+                {% if plantio_selecionado == "Batata" %}
                 <i class="fas fa-seedling icon"></i>
-            {% elif plantio_selecionado == "Cenoura" %}
+                {% elif plantio_selecionado == "Cenoura" %}
                 <i class="fas fa-carrot icon"></i>
-            {% elif plantio_selecionado == "Tomate" %}
+                {% elif plantio_selecionado == "Tomate" %}
                 <i class="fas fa-apple-alt icon"></i>
-            {% elif plantio_selecionado == "Alface" %}
+                {% elif plantio_selecionado == "Alface" %}
                 <i class="fas fa-leaf icon"></i>
-            {% elif plantio_selecionado == "Rucula" %}
+                {% elif plantio_selecionado == "Rucula" %}
                 <i class="fas fa-spa icon"></i>
-            {% endif %}
-            <p class="plantio-name">{{ plantio_selecionado }}</p>
-        </div>  
-        <input type="hidden" name="plantio" value="{{ plantio_selecionado }}">
-        <textarea id="detalhes" name="detalhes" rows="6" placeholder="Descreva o problema..." class="form-textarea"></textarea>
-        <button type="submit" class="btn btn-submit" name="botao_resolver">Resolva meu problema <i class="bi bi-send-fill" style="margin-left: 0.8rem;"></i></button>
-    </form>
-
-    <div class="resultado-container">
-        <div class="plantio-info">
-            <p class="plantio-name" name="possivel"><i class="fas fa-lightbulb icon2"></i> Possíveis pragas e doenças encontradas:</p>
+                {% endif %}
+                <p class="plantio-name">{{ plantio_selecionado }}</p>
+            </div>
+            <input type="hidden" name="plantio" value="{{ plantio_selecionado }}">
+            <textarea id="detalhes" name="detalhes" rows="6" placeholder="Descreva o problema..."
+                class="form-textarea"></textarea>
+            <button type="submit" class="btn btn-submit resolva-btn" name="botao_resolver">Resolva meu problema <i class="bi bi-send-fill"
+                    style="margin-left: 0.8rem;"></i></button>
+        </form>
+        <div class="resultado-container" id="resultadoID">
+            <div class="plantio-info">
+                <p class="plantio-name" name="possivel"><i class="fas fa-lightbulb icon2"></i> Possíveis pragas e doenças encontradas:
+                </p>
+            </div>
+            <div id="resultadoRecomendacao" class="resultado">
+                <!-- O resultado será inserido aqui pelo script -->
+            </div>
+            <button id="confirmarDoencasPragas" type="button" class="btn btn-submit"
+                style="margin-top: auto; align-self: center; margin-bottom: 10px;">
+                Confirmar doenças/pragas <i class="bi bi-bug-fill" style="margin-left: 0.8rem;"></i>
+            </button>
         </div>
-        <div id="resultadoRecomendacao" class="resultado">
-            <!-- O resultado será inserido aqui pelo script -->
-        </div>
-        <button 
-    id="confirmarDoencasPragas" 
-    type="button" 
-    class="btn btn-submit" 
-    style="margin-top: auto; align-self: center; margin-bottom: 10px;">
-    Confirmar doenças/pragas <i class="bi bi-bug-fill" style="margin-left: 0.8rem;"></i>
-</button>
-        </div>
+    </div>
 </div>
 
 <div id="modalDoencasPragas" class="modal">
@@ -343,15 +469,28 @@
                 <div id="sampleTable_wrapper-13" class="dataTables_wrapper container-fluid dt-bootstrap4 no-footer">
                     <div class="row-13">
                         <div class="col-sm-12">
-                            <table class="table table-hover table-bordered dataTable no-footer-13" id="sampleTable-13" role="grid" aria-describedby="sampleTable_info">
+                            <div class="hold-header-search">
+                                <h3>Histórico de Pragas</h3>
+                                <form class="d-flex" role="search">
+                                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                                    <button class="btn btn-outline-success" type="submit">Search</button>
+                                </form>
+                            </div>
+                            <table class="table table-hover table-bordered dataTable no-footer-13" id="sampleTable-13"
+                                role="grid" aria-describedby="sampleTable_info">
                                 <thead>
                                     <tr role="row">
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">N°</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Tipo de plantio</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Data de reporte</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Problema descrito</th>
-                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" style="width: 600px;">Resolvido?</th>
-                                    </tr> 
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1"
+                                            colspan="1" style="width: 600px;">N°</th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1"
+                                            colspan="1" style="width: 600px;">Tipo de plantio</th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1"
+                                            colspan="1" style="width: 600px;">Data de reporte</th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1"
+                                            colspan="1" style="width: 600px;">Problema descrito</th>
+                                        <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1"
+                                            colspan="1" style="width: 600px;">Resolvido?</th>
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     {% for problema in problemas %}
@@ -359,16 +498,18 @@
                                         <td>{{ forloop.counter }}</td>
                                         <td>{{ problema.plantio }}</td>
                                         <td>{{ problema.data_reporte }}</td>
-                                        <td class="descricao-coluna">{{ problema.descricao|default:"Nenhuma descrição disponível" }}</td>
+                                        <td class="descricao-coluna">{{ problema.descricao|default:"Nenhuma descrição
+                                            disponível" }}</td>
                                         <td>
-                                            <input type="checkbox" class="checkbox-resolvido" data-id="{{ problema.id }}" {{ problema.resolvido|yesno:"checked," }}>
+                                            <input type="checkbox" class="checkbox-resolvido"
+                                                data-id="{{ problema.id }}" {{ problema.resolvido|yesno:"checked," }}>
                                         </td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
-                                
-                               
-                                      
+
+
+
                             </table>
                             <div id="navigation-buttons">
                                 <!-- Se houver mais dados, adicione botões para navegação -->
@@ -396,7 +537,7 @@
 <script>
     function mostrarDetalhes(plantio, data_reporte, descricao) {
         const detalhesDiv = document.getElementById('detalhesProblema');
-        
+
         // Evite problemas de quebra de string ao escapar aspas
         const descricaoSegura = descricao.replace(/'/g, "\\'").replace(/"/g, '\\"');
 
@@ -411,25 +552,25 @@
     }
 
 
-    
-    
+
+
     function fecharModal() {
         const modal = document.getElementById('modalDetalhes');
         modal.style.display = 'none'; // Esconde o modal
     }
-    
+
 </script>
 
 
 <!-- Script para AJAX, geral-->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', function () {
         const tabelaBody = document.querySelector("#sampleTable-13 tbody");
         let currentPage = 0; // Página inicial
         const rowsPerPage = 5; // Número de linhas visíveis por vez
         let problemas = []; // Array para armazenar os problemas carregados e adicionados manualmente
 
-        
+
         function renderPage() {
             tabelaBody.innerHTML = ''; // Limpa a tabela antes de renderizar novos dados
             const start = currentPage * rowsPerPage;
@@ -438,7 +579,7 @@
 
             problemasPagina.forEach((problema, index) => {
                 const novaLinha = document.createElement('tr');
-                novaLinha.innerHTML = 
+                novaLinha.innerHTML =
                     `<td>${start + index + 1}</td>` +
                     `<td>${problema.plantio}</td>` +
                     `<td>${problema.data_reporte}</td>` +
@@ -454,13 +595,13 @@
 
 
 
-        
-        
-    
+
+
+
         function adicionarEventosCheckbox() {
             const checkboxes = document.querySelectorAll('.checkbox-resolvido');
             checkboxes.forEach(checkbox => {
-                checkbox.addEventListener('change', function() {
+                checkbox.addEventListener('change', function () {
                     const problemaId = this.dataset.id; // Captura o ID do problema associado ao checkbox
                     const resolvido = this.checked; // Verifica se está marcado ou não
 
@@ -473,40 +614,40 @@
                         },
                         body: new URLSearchParams({ id: problemaId, resolvido })
                     })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (!data.success) {
-                            console.error('Erro ao atualizar o status:', data.message);
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Erro ao atualizar o status:', error);
-                    });
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.success) {
+                                console.error('Erro ao atualizar o status:', data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Erro ao atualizar o status:', error);
+                        });
                 });
             });
         }
 
-    
+
         fetch("{% url 'site_cc:listar_problemas' %}", {
             method: 'GET',
             headers: {
                 'X-Requested-With': 'XMLHttpRequest'
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                problemas = data.problemas; // Armazena os problemas recebidos
-                renderPage(); // Renderiza a primeira página
-            } else {
-                console.error('Erro ao carregar os problemas:', data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Erro ao carregar os problemas:', error);
-        });
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    problemas = data.problemas; // Armazena os problemas recebidos
+                    renderPage(); // Renderiza a primeira página
+                } else {
+                    console.error('Erro ao carregar os problemas:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro ao carregar os problemas:', error);
+            });
 
-    
+
         document.getElementById('nextPage').addEventListener('click', () => {
             const totalPages = Math.ceil(problemas.length / rowsPerPage);
             if (currentPage < totalPages - 1) {
@@ -514,26 +655,26 @@
                 renderPage();
             }
         });
-    
+
         document.getElementById('prevPage').addEventListener('click', () => {
             if (currentPage > 0) {
                 currentPage--;
                 renderPage();
             }
         });
-    
+
         function adicionarProblema(problema) {
             problemas.unshift(problema); // Adiciona o novo problema no começo do array
             renderPage(); // Re-renderiza a tabela para mostrar o novo problema
         }
-    
-        document.getElementById('detalheProblemaForm').addEventListener('submit', function(e) {
+
+        document.getElementById('detalheProblemaForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const formData = new FormData(this);
             const resultadoDiv = document.getElementById('resultadoRecomendacao');
-    
+
             resultadoDiv.innerHTML = '<p>Carregando...</p>';
-    
+
             fetch("{% url 'site_cc:detectar_pragas_doencas' %}", {
                 method: 'POST',
                 body: formData,
@@ -541,43 +682,41 @@
                     'X-Requested-With': 'XMLHttpRequest'
                 }
             })
-            .then(response => response.json())
-            .then(data => {
-                resultadoDiv.innerHTML = '';
-                if (data.success) {
-                    document.getElementById('detalheProblemaForm').setAttribute('data-problema-id', data.problema.id);
+                .then(response => response.json())
+                .then(data => {
+                    resultadoDiv.innerHTML = '';
+                    if (data.success) {
+                        document.getElementById('detalheProblemaForm').setAttribute('data-problema-id', data.problema.id);
 
-    
-                    resultadoDiv.innerHTML = 
-                        `<h3>Doenças:</h3>` +
-                        `${data.doencas.length ? data.doencas.map(doenca => 
-                            `<div class="resultado-info">
+
+                        resultadoDiv.innerHTML =
+                            `<h3>Doenças:</h3>` +
+                            `${data.doencas.length ? data.doencas.map(doenca =>
+                                `<div class="resultado-info">
                                 <p class="resultado-item"><strong>Nome:</strong> ${doenca.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${doenca.descricao}</p>
                                 <p class="resultado-item"><strong>Tratamento:</strong> ${doenca.tratamento}</p>
                             </div>`
-                        ).join('') : '<p>Nenhuma doença identificada.</p>'}` +
-                        `<h3>Pragas:</h3>` +
-                        `${data.pragas.length ? data.pragas.map(praga => 
-                            `<div class="resultado-info">
+                            ).join('') : '<p>Nenhuma doença identificada.</p>'}` +
+                            `<h3>Pragas:</h3>` +
+                            `${data.pragas.length ? data.pragas.map(praga =>
+                                `<div class="resultado-info">
                                 <p class="resultado-item"><strong>Nome:</strong> ${praga.nome}</p>
                                 <p class="resultado-item"><strong>Descrição:</strong> ${praga.descricao}</p>
                                 <p class="resultado-item"><strong>Tratamento:</strong> ${praga.tratamento}</p>
                             </div>`
-                        ).join('') : '<p>Nenhuma praga identificada.</p>'}`;
-                } else {
-                    resultadoDiv.innerHTML = `<p>${data.message}</p>`;
-                }
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                resultadoDiv.innerHTML = '<p>Ocorreu um erro ao processar sua solicitação.</p>';
-            });
+                            ).join('') : '<p>Nenhuma praga identificada.</p>'}`;
+                    } else {
+                        resultadoDiv.innerHTML = `<p>${data.message}</p>`;
+                    }
+                })
+                .catch(error => {
+                    console.error('Erro:', error);
+                    resultadoDiv.innerHTML = '<p>Ocorreu um erro ao processar sua solicitação.</p>';
+                });
         });
     });
-    
+
 </script>
 
 {% endblock content %}
-
-
