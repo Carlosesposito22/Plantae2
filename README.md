@@ -114,12 +114,16 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
       >Diagrama de atividades</a>
   </li>
    <li>
-    <a href="https://youtu.be/MBdUUXCJv1w" 
+    <a href="https://youtu.be/NVMOAGN12j0?si=myWaYKhkerAfosXs" 
       >Screencast - Figma</a>
   </li>
   <li>
     <a href=""
       >Screencast - Azure</a>
+  </li>
+      <li>
+    <a href=""
+      >Screencast - Testes Automatizados</a>
   </li>
 </ul>
 
