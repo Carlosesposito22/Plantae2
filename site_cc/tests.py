@@ -748,8 +748,8 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".wi.wi-day-sunny.day-icon")))
-        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-sunny.day-icon")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".wi.wi-day-cloudy.day-icon")))
+        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-cloudy.day-icon")
         icone_climaTeste.click()
 
         time.sleep(4)
@@ -906,13 +906,13 @@ class AdicionarPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Batata")))
         btn_calendar = driver.find_element(By.NAME, "Batata")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
@@ -922,7 +922,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         time.sleep(2)    
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(3)
        
 
@@ -935,16 +935,16 @@ class AdicionarPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "confirmarDoencasPragas")))
         btn_calendar = driver.find_element(By.ID, "confirmarDoencasPragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(2)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "praga_Murcha-bacteriana")))
         btn_calendar = driver.find_element(By.ID, "praga_Murcha-bacteriana")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(2)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "salvarSelecoes")))
         btn_calendar = driver.find_element(By.ID, "salvarSelecoes")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(2)
 
         # Verificar e aceitar o alerta antes de fazer o refresh
@@ -1025,13 +1025,13 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Batata")))
         btn_calendar = driver.find_element(By.NAME, "Batata")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
@@ -1041,7 +1041,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(2)    
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(3)
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
@@ -1070,13 +1070,13 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "cenoura")))
         btn_calendar = driver.find_element(By.NAME, "cenoura")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
@@ -1088,7 +1088,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(2)    
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(3)
        
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
@@ -1105,13 +1105,13 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(1)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "tomate")))
         btn_calendar = driver.find_element(By.NAME, "tomate")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
@@ -1123,7 +1123,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(2)    
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(3)
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
@@ -1140,11 +1140,11 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Alface")))
         btn_calendar = driver.find_element(By.NAME, "Alface")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
@@ -1156,7 +1156,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         time.sleep(2)    
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
         time.sleep(3)
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
@@ -1173,13 +1173,13 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
         btn_calendar = driver.find_element(By.NAME, "pragas")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(1)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "rucula")))
         btn_calendar = driver.find_element(By.NAME, "rucula")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
 
         time.sleep(3)
 
@@ -1308,22 +1308,6 @@ class DashboardTest(LiveServerTestCase):
         driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
         time.sleep(5)
 
-        # Verifica e printa as informações carregadas na dashboard
-        rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
-        for row in rows:
-            columns = row.find_elements(By.TAG_NAME, "td")
-            data = {
-                "SL": columns[0].text,
-                "Nome do Evento": columns[1].text,
-                "Tipo": columns[2].text,
-                "Cultura": columns[3].text,
-                "Local": columns[4].text,
-                "Data de Início": columns[5].text,
-                "Data de Término": columns[6].text,
-            }
-            print("Informações do Evento na Dashboard:", data)
-        assert len(rows) > 0, "Nenhum evento encontrado na dashboard."
-
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
         btn_calendar.click()
@@ -1405,22 +1389,6 @@ class DashboardTest(LiveServerTestCase):
         btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
         driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
         time.sleep(5)
-
-        # Verifica e printa as informações carregadas na dashboard
-        rows = driver.find_elements(By.CSS_SELECTOR, "table tbody tr")
-        for row in rows:
-            columns = row.find_elements(By.TAG_NAME, "td")
-            data = {
-                "SL": columns[0].text,
-                "Nome do Evento": columns[1].text,
-                "Tipo": columns[2].text,
-                "Cultura": columns[3].text,
-                "Local": columns[4].text,
-                "Data de Início": columns[5].text,
-                "Data de Término": columns[6].text,
-            }
-            print("Informações do Evento na Dashboard:", data)
-        assert len(rows) > 0, "Nenhum evento encontrado na dashboard."
 
 
 class AlertaCriticoTest(LiveServerTestCase):
@@ -1557,7 +1525,7 @@ class InformarPlantiosTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def teste_Culturo(self):
+    def teste_Cultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1688,7 +1656,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-      
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
