@@ -23,6 +23,8 @@ import os
 import subprocess
 from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.alert import Alert
+from unittest.mock import patch
+from site_cc.views import calendar_view_new
 
 
 class AdicionarCulturaTest(LiveServerTestCase):
@@ -33,7 +35,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -170,7 +172,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -362,7 +364,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -561,7 +563,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -696,7 +698,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -863,7 +865,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -982,7 +984,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1222,7 +1224,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1444,7 +1446,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1456,7 +1458,33 @@ class AlertaCriticoTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeAlertaCritico(self):
+    @patch('site_cc.views.requests.get')
+    def testeAlertaCritico(self, mock_get):
+        mock_response = {
+            'forecast': {
+                'forecastday': [
+                    {
+                        'date': '22/11//2024',
+                        'day': {
+                            'maxtemp_c': 30,
+                            'mintemp_c': 18,
+                            'condition': {'text': 'Ensolarado', 'icon': '//cdn.weatherapi.com/weather/64x64/day/113.png'},
+                            'avghumidity': 60,
+                            'maxwind_kph': 15,
+                            'totalprecip_mm': 0,
+                            'uv': 7,
+                        },
+                        'astro': {
+                            'moon_phase': 'Full Moon',
+                            'moon_illumination': '100'
+                        }
+                    }
+                ]
+            }
+        }
+        mock_get.return_value.status_code = 200
+        mock_get.return_value.json.return_value = mock_response
+
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1506,27 +1534,23 @@ class AlertaCriticoTest(LiveServerTestCase):
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".wi.wi-day-sunny.day-icon")))
-        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-sunny.day-icon")
+        # Clicar no ícone do clima
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".day-icon")))
+        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".day-icon")
         icone_climaTeste.click()
 
         time.sleep(4)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima")))
+        # Verificar se o alerta crítico está visível
+        WebDriverWait(driver, 10).until(EC.visibility_of_element_located((By.ID, "weatherModal")))
+        alerta_critico = driver.find_element(By.ID, "criticalWarning")
+        self.assertTrue(alerta_critico.is_displayed())
+
+        # Fechar o modal
         fechar_modal = driver.find_element(By.ID, "fecharmodalClima")
         fechar_modal.click()
-
         time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".wi.wi-day-sprinkle.day-icon")))
-        icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-sprinkle.day-icon")
-        icone_climaTeste.click()
-
-        time.sleep(4)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima")))
-        fechar_modal = driver.find_element(By.ID, "fecharmodalClima")
-        fechar_modal.click()
 
 class InformarPlantios(LiveServerTestCase):
     
@@ -1536,7 +1560,7 @@ class InformarPlantios(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
