@@ -262,7 +262,7 @@ class SugerirColheitaTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
         btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
-        btn_aceitarsugest.click()
+        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
         time.sleep(5)  
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
@@ -328,7 +328,7 @@ class SugerirColheitaTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
         btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
-        btn_aceitarsugest.click()
+        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
         time.sleep(5)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
