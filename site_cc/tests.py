@@ -977,6 +977,283 @@ class AdicionarPragasTest(LiveServerTestCase):
         time.sleep(2)
 
 
+class SolucoesPragasTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        #chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    def teste_Cultura(self):
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Batata")))
+        btn_calendar = driver.find_element(By.NAME, "Batata")
+        btn_calendar.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("minha batata esta amarelada")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
+        btn_calendar = driver.find_element(By.NAME, "possivel")
+        btn_calendar.click()
+        time.sleep(1)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        # Role para baixo dentro da seção específica usando JavaScript
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+
+
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "cenoura")))
+        btn_calendar = driver.find_element(By.NAME, "cenoura")
+        btn_calendar.click()
+
+       
+
+        time.sleep(3)
+
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("minha cenoura esta verde")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
+        btn_calendar = driver.find_element(By.NAME, "possivel")
+        btn_calendar.click()
+        time.sleep(1)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        # Role para baixo dentro da seção específica usando JavaScript
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+
+        
+       
+
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "tomate")))
+        btn_calendar = driver.find_element(By.NAME, "tomate")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o tomate esta com cheiro de estragado")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
+        btn_calendar = driver.find_element(By.NAME, "possivel")
+        btn_calendar.click()
+        time.sleep(1)
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        # Role para baixo dentro da seção específica usando JavaScript
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+
+       
+
+          
+        
+
+        
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Alface")))
+        btn_calendar = driver.find_element(By.NAME, "Alface")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+        
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        # Role para baixo dentro da seção específica usando JavaScript
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
+
+        driver.get("http://127.0.0.1:8000/mainpage/")
+
+       
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "pragas")))
+        btn_calendar = driver.find_element(By.NAME, "pragas")
+        btn_calendar.click()
+
+        time.sleep(1)
+
+       
+
+            
+       
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "rucula")))
+        btn_calendar = driver.find_element(By.NAME, "rucula")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
+        btn_calendar = driver.find_element(By.NAME, "detalhes")
+        btn_calendar.send_keys("o alface  esta com as folhas amareladas ")
+        time.sleep(1)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(2)    
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "botao_resolver")))
+        btn_calendar = driver.find_element(By.NAME, "botao_resolver")
+        btn_calendar.click()
+        time.sleep(3)
+
+      
+
+        doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
+
+        # Role para baixo dentro da seção específica usando JavaScript
+        driver.execute_script("arguments[0].scrollTop = arguments[0].scrollHeight;", doencas_container)
+
+        time.sleep(3)
 
 
 
