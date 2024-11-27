@@ -499,7 +499,11 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p><strong>Tipo:</strong> <span id="type_event_detail"></span></p>
+                <p>
+                    <strong>Tipo:</strong> 
+                    <span id="type_event_detail"></span> 
+                    <span id="warning-icon-container"></span>
+                </p>
                 <p><strong>Cultura:</strong> <span id="cultura_event_detail"></span></p>
                 <p><strong>Local:</strong> <span id="local_event_detail"></span></p>
                 <p><strong>Descrição:</strong> <span id="description_event_detail"></span></p>
@@ -514,6 +518,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- Modal de Previsão do Tempo -->
 <div class="modal fade" id="weatherModal" tabindex="-1" role="dialog">
@@ -718,6 +723,24 @@
     </div>
 </div>
 
+<div class="modal fade" id="genericModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-white" id="genericModalTitle">Informação</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="genericModalMessage" style="font-weight: bold; color: #333;"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
 {% endblock content %}
@@ -1165,8 +1188,6 @@
             locale: 'pt-br',
             buttonText: {
                 today: 'HOJE'
-                //month: 'Mês',
-                //list: 'Tarefas do dia'
             },
             initialDate: new Date(),
             navLinks: false,
@@ -1180,19 +1201,84 @@
             },
             eventClick: function(arg) {
                 if (currentMode === 'eventos') {
+                    const eventType = arg.event.extendedProps.type || 'Sem tipo';
+                    const today = new Date().toISOString().split('T')[0]; // Data atual no formato YYYY-MM-DD
+                    const eventEndDate = arg.event.endStr.split('T')[0]; // Apenas a parte da data (YYYY-MM-DD)
+
+                    console.log("Evento clicado:", {
+                        type: eventType,
+                        today: today,
+                        eventEndDate: eventEndDate
+                    });
+
+                    // Atualizar informações no modal de detalhes
                     document.getElementById('title_event_detail').textContent = arg.event.title;
                     document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
                     document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
                     document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
-                    document.getElementById('type_event_detail').textContent = arg.event.extendedProps.type || 'Sem tipo';
+                    document.getElementById('type_event_detail').textContent = eventType;
                     document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
                     document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura';
                     document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível';
                     document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
                     document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
+
+                    // Adicionar o ícone ⚠️ apenas se for o dia de término do evento de tipo "Colheita"
+                    const warningIconContainer = document.getElementById('warning-icon-container');
+                    if (!warningIconContainer) {
+                        console.error("Container 'warning-icon-container' não encontrado no modal.");
+                        return;
+                    }
+
+                    warningIconContainer.innerHTML = ''; // Limpa ícones anteriores
+
+                    if (eventType === "Colheita" && today === eventEndDate) {
+                        console.log("Adicionando ícone ⚠️ para o evento de colheita.");
+                        const warningIcon = document.createElement('span');
+                        warningIcon.className = 'warning-icon';
+                        warningIcon.textContent = '⚠️';
+                        warningIcon.style.fontSize = '1.5rem';
+                        warningIcon.style.marginLeft = '10px';
+                        warningIcon.style.color = 'red';
+                        warningIcon.style.cursor = 'pointer';
+                        warningIconContainer.appendChild(warningIcon);
+
+                        // Configurar o clique no ícone ⚠️
+                        warningIcon.addEventListener('click', function() {
+                            const cultura = arg.event.extendedProps.cultura;
+                            fetch(`/alerta_colheita?cultura=${encodeURIComponent(cultura)}`)
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error('Erro na resposta da rede');
+                                    }
+                                    return response.json();
+                                })
+                                .then(data => {
+                                    // Abrir o modal de alerta com as recomendações
+                                    const modalTitle = document.querySelector('#genericModal .modal-title');
+                                    const modalMessage = document.querySelector('#genericModalMessage');
+                                    if (data.texto_gerado) {
+                                        modalTitle.textContent = `Alerta de Colheita - ${data.cultura}`;
+                                        modalMessage.textContent = data.texto_gerado;
+                                    } else {
+                                        modalMessage.textContent = "Nenhuma informação gerada sobre a colheita.";
+                                    }
+                                    $('#genericModal').modal('show'); // Abre o modal
+                                })
+                                .catch(error => {
+                                    console.error('Erro ao carregar o alerta de colheita:', error);
+                                    document.getElementById('genericModalMessage').textContent = "Erro ao carregar informações de colheita.";
+                                    $('#genericModal').modal('show'); // Exibe mensagem de erro no modal
+                                });
+                        });
+                    }
+
                     $('#detailModal').modal('show');
                 }
             },
+
+
+
             editable: false,
             dayMaxEvents: true,
             events: {{ events|safe }},
@@ -1214,31 +1300,70 @@
                 }
             },
             dayCellDidMount: function(args) {
-                if (currentMode === 'tempo') {
-                    const dateStr = args.date.toISOString().split('T')[0];
-                    const forecast = previsoes[dateStr];
+                const today = new Date().toISOString().split('T')[0];
+                const dateStr = args.date.toISOString().split('T')[0];
 
+                // Identificar eventos que coincidem com o dia atual
+                const eventsOnDate = calendar.getEvents().filter(event => {
+                    return event.extendedProps.type === "Colheita" && event.endStr === dateStr;
+                });
+
+                if (dateStr === today && eventsOnDate.length > 0) {
+                    // Adicionar ícone ⚠️ ao dia
+                    const icon = document.createElement('span');
+                    icon.textContent = '⚠️';
+                    icon.style.fontSize = '1.5rem';
+                    icon.style.cursor = 'pointer';
+
+                    icon.addEventListener('click', function() {
+                        const cultura = eventsOnDate[0].extendedProps.cultura;
+                        fetch(`/alerta_colheita?cultura=${encodeURIComponent(cultura)}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const modalTitle = document.querySelector('#genericModal .modal-title');
+                                const modalMessage = document.querySelector('#genericModalMessage');
+                                if (data.texto_gerado) {
+                                    modalTitle.textContent = `Alerta de Colheita - ${data.cultura}`;
+                                    modalMessage.textContent = data.texto_gerado;
+                                } else {
+                                    modalMessage.textContent = "Nenhuma informação gerada sobre a colheita.";
+                                }
+                                $('#genericModal').modal('show');
+                            })
+                            .catch(error => {
+                                console.error('Erro ao carregar o alerta de colheita:', error);
+                                document.getElementById('genericModalMessage').textContent = "Erro ao carregar informações de colheita.";
+                                $('#genericModal').modal('show');
+                            });
+                    });
+
+                    // Adicionar ícone ao dia do calendário
+                    args.el.querySelector('.fc-daygrid-day-frame').appendChild(icon);
+                }
+
+                // Exibe os ícones de previsão do tempo no modo "tempo"
+                if (currentMode === 'tempo') {
+                    const forecast = previsoes[dateStr];
                     if (forecast) {
                         const cellContent = args.el.querySelector('.fc-daygrid-day-frame');
 
                         let iconClass = descriptionIcons[forecast.descricao] || descriptionIcons['Nublado'];
 
-                        const icon = document.createElement('i');
-                        icon.className = `${iconClass} day-icon`;
-                        icon.style.fontSize = '20px';
-                        icon.style.color = 'green';
-                        icon.style.cursor = 'pointer';
+                        const weatherIcon = document.createElement('i');
+                        weatherIcon.className = `${iconClass} day-icon`;
+                        weatherIcon.style.fontSize = '20px';
+                        weatherIcon.style.color = 'green';
+                        weatherIcon.style.cursor = 'pointer';
 
-                        icon.onclick = function(event) {
+                        weatherIcon.onclick = function(event) {
                             event.stopPropagation();
                             openWeatherModal(dateStr);
                         };
 
-                        cellContent.appendChild(icon);
+                        cellContent.appendChild(weatherIcon);
                     }
                 }
             },
-
             datesSet: function() {
                 if (currentMode === 'tempo') {
                     renderWeatherIcons();
@@ -1249,6 +1374,7 @@
                 }
             }
         });
+
 
         calendar.render();
 
