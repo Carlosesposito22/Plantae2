@@ -934,10 +934,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "botao_resolver")
         btn_calendar.click()
         time.sleep(3)
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
-        btn_calendar = driver.find_element(By.NAME, "possivel")
-        btn_calendar.click()
-        time.sleep(1)
+       
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
@@ -1057,10 +1054,6 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
-        btn_calendar = driver.find_element(By.NAME, "possivel")
-        btn_calendar.click()
-        time.sleep(1)
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
@@ -1112,11 +1105,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
-        btn_calendar = driver.find_element(By.NAME, "possivel")
-        btn_calendar.click()
-        time.sleep(1)
-
+       
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
         # Role para baixo dentro da seção específica usando JavaScript
@@ -1158,10 +1147,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(3)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "possivel")))
-        btn_calendar = driver.find_element(By.NAME, "possivel")
-        btn_calendar.click()
-        time.sleep(1)
+       
 
         doencas_container = driver.find_element(By.CLASS_NAME, "resultado-container")
 
