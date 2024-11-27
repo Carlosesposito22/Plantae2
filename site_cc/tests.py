@@ -35,8 +35,8 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
-        chrome_options.add_argument("--window-size=1920,1080")
+        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1280,720")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -157,9 +157,9 @@ class AdicionarCulturaTest(LiveServerTestCase):
         time.sleep(8)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
-        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
-        driver.execute_script("arguments[0].scrollIntoView(true);", btn_gerenciarCultura)
-        time.sleep(1)  # Dê um pequeno tempo para ajuste
+        btn_gerenciarCultura = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.NAME, "btn_gerenciarCultura"))
+        )
         btn_gerenciarCultura.click()
         time.sleep(3)
         assert "Nome teste para a cultura" in driver.page_source
