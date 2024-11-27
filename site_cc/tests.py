@@ -1315,16 +1315,10 @@ class DashboardTest(LiveServerTestCase):
 
         time.sleep(3)
         cultura_excluida = WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event"))
+            EC.presence_of_element_located((By.ID, "event-test"))
         )
-
-        # Use JavaScript para garantir que o elemento esteja visível
         driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
-
-        # Aguarde até que o elemento seja clicável
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".fc-daygrid-event")))
-
-        # Clique no elemento
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
         cultura_excluida.click()
 
         time.sleep(3)

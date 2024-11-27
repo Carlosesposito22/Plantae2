@@ -1330,6 +1330,8 @@
                 if (eventType) {
                     info.el.classList.add(eventType);
                 }
+
+                info.el.id = `event-test`;
             },
             dayCellDidMount: function(args) {
                 const today = new Date().toISOString().split('T')[0];
