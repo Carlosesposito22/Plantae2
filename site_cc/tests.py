@@ -742,7 +742,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "modeTempo")))
         btn_Clima = driver.find_element(By.ID, "modeTempo")
-        btn_Clima.click()
+        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
 
         time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
@@ -1513,7 +1513,7 @@ class AlertaCriticoTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "modeTempo")))
         btn_Clima = driver.find_element(By.ID, "modeTempo")
-        btn_Clima.click()
+        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
 
         time.sleep(1)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
