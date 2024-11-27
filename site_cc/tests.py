@@ -1213,6 +1213,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1312,20 +1313,18 @@ class DashboardTest(LiveServerTestCase):
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
         btn_calendar.click()
 
-        # Aguarde o evento aparecer no DOM
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
+        time.sleep(3)
+        cultura_excluida = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event"))
+        )
 
-        # Localize o elemento
-        cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
-
-        # Role até o elemento usando Selenium
-        actions = ActionChains(driver)
-        actions.move_to_element(cultura_excluida).perform()
+        # Use JavaScript para garantir que o elemento esteja visível
+        driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
 
         # Aguarde até que o elemento seja clicável
         WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.CSS_SELECTOR, ".fc-daygrid-event")))
 
-        # Clique no evento
+        # Clique no elemento
         cultura_excluida.click()
 
         time.sleep(3)
