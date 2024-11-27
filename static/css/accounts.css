@@ -8148,7 +8148,7 @@ h1, h2, h3, h4, h5,
 .h1, .h2, .h3, .h4, .h5 {
   font-weight: 400;
   font-family: "Roboto", Arial, sans-serif;
-  color: #000; }
+  color: #316722; }
 
 .bg-primary {
   background: #6807f9 !important; }
@@ -8373,7 +8373,7 @@ textarea.form-control {
   .btn:hover, .btn:active, .btn:focus {
     outline: none; }
   .btn.btn-primary {
-    background: black !important;
+    background-color: #316722 !important;
     border: none !important;
     color: white !important;
     width: 100% !important;
