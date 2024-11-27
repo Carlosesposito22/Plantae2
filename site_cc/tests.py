@@ -1314,8 +1314,9 @@ class DashboardTest(LiveServerTestCase):
 
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
-
+        driver.save_screenshot("screenshot.png")
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
+        driver.save_screenshot("screenshot2.png")
         cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
         cultura_excluida.click()
 
@@ -1513,7 +1514,7 @@ class InformarPlantiosTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1751,7 +1752,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
         btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
-        btn_gerenciarCultura.click()
+        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
         time.sleep(3)
         assert "Teste para excluir cultura" in driver.page_source
 
