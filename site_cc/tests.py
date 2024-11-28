@@ -1292,11 +1292,11 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
         time.sleep(1)
-        dataInicio_cultura.send_keys("20/11/2024")
+        dataInicio_cultura.send_keys("29/11/2024")
         dataInicio_cultura.send_keys(Keys.TAB)
         dataInicio_cultura.send_keys("10:00")
         time.sleep(1)
-        dataFim_cultura.send_keys("20/11/2024")
+        dataFim_cultura.send_keys("30/11/2024")
         dataFim_cultura.send_keys(Keys.TAB)
         dataFim_cultura.send_keys("12:00")
         time.sleep(1)
@@ -1311,20 +1311,18 @@ class DashboardTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
+
         ##########################
-        try:
-            time.sleep(3)
-            cultura_excluida = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "event-test"))
-            )
-            driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
-            cultura_excluida.click()
-        except Exception as e:
-            print(f"Erro: {e}")
-            driver.save_screenshot("static/erro_screenshot.png")
-            raise
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+        
+        time.sleep(3)
+        cultura_excluida = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "event-test")))
+        driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
+        driver.execute_script("arguments[0].click();", cultura_excluida)
 
         ##########################
 
@@ -1334,8 +1332,8 @@ class DashboardTest(LiveServerTestCase):
         btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
         btn_editarCultura.click()
 
-        nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        nomeEvento_culturaEditar = driver.find_element(By.ID, "edit_title")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -1343,7 +1341,7 @@ class DashboardTest(LiveServerTestCase):
         nomeEvento_culturaEditar.send_keys("Novo nome para o evento")
         time.sleep(2)
 
-        salvar_btn.click()
+        driver.execute_script("arguments[0].click();", salvar_btn)
         time.sleep(5)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))

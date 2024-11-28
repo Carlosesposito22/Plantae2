@@ -7,7 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy, reverse
 from site_cc.utils import Calendar
-from site_cc.forms import EventForm, AddMemberForm
+from site_cc.forms import EventForm, AddMemberForm, EditEventForm
 import calendar
 import requests
 import google.generativeai as genai
@@ -886,6 +886,7 @@ def calendar_view_new(request, event_id=None):
             event = get_object_or_404(Event, id=event_id, user=request.user)
             form = EventForm(instance=event)
 
+    edit_form = EditEventForm()
     events = Event.objects.get_all_events(user=request.user)
     events_month = Event.objects.get_running_events(user=request.user)
     event_list = [
@@ -966,6 +967,7 @@ def calendar_view_new(request, event_id=None):
     context = {
         "form": form,
         "events": event_list,
+        "edit_form": edit_form,
         "events_month": events_month,
         "previsoes": previsoes,
         "fases_lua": fases_lua

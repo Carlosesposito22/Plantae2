@@ -845,6 +845,7 @@
     </div>
 </div>
 
+<!-- Modal para editar evento -->
 <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -859,37 +860,38 @@
                 <input type="hidden" id="edit_event_id" name="event_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Evento:</label>
-                        {{ form.title }}
+                        <label for="edit_title">Título do Evento:</label>
+                        {{ edit_form.title }}
                     </div>
                     <div class="form-group">
-                        <label>Tipo:</label>
-                        {{ form.type }}
+                        <label for="edit_type">Tipo:</label>
+                        {{ edit_form.type }}
                     </div>
                     <div class="form-group">
-                        <label>Cultura:</label>
-                        {{ form.cultura }}
+                        <label for="edit_cultura">Cultura:</label>
+                        {{ edit_form.cultura }}
                     </div>
                     <div class="form-group">
-                        <label>Local:</label>
-                        {{ form.local }}
+                        <label for="edit_local">Local:</label>
+                        {{ edit_form.local }}
                     </div>
                     <div class="form-group">
-                        <label>Descriço:</label>
-                        {{ form.description }}
+                        <label for="edit_description">Descrição:</label>
+                        {{ edit_form.description }}
                     </div>
                     <div class="form-group">
-                        <label>Início:</label>
-                        {{ form.start_time }}
+                        <label for="edit_start_time">Data de Início:</label>
+                        {{ edit_form.start_time }}
                     </div>
                     <div class="form-group">
-                        <label>Fim:</label>
-                        {{ form.end_time }}
+                        <label for="edit_end_time">Data de Término:</label>
+                        {{ edit_form.end_time }}
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary save-btn">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary" id="salvar_editar">Salvar Alterações</button>
                 </div>
             </form>
         </div>
