@@ -34,6 +34,8 @@ urlpatterns = [
     path('listar-problemas/', views.listar_problemas, name='listar_problemas'),
     path('url-salvar-selecao-modal/', salvar_selecao_modal, name='salvar_selecao_modal'),
     path('api/events/', views.api_events, name='api_events'),
+    path('planta_detalhes/', views.planta_detalhes, name='planta_detalhes'),
+
 
 
 

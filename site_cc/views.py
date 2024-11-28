@@ -1106,3 +1106,36 @@ def api_events(request):
         for event in events
     ]
     return JsonResponse(events_data, safe=False)
+
+def planta_detalhes(request, planta_selecionada=None):
+    # Dicionário das plantas
+    plantas = {
+        'Tomate': {'se_da_bem': ['Cenoura', 'Alface'], 'nao_se_da_bem': ['Batata'], 'indiferente': ['Rúcula']},
+        'Cenoura': {'se_da_bem': ['Alface', 'Rúcula'], 'nao_se_da_bem': ['Batata'], 'indiferente': ['Tomate']},
+        'Alface': {'se_da_bem': ['Cenoura', 'Rúcula'], 'nao_se_da_bem': ['Batata'], 'indiferente': ['Tomate']},
+        'Batata': {'se_da_bem': ['Rúcula'], 'nao_se_da_bem': ['Tomate', 'Cenoura'], 'indiferente': ['Alface']},
+        'Rúcula': {'se_da_bem': ['Cenoura', 'Alface'], 'nao_se_da_bem': ['Batata'], 'indiferente': ['Tomate']},
+    }
+
+    # Verifica se a planta foi passada corretamente
+    if not planta_selecionada:
+        planta_selecionada = request.GET.get('planta', 'Tomate')  # Usa 'Tomate' como padrão
+
+    planta = plantas.get(planta_selecionada.capitalize(), None)
+    if planta:
+        context = {
+            'planta_selecionada': planta_selecionada,
+            'plantas_se_da_bem': [{'nome': p, 'cor': 'green'} for p in planta['se_da_bem']],
+            'plantas_nao_se_da_bem': [{'nome': p, 'cor': 'red'} for p in planta['nao_se_da_bem']],
+            'plantas_indiferente': [{'nome': p, 'cor': 'blue'} for p in planta['indiferente']],
+        }
+    else:
+        context = {
+            'planta_selecionada': 'Planta não encontrada no dicionário.',
+            'plantas_se_da_bem': [],
+            'plantas_nao_se_da_bem': [],
+            'plantas_indiferente': [],
+        }
+
+    # Retorna um JSON para o fetch
+    return JsonResponse(context)
