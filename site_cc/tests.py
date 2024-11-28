@@ -1591,12 +1591,18 @@ class InformarPlantiosTest(LiveServerTestCase):
         senhalogin.send_keys("@MinhasenhaForte1234")
         time.sleep(1)
         btn_logar.send_keys(Keys.ENTER)
-        time.sleep(1)
+        time.sleep(3)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "recomendacao")))
-        btn_calendar = driver.find_element(By.NAME, "recomendacao")
-        btn_calendar.click()
-        time.sleep(1)
+        try:
+            WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "recomendacao")))
+            btn_calendar = driver.find_element(By.NAME, "recomendacao")
+            btn_calendar.click()
+            time.sleep(1)
+        except TimeoutException:
+            with open('page_source2.html', 'w', encoding='utf-8') as f:
+                f.write(driver.page_source)
+            driver.save_screenshot('screenshot2.png')
+            raise
 
         select_element = driver.find_element(By.ID, "planta2")
 
