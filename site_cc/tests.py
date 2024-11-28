@@ -1285,14 +1285,6 @@ class DashboardTest(LiveServerTestCase):
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
         salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
 
-        start_datetime = timezone.now() + timedelta(days=1)
-        start_date_str = start_datetime.strftime("%d/%m/%Y")
-        start_time_str = start_datetime.strftime("%H:%M")
-
-        end_datetime = start_datetime + timedelta(hours=2)
-        end_date_str = end_datetime.strftime("%d/%m/%Y")
-        end_time_str = end_datetime.strftime("%H:%M")
-
         nomeEvento_cultura.send_keys("Teste para DashBoard")
         time.sleep(1)
         tipo_cultura.select_by_visible_text("Outros")
@@ -1303,13 +1295,16 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
         time.sleep(1)
-        #dataInicio_cultura.send_keys("29/11/2024")
-        #dataInicio_cultura.send_keys(Keys.TAB)
-        #dataInicio_cultura.send_keys("10:00")
-        #time.sleep(1)
-        #dataFim_cultura.send_keys("30/11/2024")
-        #dataFim_cultura.send_keys(Keys.TAB)
-        #dataFim_cultura.send_keys("12:00")
+        start_datetime = timezone.now() + timedelta(days=1)
+        end_datetime = start_datetime + timedelta(hours=2)
+
+        # Formatar datas conforme esperado pela aplicação
+        start_date_str = start_datetime.strftime("%Y/%m/%d")
+        start_time_str = start_datetime.strftime("%H:%M")
+        end_date_str = end_datetime.strftime("%Y/%m/%d")
+        end_time_str = end_datetime.strftime("%H:%M")
+
+        # Inserir datas nos campos
         dataInicio_cultura.send_keys(start_date_str)
         dataInicio_cultura.send_keys(Keys.TAB)
         dataInicio_cultura.send_keys(start_time_str)
