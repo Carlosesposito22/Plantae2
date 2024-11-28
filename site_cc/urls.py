@@ -33,6 +33,7 @@ urlpatterns = [
     path("dashboard/", DashboardView.as_view(), name="dashboard"),
     path('listar-problemas/', views.listar_problemas, name='listar_problemas'),
     path('url-salvar-selecao-modal/', salvar_selecao_modal, name='salvar_selecao_modal'),
+    path('planta_detalhes/', views.planta_detalhes, name='planta_detalhes'),
 
 
 
