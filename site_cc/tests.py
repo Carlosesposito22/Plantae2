@@ -1607,7 +1607,7 @@ class InformarPlantiosTest(LiveServerTestCase):
         try:
             select_element = driver.find_element(By.ID, "planta2")
             time.sleep(1)
-        except TimeoutException:
+        except:
             with open('page_source3.html', 'w', encoding='utf-8') as f:
                 f.write(driver.page_source)
             driver.save_screenshot('screenshot3.png')
