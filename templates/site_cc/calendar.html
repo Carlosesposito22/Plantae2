@@ -434,6 +434,11 @@
         color: rgb(255, 11, 11);
     }
 
+    ul{
+        margin: 0;
+        padding: 0 !important;
+    }
+
 
     .strongmodal{
         color: #316722 !important;
@@ -593,12 +598,6 @@
                 <span id="start_event_detail"></span>
                 <p><strong>Data de colheita:</strong></p>
                 <span id="end_event_detail"></span>
-
-               
-                
-                
-                
-                
             </div>
             <div class="modal-footer footer-detalhes">
                 <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Editar</button>
@@ -1379,11 +1378,31 @@
                             .then(data => {
                                 console.log("Detalhes da planta recebidos:", data);
 
-                                // Atualizar o modal com os detalhes das plantas
                                 const plantaSelecionada = data.planta_selecionada;
-                                const plantasAmigas = data.plantas_se_da_bem.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
-                                const plantasInimigas = data.plantas_nao_se_da_bem.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
-                                const plantasNeutras = data.plantas_indiferente.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
+
+                                // Criar lista de plantas amigas
+                                const plantasAmigas = data.plantas_se_da_bem.map(p => 
+                                    `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
+                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <span>${p.nome}</span>
+                                    </li>`
+                                ).join('');
+
+                                // Criar lista de plantas inimigas
+                                const plantasInimigas = data.plantas_nao_se_da_bem.map(p => 
+                                    `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
+                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <span>${p.nome}</span>
+                                    </li>`
+                                ).join('');
+
+                                // Criar lista de plantas neutras
+                                const plantasNeutras = data.plantas_indiferente.map(p => 
+                                    `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
+                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <span>${p.nome}</span>
+                                    </li>`
+                                ).join('');
 
                                 document.getElementById('cultura_event_detail').innerHTML = `
                                     <strong>Tipo de plantio:</strong> <br>${plantaSelecionada}<br>
