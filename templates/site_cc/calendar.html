@@ -54,6 +54,8 @@
 
     .modal-header {
         width: 100% !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
     }
 
     .modal-title {
@@ -326,7 +328,12 @@
 
     .modal-body{
         padding: 60px !important;
+        padding-left: 30px !important;
         padding-top: 10px !important;
+        padding-bottom: 20px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     #suggestionModal .modal-body span {
@@ -393,25 +400,71 @@
         padding: 2rem !important;
     }
 
+    .footer-detalhes{
+        justify-content: center !important;
+    }
+
+    #delete-event-button{
+        background-color: #D5EDBB !important;
+        border-color: #316722 !important;
+        color: #316722 !important;
+    }
+
+    #delete-event-button:hover{
+        background-color: #c1d7aa !important;
+    }
+
+    #edit-event-button{
+        background-color: #316722 !important;
+        border: none !important;
+    }
+
+    #edit-event-button:hover{
+        background-color: #26501b !important;
+    }
+
+    #edit-event-button, #delete-event-button {
+        width: 45% !important;
+        border-radius: 30px !important;
+    }
+
+    .bi-circle-fill{
+        color: rgb(255, 11, 11);
+    }
+
+
+    .strongmodal{
+        color: #316722 !important;
+    }
+
+    .hold-details-body{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-content{
+        border-radius: 1.5rem !important;
+    }
+
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
 <div style="margin: 100px 0 40px 180px;">
-    <button style="width: 110px;" class="btn btn-primary active rounded-5 voltar"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
+    <button style="width: 110px;" class="btn rounded-5 voltar"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
 </div>
 
 <div style="width: 76%; max-width: 1200px; margin: 0 auto;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
         <h1 style="font-size: 4.5rem; margin: 0; color: #316722;">Calendário</h1>
         <div class="mode-buttons" style="display: flex; gap: 14px;">
-            <button id="modeEventos" class="btn   rounded-5">
+            <button id="modeEventos" class="btn rounded-5">
                 <i class="fa-solid fa-seedling"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Plantio
             </button>
-            <button id="modeFasesLua" class="btn   rounded-5">
+            <button id="modeFasesLua" class="btn rounded-5">
                 <i class="bi bi-moon-fill"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Fase da Lua
             </button>
-            <button id="modeTempo" class="btn   rounded-5">
+            <button id="modeTempo" class="btn rounded-5">
                 <i class="bi bi-brightness-high"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Clima
             </button>            
         </div>
@@ -530,22 +583,40 @@
                     <span id="type_event_detail"></span> 
                     <span id="warning-icon-container"></span>
                 </p>
-                <p><strong>Cultura:</strong></p>
-                <p style="display: flex; flex-direction: row; align-items: center;"><i class="bi bi-circle-fill" style="margin-right: 0.5rem;"></i><span id="cultura_event_detail"></span></p>
-                <p><strong>Local:</strong></p>
-                <span id="local_event_detail"></span>
-                <p><strong>Descrição:</strong></p>
-                <span id="description_event_detail"></span>
-                <p><strong>Data Início:</strong></p>
-                <span id="start_event_detail"></span>
-                <p><strong>Data Fim:</strong></p>
-                <span id="end_event_detail"></span>
-                <p><strong>Duração:</strong></p>
-                <span id="duration_readable_event_detail"></span>
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Cultura:</strong></p>
+                    <p style="display: flex; flex-direction: row; align-items: center;"><i class="bi bi-circle-fill" style="margin-right: 0.5rem; font-size: 0.8rem;"></i><span id="cultura_event_detail"></span></p>
+                </div>
+
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Local:</strong></p>
+                    <span id="local_event_detail"></span>
+                </div>
+                
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Descrição:</strong></p>
+                    <span id="description_event_detail"></span>
+                </div>
+                
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Data Início:</strong></p>
+                    <span id="start_event_detail"></span>
+                </div>
+                
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Data Fim:</strong></p>
+                    <span id="end_event_detail"></span>
+                </div>
+                
+                <div class="hold-details-body">
+                    <p><strong class="strongmodal">Duração:</strong></p>
+                    <span id="duration_readable_event_detail"></span>
+                </div>
+                
             </div>
-            <div class="modal-footer">
-                <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
-                <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
+            <div class="modal-footer footer-detalhes">
+                <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Editar</button>
+                <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger"><i class="bi bi-trash3"></i> Apagar</button>
             </div>
         </div>
     </div>
