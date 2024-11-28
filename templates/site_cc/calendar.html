@@ -580,40 +580,24 @@
                 </button>
             </div>
             <div class="modal-body">
-                <p>
-                    <strong>Tipo:</strong> 
-                    <span id="type_event_detail"></span> 
-                    <span id="warning-icon-container"></span>
-                </p>
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Cultura:</strong></p>
-                    <p style="display: flex; flex-direction: row; align-items: center;"><i class="bi bi-circle-fill" style="margin-right: 0.5rem; font-size: 0.8rem;"></i><span id="cultura_event_detail"></span></p>
-                </div>
+                
+                <span id="type_event_detail"></span> 
+                <span id="warning-icon-container"></span>
+                
+              
+                <span id="cultura_event_detail"></span>
+                <p><strong>Linha de Cultivo:</strong></p>
+                <span id="local_event_detail"></span>
+                
+                <p><strong>Data de plantio:</strong></p>
+                <span id="start_event_detail"></span>
+                <p><strong>Data de colheita:</strong></p>
+                <span id="end_event_detail"></span>
 
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Local:</strong></p>
-                    <span id="local_event_detail"></span>
-                </div>
+               
                 
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Descrição:</strong></p>
-                    <span id="description_event_detail"></span>
-                </div>
                 
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Data Início:</strong></p>
-                    <span id="start_event_detail"></span>
-                </div>
                 
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Data Fim:</strong></p>
-                    <span id="end_event_detail"></span>
-                </div>
-                
-                <div class="hold-details-body">
-                    <p><strong class="strongmodal">Duração:</strong></p>
-                    <span id="duration_readable_event_detail"></span>
-                </div>
                 
             </div>
             <div class="modal-footer footer-detalhes">
@@ -899,6 +883,9 @@
         </div>
     </div>
 </div>
+
+<
+
 
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
@@ -1370,17 +1357,48 @@
                         eventEndDate: eventEndDate
                     });
 
-                    // Atualizar informações no modal de detalhes
+                    // Atualizar informações básicas no modal de detalhes
                     document.getElementById('title_event_detail').textContent = arg.event.title;
-                    document.getElementById('description_event_detail').textContent = arg.event.extendedProps.description || '';
                     document.getElementById('start_event_detail').textContent = formatDateTime(arg.event.start);
                     document.getElementById('end_event_detail').textContent = formatDateTime(arg.event.end);
-                    document.getElementById('type_event_detail').textContent = eventType;
                     document.getElementById('local_event_detail').textContent = arg.event.extendedProps.local || 'Sem local';
                     document.getElementById('cultura_event_detail').textContent = arg.event.extendedProps.cultura || 'Sem cultura';
-                    document.getElementById('duration_readable_event_detail').textContent = arg.event.extendedProps.duration_readable || 'Duração não disponível';
                     document.getElementById('edit-event-button').setAttribute("data-event-id", arg.event.id);
                     document.getElementById('delete-event-button').setAttribute("data-event-id", arg.event.id);
+
+                    // Fetch para buscar detalhes das plantas relacionadas
+                    const cultura = arg.event.extendedProps.cultura; // Atribuir cultura (nome da planta)
+                    if (cultura) {
+                        fetch(`/planta_detalhes/?planta=${encodeURIComponent(cultura)}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`Erro ao buscar detalhes da planta: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                console.log("Detalhes da planta recebidos:", data);
+
+                                // Atualizar o modal com os detalhes das plantas
+                                const plantaSelecionada = data.planta_selecionada;
+                                const plantasAmigas = data.plantas_se_da_bem.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
+                                const plantasInimigas = data.plantas_nao_se_da_bem.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
+                                const plantasNeutras = data.plantas_indiferente.map(p => `<li style="color: ${p.cor}">${p.nome}</li>`).join('');
+
+                                document.getElementById('cultura_event_detail').innerHTML = `
+                                    <strong>Tipo de plantio:</strong> <br>${plantaSelecionada}<br>
+                                    <strong>Plantas amigas:</strong><ul>${plantasAmigas || '<li>Nenhuma planta amiga.</li>'}</ul>
+                                    <strong>Plantas inimigas:</strong><ul>${plantasInimigas || '<li>Nenhuma planta inimiga.</li>'}</ul>
+                                    <strong>Plantas neutras:</strong><ul>${plantasNeutras || '<li>Nenhuma planta neutra.</li>'}</ul>
+                                `;
+                            })
+                            .catch(error => {
+                                console.error("Erro ao buscar detalhes da planta:", error);
+                                document.getElementById('cultura_event_detail').textContent = "Erro ao carregar detalhes das plantas.";
+                            });
+                    } else {
+                        console.warn("Cultura não definida no evento.");
+                    }
 
                     // Adicionar o ícone ⚠️ apenas se for o dia de término do evento de tipo "Colheita"
                     const warningIconContainer = document.getElementById('warning-icon-container');
@@ -1438,9 +1456,11 @@
 
 
 
+
             editable: false,
             dayMaxEvents: true,
-            events: {{ events|safe }},
+            events: {{ events|default:"[]"|safe }},
+
             eventDidMount: function(info) {
                 const cultura = info.event.extendedProps.cultura;
                 if (cultura && culturaCores[cultura]) {
@@ -1566,10 +1586,10 @@
             document.getElementById('edit_event_id').value = eventId;
 
             document.querySelector('#editEventModal [name="title"]').value = document.getElementById('title_event_detail').textContent;
-            document.querySelector('#editEventModal [name="type"]').value = document.getElementById('type_event_detail').textContent;
+           
             document.querySelector('#editEventModal [name="cultura"]').value = document.getElementById('cultura_event_detail').textContent;
             document.querySelector('#editEventModal [name="local"]').value = document.getElementById('local_event_detail').textContent;
-            document.querySelector('#editEventModal [name="description"]').value = document.getElementById('description_event_detail').textContent;
+            
 
             let startDateStr = document.getElementById('start_event_detail').textContent.trim();
             let endDateStr = document.getElementById('end_event_detail').textContent.trim();
