@@ -3,12 +3,10 @@
 
 {% block title %}Painel de Eventos{% endblock title %}
 
-
 {% block content %}
 
 <style>
-
-    .iconsholder{
+    .iconsholder {
         display: flex;
         flex-direction: row;
         gap: 1rem;
@@ -17,27 +15,28 @@
         padding-top: 3rem;
     }
 
-    .historicodoplantio{
+    .historicodoplantio {
         color: #316722 !important;
         font-weight: bold !important;
     }
 
-    th{
+    th {
         background-color: #2D3C29 !important;
         color: white !important;
         border-color: #FBFBFB !important;
     }
 
-    td{
+    td {
         background-color: #EEF8E3 !important;
     }
-
 </style>
 
 <div class="row">
     <div class="col-md-12 tilecol">
         <div class="painelholder">
-            <h1 style="width: fit-content;" class="historicodoplantio"><i class="fa fa-dashboard"></i> Histórico do Plantio</h1>
+            <h1 style="width: fit-content;" class="historicodoplantio">
+                <i class="fa fa-dashboard"></i> Histórico do Plantio
+            </h1>
             <div class="cardsholderdashboard">
                 <div class="col-md-6 col-lg-3" style="padding: 0; margin: 0;">
                     <div class="widget-small primary coloured-icon">
@@ -60,11 +59,21 @@
             </div>
         </div>
         <div class="iconsholder">
-            <p class="concluded-n-icon"><i class="bi bi-check-circle-fill" style="color: rgb(0, 213, 0); margin-right: 0.3rem; font-weight: bold;"></i> Concluído</p>
-            <p class="ready-n-icon"><i class="bi bi-arrow-up-circle" style="color: rgb(0, 149, 255); margin-right: 0.3rem; font-weight: bold;"></i> Pronto pra colher</p>
-            <p class="ongoing-n-icon"><i class="bi bi-clock-history" style="color: rgb(255, 187, 0); margin-right: 0.3rem; font-weight: bold;"></i> Em Andamento</p>
-            <p class="agendado-n-icon"><i class="bi bi-calendar-week" style="color: rgb(231, 0, 173); margin-right: 0.3rem; font-weight: bold;"></i> Agendado</p>
-            <p class="critical-n-icon"><i class="bi bi-exclamation-triangle" style="color: red; margin-right: 0.3rem; font-weight: bold;"></i> Situação Crítica</p>
+            <p class="concluded-n-icon">
+                <i class="bi bi-check-circle-fill" style="color: rgb(0, 213, 0); margin-right: 0.3rem; font-weight: bold;"></i> Concluído
+            </p>
+            <p class="ready-n-icon">
+                <i class="bi bi-arrow-up-circle" style="color: rgb(0, 149, 255); margin-right: 0.3rem; font-weight: bold;"></i> Pronto pra colher
+            </p>
+            <p class="ongoing-n-icon">
+                <i class="bi bi-clock-history" style="color: rgb(255, 187, 0); margin-right: 0.3rem; font-weight: bold;"></i> Em Andamento
+            </p>
+            <p class="agendado-n-icon">
+                <i class="bi bi-calendar-week" style="color: rgb(231, 0, 173); margin-right: 0.3rem; font-weight: bold;"></i> Agendado
+            </p>
+            <p class="critical-n-icon">
+                <i class="bi bi-exclamation-triangle" style="color: red; margin-right: 0.3rem; font-weight: bold;"></i> Situação Crítica
+            </p>
         </div>
         <div class="tile">
             <div class="tile-body">
@@ -75,25 +84,54 @@
                                 <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable" role="grid" aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr role="row">
-                                            <th class="sorting_asc" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Nome: ative para classificar a coluna em ordem decrescente" style="width: 261.641px;">SL</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Nome do Evento: ative para classificar a coluna em ordem crescente" style="width: 417.312px;">Nome do Evento</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Tipo: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Tipo</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Cultura: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Cultura</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Local: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Local</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Início: ative para classificar a coluna em ordem crescente" style="width: 189.281px;">Data de Início</th>
-                                            <th class="sorting" tabindex="0" aria-controls="sampleTable" rowspan="1" colspan="1" aria-label="Fim: ative para classificar a coluna em ordem crescente" style="width: 102.141px;">Data de Término</th>
+                                            <th>SL</th>
+                                            <th>Status</th>
+                                            <th>Nome do Evento</th>
+                                            <th>Tipo</th>
+                                            <th>Cultura</th>
+                                            <th>Local</th>
+                                            <th>Data de Início</th>
+                                            <th>Data de Término</th>
+                                            
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {% for event in latest_events %}
-                                            <tr role="row" class="odd">
-                                                <td class="sorting_1">{{ forloop.counter }}</td>
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    {% now "Y-m-d" as today_date %}
+                                                    {% with event.start_time|date:"Y-m-d" as start_date %}
+                                                        {% with event.end_time|date:"Y-m-d" as end_date %}
+                                                            {% if today_date > end_date %}
+                                                                <!-- Concluído -->
+                                                                <i class="bi bi-check-circle-fill" style="color: green;"></i>
+                                                            {% elif today_date == end_date %}
+                                                                <!-- Pronto pra colher -->
+                                                                <i class="bi bi-arrow-up-circle" style="color: blue;"></i>
+                                                            {% elif today_date >= start_date and today_date < end_date %}
+                                                                <!-- Em Andamento -->
+                                                                <i class="bi bi-clock-history" style="color: orange;"></i>
+                                                            {% elif today_date < start_date %}
+                                                                <!-- Agendado -->
+                                                                <i class="bi bi-calendar-week" style="color: purple;"></i>
+                                                            {% endif %}
+                                                        {% endwith %}
+                                                    {% endwith %}
+                                                </td>
                                                 <td>{{ event.title }}</td>
-                                                <td>{{event.type}}</td>
-                                                <td>{{event.cultura}}</td>
-                                                <td>{{event.local}}</td>
+                                                <td>{{ event.type }}</td>
+                                                <td>{{ event.cultura }}</td>
+                                                <td>{{ event.local }}</td>
                                                 <td>{{ event.start_time }}</td>
                                                 <td>{{ event.end_time }}</td>
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
+                                                
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -105,12 +143,12 @@
             </div>
         </div>
     </div>
-
 </div>
+
 {% endblock content %}
 
 {% block extrascripts %}
-    <script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
-    <script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
-    <script type="text/javascript">$('#sampleTable').DataTable();</script>
+<script type="text/javascript" src="{% static 'js/plugins/jquery.dataTables.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/plugins/dataTables.bootstrap.min.js' %}"></script>
+<script type="text/javascript">$('#sampleTable').DataTable();</script>
 {% endblock extrascripts %}
