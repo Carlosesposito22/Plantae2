@@ -1,3 +1,4 @@
+
 {% block content %}
 {% include 'navbar.html' %}
 
@@ -188,6 +189,14 @@
         width: 100%;
         font-size: 1rem;
     }
+    .status-plantio {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+        border-radius: 1rem;
+        text-align: center;
+        color: white;
+    }
+
 
     #plantio-card{
         background-color: rgb(175, 229, 7);
@@ -206,73 +215,75 @@
     <div class="hold-cards">
         <div class="card shadow-lg" id="plantio-card">
             <div class="plantio-e-navigation">
-
                 <p class="plantio">Plantio</p>
-
                 <div class="navigation">
-                    <i class="fa-solid fa-angle-left carousel-control-prev" style="color: black;" type="button" data-bs-target="#carouselExample" data-bs-slide="prev"></i>
+                    <i class="fa-solid fa-angle-left carousel-control-prev" id="prev-event" style="color: black;" type="button"></i>
                     <i class="fa-solid fa-circle"></i>
                     <i class="fa-solid fa-circle"></i>
                     <i class="fa-solid fa-circle"></i>
                     <i class="fa-solid fa-circle"></i>
-                    <i class="fa-solid fa-angle-right carousel-control-next" type="button" style="color: black;" data-bs-target="#carouselExample" data-bs-slide="next"></i>
+                    <i class="fa-solid fa-angle-right carousel-control-next" id="next-event" style="color: black;" type="button"></i>
                 </div>
-
             </div>
-
+            
             <div class="img-e-detalhes carousel-item">
-
-                <div class="plantio-img">
-                </div>
-
+                <div class="plantio-img"></div>
                 <div class="detalhes">
                     <p class="data">SEGUNDA-FEIRA</p>
-                    <h1 class="evento" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X
-                    </h1>
+                    <h1 class="evento" id="event-title" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X</h1>
                     <p class="status-plantio"
                         style="background-color: grey; margin-top: -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; color: white; text-align: center; border-radius: 1rem; font-size: 0.8rem;">
-                        STATUS DO PLANTIO</p>
+                        STATUS DO PLANTIO
+                    </p>
                 </div>
-
             </div>
+            
 
-            <div class="datas-calendario-setaBtn">
-                <div class="datas-calendario">
-                    <ul class="calendario-ul">
-                        <li class="calendario-li">
-                            <div class="calendario-item">
-                                <p class="data-na-lista">TER</p>
-                                <div class="plantio-img-lista"></div>
-                            </div>
-                        </li>
-                        <li class="calendario-li">
-                            <div class="calendario-item">
-                                <p class="data-na-lista">TER</p>
-                                <div class="plantio-img-lista"></div>
-                            </div>
-                        </li>
-                        <li class="calendario-li">
-                            <div class="calendario-item">
-                                <p class="data-na-lista">TER</p>
-                                <div class="plantio-img-lista"></div>
-                            </div>
-                        </li>
-                        <li class="calendario-li">
-                            <div class="calendario-item">
-                                <p class="data-na-lista">TER</p>
-                                <div class="plantio-img-lista"></div>
-                            </div>
-                        </li>
-                        <li class="calendario-li">
-                            <div class="calendario-item">
-                                <p class="data-na-lista">TER</p>
-                                <div class="plantio-img-lista"></div>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-                <a href="" class="seta-btn" style="transform: rotate(225deg);"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
-                </a>
+            <div class="datas-calendario">
+                <ul class="calendario-ul">
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="monday">
+                            <p class="data-na-lista">SEG</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>                        
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="tuesday">
+                            <p class="data-na-lista">TER</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="wednesday">
+                            <p class="data-na-lista">QUA</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="thursday">
+                            <p class="data-na-lista">QUI</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="friday">
+                            <p class="data-na-lista">SEX</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="saturday">
+                            <p class="data-na-lista">SAB</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                    <li class="calendario-li">
+                        <div class="calendario-item" id="sunday">
+                            <p class="data-na-lista">DOM</p>
+                            <div class="plantio-img-lista"></div>
+                        </div>
+                    </li>
+                </ul>
             </div>
 
         </div>
@@ -355,10 +366,145 @@
         <a class="gerenciar-culturas" href=""><i class="bi bi-pencil-square" style="margin-right: 1rem;"></i> Gerenciar Culturas</a>
         <div class="botoes-debaixo">
             <a class="reportar-pragas" href="{% url 'site_cc:praga' %}" name="pragas"><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
-            <a class="adicionar-cultura" href=""><i class="bi bi-plus-circle" style="margin-right: 0.5rem;"></i> Adicionar Cultura</a>
+            
         </div>
     </div>
 
 </div>
 
 {% endblock %}
+
+
+{% block extrascripts %}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+        const prevButton = document.getElementById("prev-event");
+        const nextButton = document.getElementById("next-event");
+        const eventTitle = document.getElementById("event-title");
+        const statusElement = document.querySelector(".status-plantio");
+        const dataElement = document.querySelector(".data");
+
+        // Dias da semana
+        const daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        const dayAbbreviations = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"]; // Apenas abreviações
+        const dayElements = Array.from(document.querySelectorAll(".data-na-lista")); // Seleciona as bolinhas na ordem DOM
+
+        // Índices e eventos
+        let eventsByDay = {};
+        let todayIndex = new Date().getDay(); // Índice do dia atual (0 = Domingo, 1 = Segunda, etc.)
+        let selectedDay = 0; // Começa com o dia atual (primeira bolinha)
+        let currentEventIndex = 0;
+
+        // Reorganizar os dias da semana para começar com o dia atual
+        const reorderedDays = [...daysOfWeek.slice(todayIndex), ...daysOfWeek.slice(0, todayIndex)];
+        const reorderedDayAbbreviations = [...dayAbbreviations.slice(todayIndex), ...dayAbbreviations.slice(0, todayIndex)];
+
+        // Atualizar as bolinhas para exibir os próximos 7 dias
+        dayElements.forEach((el, index) => {
+            const dayIndex = index % reorderedDayAbbreviations.length;
+            el.textContent = reorderedDayAbbreviations[dayIndex]; // Apenas a abreviação
+        });
+
+        const updateEventTitleAndStatus = () => {
+            const currentDay = reorderedDays[selectedDay];
+            const events = eventsByDay[currentDay] || [];
+            if (events.length > 0) {
+                const event = events[currentEventIndex];
+                eventTitle.textContent = event?.title || "Nenhum.";
+
+                // Atualizar o status do evento
+                const today = new Date().toISOString().split("T")[0];
+                if (today > event.end_time.split("T")[0]) {
+                    statusElement.textContent = "Concluído";
+                    statusElement.style.backgroundColor = "green";
+                } else if (today === event.end_time.split("T")[0]) {
+                    statusElement.textContent = "Pronto para colher";
+                    statusElement.style.backgroundColor = "blue";
+                } else if (today >= event.start_time.split("T")[0] && today < event.end_time.split("T")[0]) {
+                    statusElement.textContent = "Em Andamento";
+                    statusElement.style.backgroundColor = "orange";
+                } else if (today < event.start_time.split("T")[0]) {
+                    statusElement.textContent = "Agendado";
+                    statusElement.style.backgroundColor = "purple";
+                }
+            } else {
+                eventTitle.textContent = "Nenhum.";
+                statusElement.textContent = "Sem eventos";
+                statusElement.style.backgroundColor = "gray";
+            }
+        };
+
+        const highlightDay = () => {
+            dayElements.forEach((el, index) => {
+                if (index === selectedDay) {
+                    el.parentElement.classList.add("selected-day"); // Destaca a bolinha correspondente
+                } else {
+                    el.parentElement.classList.remove("selected-day");
+                }
+            });
+        };
+
+        const updateSelectedDayText = () => {
+            dataElement.textContent = reorderedDayAbbreviations[selectedDay];
+        };
+
+        dayElements.forEach((el, index) => {
+            el.parentElement.addEventListener("click", () => {
+                selectedDay = index;
+                currentEventIndex = 0; // Reinicia no primeiro evento do dia
+                highlightDay();
+                updateEventTitleAndStatus();
+                updateSelectedDayText();
+            });
+        });
+
+        fetch("/api/events/")
+            .then(response => response.json())
+            .then(data => {
+                eventsByDay = data.reduce((acc, event) => {
+                    const startDate = new Date(event.start_time);
+                    const endDate = new Date(event.end_time);
+
+                    let currentDate = new Date(startDate.setHours(0, 0, 0, 0));
+                    const normalizedEndDate = new Date(endDate.setHours(0, 0, 0, 0));
+
+                    while (currentDate <= normalizedEndDate) {
+                        const dayOfWeek = currentDate.getDay();
+                        const dayName = daysOfWeek[dayOfWeek];
+                        if (!acc[dayName]) acc[dayName] = [];
+                        if (!acc[dayName].some(e => e.id === event.id)) {
+                            acc[dayName].push(event);
+                        }
+                        currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+                    }
+
+                    return acc;
+                }, {});
+                highlightDay();
+                updateEventTitleAndStatus();
+                updateSelectedDayText();
+            })
+            .catch(error => console.error("Erro ao carregar eventos:", error));
+
+        prevButton.addEventListener("click", () => {
+            const currentDay = reorderedDays[selectedDay];
+            const events = eventsByDay[currentDay] || [];
+            if (events.length > 0) {
+                currentEventIndex = (currentEventIndex - 1 + events.length) % events.length;
+                updateEventTitleAndStatus();
+            }
+        });
+
+        nextButton.addEventListener("click", () => {
+            const currentDay = reorderedDays[selectedDay];
+            const events = eventsByDay[currentDay] || [];
+            if (events.length > 0) {
+                currentEventIndex = (currentEventIndex + 1) % events.length;
+                updateEventTitleAndStatus();
+            }
+        });
+    });
+
+
+    </script>
+{% endblock extrascripts %}
