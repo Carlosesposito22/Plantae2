@@ -145,10 +145,18 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
 
 ### Histórias
 
-- No total temos X histórias definidas e X implementadas. As implementadas são:
-  - Consultar o Clima Local
-  - Receber Alertas de Clima Crítico
-  - X
+- No total temos 10 histórias implementadas. São elas:
+    - Criar Eventos
+    - Sugerir evento de colheita 
+    - Registrar Pragas
+    - Excluir/Editar evento 
+    - Informar Plantios que se dão bem ou não 
+    - Mostrar clima e informações do tempo 
+    - Dashboard Geral 
+    - Alertar um clima crítico na região 
+    - Sugerir como tratar as pragas 
+    - Sugerir e permitir criação de plantio recomendado com base na colheita anterior
+
 
 **👩‍💻🧑‍💻 Relato da Programação em Par no SR2**
 
