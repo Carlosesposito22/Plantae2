@@ -110,7 +110,7 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
       >Protótipo de média fidelidade no Figma</a>
   </li>
     <li>
-        <a  href=""
+        <a  href="https://excalidraw.com/#room=735a8c36e2fcf75da5a5,PLo7HRBrsgD0x_1r2BE2_g"
       >Diagrama de atividades</a>
   </li>
    <li>
