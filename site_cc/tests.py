@@ -1034,7 +1034,7 @@ class SolucoesPragasTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "Batata")))
         btn_calendar = driver.find_element(By.NAME, "Batata")
-        driver.execute_script("arguments[0].click();", btn_calendar)
+        btn_calendar.click()
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "detalhes")))
         btn_calendar = driver.find_element(By.NAME, "detalhes")
