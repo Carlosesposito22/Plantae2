@@ -27,8 +27,8 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
-      - name: Collect static files
-        run: python manage.py collectstatic --noinput
+      #- name: Collect static files
+      #  run: python manage.py collectstatic --noinput
       
       - name: Install dependencies
         run: |
