@@ -1320,7 +1320,7 @@ class DashboardTest(LiveServerTestCase):
             )
             driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
             WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
-            cultura_excluida.click()
+            driver.execute_script("arguments[0].click();", cultura_excluida)
         except Exception as e:
             print(f"Erro: {e}")
             driver.save_screenshot("static/erro_screenshot.png")
@@ -1334,8 +1334,8 @@ class DashboardTest(LiveServerTestCase):
         btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
         btn_editarCultura.click()
 
-        nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        nomeEvento_culturaEditar = driver.find_element(By.ID, "edit_title")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -1343,7 +1343,7 @@ class DashboardTest(LiveServerTestCase):
         nomeEvento_culturaEditar.send_keys("Novo nome para o evento")
         time.sleep(2)
 
-        salvar_btn.click()
+        driver.execute_script("arguments[0].click();", salvar_btn)
         time.sleep(5)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
