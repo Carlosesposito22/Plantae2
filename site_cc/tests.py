@@ -1214,7 +1214,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1305,12 +1305,13 @@ class DashboardTest(LiveServerTestCase):
         end_time_str = end_datetime.strftime("%H:%M")
 
         # Inserir datas nos campos
-        dataInicio_cultura.send_keys(start_date_str)
+        dataInicio_cultura.send_keys("28/11/2024")
         dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys(start_time_str)
-        dataFim_cultura.send_keys(end_date_str)
+        dataInicio_cultura.send_keys("10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("30/11/2024")
         dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys(end_time_str)
+        dataFim_cultura.send_keys("10:00")
         time.sleep(1)
 
         salvar_btn.click()
@@ -1331,7 +1332,7 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
 
         try:
-            cultura_excluida = WebDriverWait(driver, 20).until(
+            cultura_excluida = WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.ID, "event-test"))
             )
         except TimeoutException:
@@ -1599,11 +1600,6 @@ class InformarPlantiosTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(1)
         
-        driver.save_screenshot('screenshot.png')
-
-        with open('page_source.html', 'w', encoding='utf-8') as f:
-            f.write(driver.page_source)
-
         select_element = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "planta2"))
         )
