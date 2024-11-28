@@ -1208,11 +1208,11 @@ class DashboardTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -1311,7 +1311,7 @@ class DashboardTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        driver.execute_script("arguments[0].click();", btn_calendar)
+        btn_calendar.click()
 
         ##########################
         time.sleep(2)
@@ -1319,10 +1319,8 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         
         time.sleep(3)
-        cultura_excluida = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "event-test")))
-        driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
-        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
-        driver.execute_script("arguments[0].click();", cultura_excluida)
+        element = driver.find_element(By.ID, "event-test")
+        element.click() 
 
         ##########################
 
