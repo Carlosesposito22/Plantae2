@@ -520,6 +520,25 @@
         background-color: #254f1a !important;
     }
 
+    .footer-add{
+        padding-left: 0 !important;
+        justify-content: center !important;
+    }
+
+    #rejectSuggestion{
+        background-color: #D5EDBB !important;
+        color: #316722 !important;
+        border-radius: 30px !important;
+        border: solid 0.05rem !important;
+    }
+
+    #acceptSuggestion{
+        background-color: #316722 !important;
+        color: #EFEFEF !important;
+        border-radius: 30px !important;
+        border: none !important;
+    }
+
 </style>
 {% endblock extracss %}
 
@@ -572,7 +591,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Adicionar Plantação</h5>
+                <h5 class="modal-title">Adicionar Cultura</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -610,9 +629,9 @@
                         {{ form.end_time }}
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary save-btn">Salvar</button>
+                <div class="modal-footer footer-add">
+                    <button type="button" class="btn fechar-edit-btn" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn salvar-edit-btn" id="salvar_editar"><i class="bi bi-floppy-fill" style="margin-right: 0.5rem;"></i> Salvar</button>
                 </div>
             </form>
         </div>
@@ -803,7 +822,7 @@
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content content-excluindo">
             <div class="modal-body text-center">
-                <p>Excluindo cultura...</p>
+                <p style="margin-top: 0.7rem;">Excluindo cultura...</p>
             </div>
         </div>
     </div>
@@ -830,7 +849,7 @@
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content content-processando">
             <div class="modal-body text-center">
-                <p>Processando nova cultura...</p>
+                <p style="margin-top: 0.7rem;">Processando nova cultura...</p>
             </div>
         </div>
     </div>
@@ -858,12 +877,17 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content" style="border-radius: 16px; background-color: #F4F4F4; padding: 24px; text-align: center; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);">
             <div class="modal-body">
-                <h4 class="modal-title" style="font-weight: bold; margin-bottom: 8px; font-size: 1.5rem; color: #333;">Sugestão</h4>
-                <p style="color: #777; font-size: 1rem; margin-bottom: 15px;">
-                    Sua cultura será plantada no dia <span id="suggestionPlantingDate"></span>, <br>
-                    sugerimos que a colheita seja no dia <span id="suggestionHarvestDate"></span>.
-                </p>
-                <p style="font-weight: bold; font-size: 1rem; color: #444;">Gostaria de aceitar nossa sugestão?</p>
+                <h4 class="modal-title" style="font-weight: bold; margin-bottom: 1.5rem; font-size: 1.5rem; color: #333; display: flex; justify-content: left;">Sugestão</h4>
+                <div class="texto-modal-sugestao" style="display: flex; flex-direction: column; justify-content: left; gap: 0.5rem;">
+                    <p style="color: #777; font-size: 1rem; display: flex; justify-content: left; align-items: center; margin-bottom: 0;">
+                        Sua cultura será plantada no dia <span id="suggestionPlantingDate" style="margin-left: 0.5rem; color: #316722;"></span>,
+                    </p>
+                    <p style="color: #777; font-size: 1rem; display: flex; justify-content: left; align-items: center; margin-top: -0.5rem;">
+                        sugerimos que a colheita seja no dia <span id="suggestionHarvestDate" style="margin-left: 0.5rem; color: #F46718;"></span>.
+                    </p>
+                </div>
+
+                <p style="font-weight: bold; font-size: 1rem; color: #444; display: flex; justify-content: left;">Gostaria de aceitar nossa sugestão?</p>
                 <div class="d-flex justify-content-center gap-3 mt-4">
                     <button type="button" id="rejectSuggestion" class="btn btn-outline-dark" style="border-radius: 8px; padding: 10px 20px; font-size: 1rem;">
                         <i class="bi bi-x-circle"></i> Não, estou ciente
