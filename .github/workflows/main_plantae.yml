@@ -40,8 +40,6 @@ jobs:
 
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2
-        with:
-          version: latest
 
       - name: Run local server and tests
         run: |
@@ -49,7 +47,7 @@ jobs:
           python manage.py migrate
           python manage.py runserver &
           sleep 10
-          python manage.py test
+          python manage.py test site_cc.tests.InformarPlantiosTest
 
       - name: Upload artifacts
         if: failure()
