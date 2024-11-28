@@ -17,6 +17,10 @@
         color: #6A8463;
     }
 
+    .btn{
+        box-shadow: none !important;
+    }
+
     #addEventButton{
         display: flex;
         flex-direction: row;
@@ -41,8 +45,6 @@
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
-
-
     .coluna-ongoing {
         background-color: #F2F7F2;
         padding: 20px;
@@ -54,6 +56,8 @@
 
     .modal-header {
         width: 100% !important;
+        padding-left: 30px !important;
+        padding-right: 30px !important;
     }
 
     .modal-title {
@@ -326,7 +330,12 @@
 
     .modal-body{
         padding: 60px !important;
+        padding-left: 30px !important;
         padding-top: 10px !important;
+        padding-bottom: 20px !important;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
     }
 
     #suggestionModal .modal-body span {
@@ -393,25 +402,71 @@
         padding: 2rem !important;
     }
 
+    .footer-detalhes{
+        justify-content: center !important;
+    }
+
+    #delete-event-button{
+        background-color: #D5EDBB !important;
+        border-color: #316722 !important;
+        color: #316722 !important;
+    }
+
+    #delete-event-button:hover{
+        background-color: #c1d7aa !important;
+    }
+
+    #edit-event-button{
+        background-color: #316722 !important;
+        border: none !important;
+    }
+
+    #edit-event-button:hover{
+        background-color: #26501b !important;
+    }
+
+    #edit-event-button, #delete-event-button {
+        width: 45% !important;
+        border-radius: 30px !important;
+    }
+
+    .bi-circle-fill{
+        color: rgb(255, 11, 11);
+    }
+
+
+    .strongmodal{
+        color: #316722 !important;
+    }
+
+    .hold-details-body{
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-content{
+        border-radius: 1.5rem !important;
+    }
+
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
 <div style="margin: 100px 0 40px 180px;">
-    <button style="width: 110px;" class="btn btn-primary active rounded-5 voltar"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
+    <button style="width: 110px;" class="btn rounded-5 voltar"><i class="fa-solid fa-chevron-left"></i> Voltar</button>
 </div>
 
 <div style="width: 76%; max-width: 1200px; margin: 0 auto;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
         <h1 style="font-size: 4.5rem; margin: 0; color: #316722;">Calendário</h1>
         <div class="mode-buttons" style="display: flex; gap: 14px;">
-            <button id="modeEventos" class="btn   rounded-5">
+            <button id="modeEventos" class="btn rounded-5">
                 <i class="fa-solid fa-seedling"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Plantio
             </button>
-            <button id="modeFasesLua" class="btn   rounded-5">
+            <button id="modeFasesLua" class="btn rounded-5">
                 <i class="bi bi-moon-fill"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Fase da Lua
             </button>
-            <button id="modeTempo" class="btn   rounded-5">
+            <button id="modeTempo" class="btn rounded-5">
                 <i class="bi bi-brightness-high"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Clima
             </button>            
         </div>
@@ -545,9 +600,9 @@
                 
                 
             </div>
-            <div class="modal-footer">
-                <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary">Editar</button>
-                <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger">Apagar</button>
+            <div class="modal-footer footer-detalhes">
+                <button id="edit-event-button" data-event-id="" type="button" class="btn btn-primary"><i class="bi bi-pencil-square"></i> Editar</button>
+                <button id="delete-event-button" data-event-id="" type="button" class="btn btn-danger"><i class="bi bi-trash3"></i> Apagar</button>
             </div>
         </div>
     </div>
@@ -776,6 +831,7 @@
     </div>
 </div>
 
+<!-- Modal para editar evento -->
 <div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -790,37 +846,38 @@
                 <input type="hidden" id="edit_event_id" name="event_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label>Evento:</label>
-                        {{ form.title }}
+                        <label for="edit_title">Título do Evento:</label>
+                        {{ edit_form.title }}
                     </div>
                     <div class="form-group">
-                        <label>Tipo:</label>
-                        {{ form.type }}
+                        <label for="edit_type">Tipo:</label>
+                        {{ edit_form.type }}
                     </div>
                     <div class="form-group">
-                        <label>Cultura:</label>
-                        {{ form.cultura }}
+                        <label for="edit_cultura">Cultura:</label>
+                        {{ edit_form.cultura }}
                     </div>
                     <div class="form-group">
-                        <label>Local:</label>
-                        {{ form.local }}
+                        <label for="edit_local">Local:</label>
+                        {{ edit_form.local }}
                     </div>
                     <div class="form-group">
-                        <label>Descriço:</label>
-                        {{ form.description }}
+                        <label for="edit_description">Descrição:</label>
+                        {{ edit_form.description }}
                     </div>
                     <div class="form-group">
-                        <label>Início:</label>
-                        {{ form.start_time }}
+                        <label for="edit_start_time">Data de Início:</label>
+                        {{ edit_form.start_time }}
                     </div>
                     <div class="form-group">
-                        <label>Fim:</label>
-                        {{ form.end_time }}
+                        <label for="edit_end_time">Data de Término:</label>
+                        {{ edit_form.end_time }}
                     </div>
+                    
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary save-btn">Salvar</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary" id="salvar_editar">Salvar Alterações</button>
                 </div>
             </form>
         </div>

@@ -25,6 +25,9 @@ from selenium.common.exceptions import UnexpectedAlertPresentException
 from selenium.webdriver.common.alert import Alert
 from unittest.mock import patch
 from site_cc.views import calendar_view_new
+from selenium.common.exceptions import TimeoutException
+from django.utils import timezone
+from datetime import timedelta
 
 
 class AdicionarCulturaTest(LiveServerTestCase):
@@ -1208,11 +1211,11 @@ class DashboardTest(LiveServerTestCase):
 
     @classmethod
     def setUpClass(cls):
-        super().setUpClass()
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -1282,6 +1285,14 @@ class DashboardTest(LiveServerTestCase):
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
         salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
 
+        start_datetime = timezone.now() + timedelta(days=1)
+        start_date_str = start_datetime.strftime("%d/%m/%Y")
+        start_time_str = start_datetime.strftime("%H:%M")
+
+        end_datetime = start_datetime + timedelta(hours=2)
+        end_date_str = end_datetime.strftime("%d/%m/%Y")
+        end_time_str = end_datetime.strftime("%H:%M")
+
         nomeEvento_cultura.send_keys("Teste para DashBoard")
         time.sleep(1)
         tipo_cultura.select_by_visible_text("Outros")
@@ -1292,13 +1303,19 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
         time.sleep(1)
-        dataInicio_cultura.send_keys("20/11/2024")
+        #dataInicio_cultura.send_keys("29/11/2024")
+        #dataInicio_cultura.send_keys(Keys.TAB)
+        #dataInicio_cultura.send_keys("10:00")
+        #time.sleep(1)
+        #dataFim_cultura.send_keys("30/11/2024")
+        #dataFim_cultura.send_keys(Keys.TAB)
+        #dataFim_cultura.send_keys("12:00")
+        dataInicio_cultura.send_keys(start_date_str)
         dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys("10:00")
-        time.sleep(1)
-        dataFim_cultura.send_keys("20/11/2024")
+        dataInicio_cultura.send_keys(start_time_str)
+        dataFim_cultura.send_keys(end_date_str)
         dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys("12:00")
+        dataFim_cultura.send_keys(end_time_str)
         time.sleep(1)
 
         salvar_btn.click()
@@ -1312,19 +1329,30 @@ class DashboardTest(LiveServerTestCase):
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
         btn_calendar.click()
+
         ##########################
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+
         try:
-            time.sleep(3)
-            cultura_excluida = WebDriverWait(driver, 10).until(
+            cultura_excluida = WebDriverWait(driver, 20).until(
                 EC.presence_of_element_located((By.ID, "event-test"))
             )
-            driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
-            cultura_excluida.click()
-        except Exception as e:
-            print(f"Erro: {e}")
-            driver.save_screenshot("static/erro_screenshot.png")
+        except TimeoutException:
+            print("Element with ID 'event-test' not found.")
+            # Capture page source
+            with open('page_source.html', 'w', encoding='utf-8') as f:
+                f.write(driver.page_source)
+            # Take a screenshot
+            driver.save_screenshot('screenshot.png')
+            # Re-raise the exception to fail the test
             raise
+        
+        time.sleep(3)
+        element = driver.find_element(By.ID, "event-test")
+        time.sleep(3)
+        element.click() 
 
         ##########################
 
@@ -1334,8 +1362,8 @@ class DashboardTest(LiveServerTestCase):
         btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
         btn_editarCultura.click()
 
-        nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        nomeEvento_culturaEditar = driver.find_element(By.ID, "edit_title")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -1343,7 +1371,7 @@ class DashboardTest(LiveServerTestCase):
         nomeEvento_culturaEditar.send_keys("Novo nome para o evento")
         time.sleep(2)
 
-        salvar_btn.click()
+        driver.execute_script("arguments[0].click();", salvar_btn)
         time.sleep(5)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))

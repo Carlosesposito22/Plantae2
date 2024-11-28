@@ -64,12 +64,16 @@
 
   .cta-btn {
     padding: 0.75rem 1.5rem;
-    background-color: black;
+    background-color: #316722;
     color: #fff;
     border: none;
     border-radius: 1.5rem;
     cursor: pointer;
     margin-top: 1rem;
+  }
+
+  .cta-btn:hover{
+    background-color: #234818;
   }
 
   .about {
@@ -203,7 +207,7 @@
       <p class="subtitle" style="color: #316722;">Gerencie seu cultivo de forma simples e eficiente.</p>
       <p style="color: #316722;">Acompanhe cada etapa, maximize sua produção e tome decisões informadas para colher mais com menos esforço.</p>
       <a href="{% url 'accounts:signin' %}">
-        <button class="cta-btn" style="background-color: #316722;">Experimente agora</button>
+        <button class="cta-btn btn">Experimente agora</button>
       </a>
     </div>
     <div class="hero-image">

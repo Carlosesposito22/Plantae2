@@ -11,6 +11,7 @@
     :-ms-input-placeholder {
         color: #6c757d !important;
     }
+
 </style>
 
 <!DOCTYPE html>
@@ -39,7 +40,7 @@
                 <h3 style="font-size: 2.5rem;"><strong>Crie a sua conta</strong></h3>
                 <p>Acesse o melhor portal do Brasil</p>
     
-                <div class="login-register-holder-changer">
+                <div class="login-register-holder-changer btn">
                     <a class="logininactive" href="{% url 'accounts:signin' %}">Login</a>
                     <a class="registeractive" href="{% url 'accounts:signup' %}">Cadastro</a>
                 </div>
@@ -94,7 +95,7 @@
                         </div>
                         <div class="col-md-12">
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary" name="btn_registar">Finalizar cadastro</button>
+                                <button type="submit" class="btn btn-primary finalizarcadastro" name="btn_registar">Finalizar cadastro</button>
                             </div>
                         </div>
                     </div>

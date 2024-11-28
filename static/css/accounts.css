@@ -8409,6 +8409,10 @@ textarea.form-control {
           margin-right: auto;
         }
 
+        .finalizarcadastro:hover{
+          background-color: #234818 !important;
+        }
+
         .loginactive, .registeractive {
           background-color: #AFE507 !important;
           padding: 0.5rem 3rem;
@@ -8416,6 +8420,10 @@ textarea.form-control {
           border-radius: 2rem;
           width: 50%;
           text-align: center;
+        }
+
+        .login-register-holder-changer:hover{
+          background-color: #EBEBEB !important;
         }
       
 
