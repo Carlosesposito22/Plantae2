@@ -28,6 +28,7 @@
 
     td {
         background-color: #EEF8E3 !important;
+        text-align: center;
     }
 </style>
 
@@ -105,16 +106,16 @@
                                                         {% with event.end_time|date:"Y-m-d" as end_date %}
                                                             {% if today_date > end_date %}
                                                                 <!-- Concluído -->
-                                                                <i class="bi bi-check-circle-fill" style="color: green;"></i>
+                                                                <i class="bi bi-check-circle-fill" style="color: rgb(0, 213, 0);"></i>
                                                             {% elif today_date == end_date %}
                                                                 <!-- Pronto pra colher -->
-                                                                <i class="bi bi-arrow-up-circle" style="color: blue;"></i>
+                                                                <i class="bi bi-arrow-up-circle" style="color: rgb(0, 149, 255);"></i>
                                                             {% elif today_date >= start_date and today_date < end_date %}
                                                                 <!-- Em Andamento -->
-                                                                <i class="bi bi-clock-history" style="color: orange;"></i>
+                                                                <i class="bi bi-clock-history" style="color: rgb(255, 187, 0);"></i>
                                                             {% elif today_date < start_date %}
                                                                 <!-- Agendado -->
-                                                                <i class="bi bi-calendar-week" style="color: purple;"></i>
+                                                                <i class="bi bi-calendar-week" style="color: rgb(231, 0, 173);"></i>
                                                             {% endif %}
                                                         {% endwith %}
                                                     {% endwith %}
