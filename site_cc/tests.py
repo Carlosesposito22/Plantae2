@@ -1311,20 +1311,18 @@ class DashboardTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
         btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
+        driver.execute_script("arguments[0].click();", btn_calendar)
+
         ##########################
-        try:
-            time.sleep(3)
-            cultura_excluida = WebDriverWait(driver, 10).until(
-                EC.presence_of_element_located((By.ID, "event-test"))
-            )
-            driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
-            WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
-            driver.execute_script("arguments[0].click();", cultura_excluida)
-        except Exception as e:
-            print(f"Erro: {e}")
-            driver.save_screenshot("static/erro_screenshot.png")
-            raise
+        time.sleep(2)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(1)
+        
+        time.sleep(3)
+        cultura_excluida = WebDriverWait(driver, 20).until(EC.presence_of_element_located((By.ID, "event-test")))
+        driver.execute_script("arguments[0].scrollIntoView(true);", cultura_excluida)
+        WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.ID, "event-test")))
+        driver.execute_script("arguments[0].click();", cultura_excluida)
 
         ##########################
 
