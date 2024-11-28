@@ -1392,7 +1392,18 @@
                 $('#eventModal').modal('show');
                 calendar.unselect();
             },
+
+            
             eventClick: function(arg) {
+                const culturaColors = {
+                    "Tomate": "red",
+                    "Batata": "yellow",
+                    "Alface": "green",
+                    "Cenoura": "orange",
+                    "Rúcula": "blue",
+                    "default": "gray" // Cor padrão para tipos não especificados
+                };
+
                 if (currentMode === 'eventos') {
                     const eventType = arg.event.extendedProps.type || 'Sem tipo';
                     const today = new Date().toISOString().split('T')[0]; // Data atual no formato YYYY-MM-DD
@@ -1431,7 +1442,7 @@
                                 // Criar lista de plantas amigas
                                 const plantasAmigas = data.plantas_se_da_bem.map(p => 
                                     `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
-                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <i class="bi bi-circle-fill" style="color: ${culturaColors[p.nome] || culturaColors.default}; margin-right: 5px;"></i>
                                         <span>${p.nome}</span>
                                     </li>`
                                 ).join('');
@@ -1439,7 +1450,7 @@
                                 // Criar lista de plantas inimigas
                                 const plantasInimigas = data.plantas_nao_se_da_bem.map(p => 
                                     `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
-                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <i class="bi bi-circle-fill" style="color: ${culturaColors[p.nome] || culturaColors.default}; margin-right: 5px;"></i>
                                         <span>${p.nome}</span>
                                     </li>`
                                 ).join('');
@@ -1447,13 +1458,18 @@
                                 // Criar lista de plantas neutras
                                 const plantasNeutras = data.plantas_indiferente.map(p => 
                                     `<li style="list-style: none; padding: 0; margin: 0; display: flex; align-items: center;">
-                                        <i class="bi bi-circle-fill" style="color: ${p.cor}; margin-right: 5px;"></i>
+                                        <i class="bi bi-circle-fill" style="color: ${culturaColors[p.nome] || culturaColors.default}; margin-right: 5px;"></i>
                                         <span>${p.nome}</span>
                                     </li>`
                                 ).join('');
 
                                 document.getElementById('cultura_event_detail').innerHTML = `
-                                    <strong>Tipo de plantio:</strong> <br>${plantaSelecionada}<br>
+                                     <strong>Tipo de plantio:</strong> 
+                                    <span style="display: flex; align-items: center;">
+                                        <i class="bi bi-circle-fill" style="color: ${culturaColors[plantaSelecionada] || culturaColors.default}; margin-right: 5px;"></i>
+                                        ${plantaSelecionada}
+                                    </span>
+                                    <br>
                                     <strong>Plantas amigas:</strong><ul>${plantasAmigas || '<li>Nenhuma planta amiga.</li>'}</ul>
                                     <strong>Plantas inimigas:</strong><ul>${plantasInimigas || '<li>Nenhuma planta inimiga.</li>'}</ul>
                                     <strong>Plantas neutras:</strong><ul>${plantasNeutras || '<li>Nenhuma planta neutra.</li>'}</ul>
@@ -1465,56 +1481,6 @@
                             });
                     } else {
                         console.warn("Cultura não definida no evento.");
-                    }
-
-                    // Adicionar o ícone ⚠️ apenas se for o dia de término do evento de tipo "Colheita"
-                    const warningIconContainer = document.getElementById('warning-icon-container');
-                    if (!warningIconContainer) {
-                        console.error("Container 'warning-icon-container' não encontrado no modal.");
-                        return;
-                    }
-
-                    warningIconContainer.innerHTML = ''; // Limpa ícones anteriores
-
-                    if (eventType === "Colheita" && today === eventEndDate) {
-                        console.log("Adicionando ícone ⚠️ para o evento de colheita.");
-                        const warningIcon = document.createElement('span');
-                        warningIcon.className = 'warning-icon';
-                        warningIcon.textContent = '⚠️';
-                        warningIcon.style.fontSize = '1.5rem';
-                        warningIcon.style.marginLeft = '10px';
-                        warningIcon.style.color = 'red';
-                        warningIcon.style.cursor = 'pointer';
-                        warningIconContainer.appendChild(warningIcon);
-
-                        // Configurar o clique no ícone ⚠️
-                        warningIcon.addEventListener('click', function() {
-                            const cultura = arg.event.extendedProps.cultura;
-                            fetch(`/alerta_colheita?cultura=${encodeURIComponent(cultura)}`)
-                                .then(response => {
-                                    if (!response.ok) {
-                                        throw new Error('Erro na resposta da rede');
-                                    }
-                                    return response.json();
-                                })
-                                .then(data => {
-                                    // Abrir o modal de alerta com as recomendações
-                                    const modalTitle = document.querySelector('#genericModal .modal-title');
-                                    const modalMessage = document.querySelector('#genericModalMessage');
-                                    if (data.texto_gerado) {
-                                        modalTitle.textContent = `Alerta de Colheita - ${data.cultura}`;
-                                        modalMessage.textContent = data.texto_gerado;
-                                    } else {
-                                        modalMessage.textContent = "Nenhuma informação gerada sobre a colheita.";
-                                    }
-                                    $('#genericModal').modal('show'); // Abre o modal
-                                })
-                                .catch(error => {
-                                    console.error('Erro ao carregar o alerta de colheita:', error);
-                                    document.getElementById('genericModalMessage').textContent = "Erro ao carregar informações de colheita.";
-                                    $('#genericModal').modal('show'); // Exibe mensagem de erro no modal
-                                });
-                        });
                     }
 
                     $('#detailModal').modal('show');
