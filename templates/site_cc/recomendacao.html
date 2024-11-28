@@ -1,12 +1,6 @@
 {% extends 'base/base.html' %}
 {% load static %}
 
-{% block breadcrumb %}
-  <div>
-      <h1><i class=" fa fa-check-square"></i> Recomendações</h1>
-  </div>
-{% endblock breadcrumb %}
-
 {% block extracss %}
     <link rel="stylesheet" href="{% static 'css/recomendacao.css' %}">
     <style>
@@ -17,7 +11,8 @@
             background-color: #f9f9f9;
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            min-height: 730px; /* Ajustar a altura mínima do container */
+            min-height: 730px;
+            margin-top: 6rem;
         }
 
         .breadcrumb h1 {
