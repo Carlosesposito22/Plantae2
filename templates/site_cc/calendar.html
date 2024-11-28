@@ -1529,26 +1529,34 @@
                 method: 'POST',
                 headers: { 'X-CSRFToken': csrftoken },
                 body: formData
-    })
+            })
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        const event = calendar.getEventById(data.event_id);
-                        if (event) {
-                            event.setProp('title', data.title);
-                            event.setExtendedProp('description', data.description);
-                            event.setExtendedProp('type', data.type);
-                            event.setExtendedProp('cultura', data.cultura);
-                            event.setExtendedProp('local', data.local);
-                            event.setDates(data.start_time, data.end_time);
-                        }
-                        $('#editEventModal').modal('hide');
+                        setTimeout(() => {
+                            // Atualizar o evento no calendário (opcional antes de reload)
+                            const event = calendar.getEventById(data.event_id);
+                            if (event) {
+                                event.setProp('title', data.title);
+                                event.setExtendedProp('description', data.description);
+                                event.setExtendedProp('type', data.type);
+                                event.setExtendedProp('cultura', data.cultura);
+                                event.setExtendedProp('local', data.local);
+                                event.setDates(data.start_time, data.end_time);
+                            }
+                            $('#editEventModal').modal('hide');
+
+                            // Atualizar a página após o atraso
+                            window.location.reload();
+                        }, 1000); // Atraso de 1 segundo (1000 milissegundos)
                     } else {
                         alert('Erro ao editar evento: ' + JSON.stringify(data.errors));
                     }
                 })
                 .catch(error => console.error('Erro ao salvar alterações:', error));
         });
+
+
 
 
         document.getElementById('delete-event-button').addEventListener('click', function () {
