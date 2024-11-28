@@ -38,6 +38,11 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libgbm-dev libgconf-2-4 libnss3 xvfb
+
       - name: Set up ChromeDriver
         uses: nanasess/setup-chromedriver@v2
 
@@ -45,7 +50,7 @@ jobs:
         run: |
           python manage.py makemigrations
           python manage.py migrate
-          python manage.py runserver &
+          nohup xvfb-run python manage.py runserver 0.0.0.0:8000 &
           sleep 10
           python manage.py test site_cc.tests.InformarPlantiosTest
 

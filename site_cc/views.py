@@ -14,6 +14,7 @@ import google.generativeai as genai
 from .forms import EventForm
 from .models import Event, EventMember
 from .forms import EventForm  
+from django.contrib.auth import logout
 
 API_KEY = 'AIzaSyAB_SXUAAl0dTtSrFJzn6o7gDprXiet6E0'
 genai.configure(api_key=API_KEY)
@@ -569,7 +570,14 @@ def add_eventmember(request, event_id):
     context = {"form": forms}
     return render(request, "add_member.html", context)
 
+def preferences_view(request):
+    # Retorne a página de preferências
+    return render(request, 'preferences.html')
 
+def logout_view(request):
+    # Realiza o logout
+    logout(request)  # Agora a função logout está sendo usada corretamente
+    return redirect('homepage')  # Redireciona para a página inicial (ou o que você preferir)
 
 def post(self, request, *args, **kwargs):
         forms = self.form_class(request.POST)
