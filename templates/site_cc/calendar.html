@@ -258,41 +258,43 @@
     }
 
     .delete-cancel-btn {
-        background-color: #ffffff;
-        border: 1px solid #cccccc;
-        color: #333;
-        border-radius: 8px;
-        padding: 10px 20px;
+        background-color: #D5EDBB !important;
+        border: #316722 solid 0.05rem !important;
+        color: #316722 !important;
+        border-radius: 30px !important;
+        padding-top: 0.7rem !important;
+        padding-bottom: 0.7rem !important;
         font-size: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
-        transition: all 0.3s ease;
+        width: 50%;
     }
 
     .delete-cancel-btn:hover {
-        background-color: #367A29;
+        background-color: #c4daac !important;
         border-color: #2A5E21 !important;
-        color: #ffffff !important;
     }
 
     .delete-confirm-btn {
-        background-color: #333333;
-        border: 1px solid #000000;
-        color: #ffffff;
-        border-radius: 8px;
-        padding: 10px 20px;
+        background-color: #316722 !important;
+        border: none !important;
+        color: #EFEFEF !important;
+        border-radius: 30px !important;
+        padding-top: 0.7rem !important;
+        padding-bottom: 0.7rem !important;
         font-size: 1rem;
         display: flex;
         align-items: center;
         justify-content: center;
         gap: 5px;
         transition: all 0.3s ease;
+        width: 50%;
     }
 
     .delete-confirm-btn:hover {
-        background-color: #367A29;
+        background-color: #27581d !important;
         border-color: #2A5E21 !important;
         color: #ffffff !important;
     }
@@ -402,7 +404,7 @@
         padding: 2rem !important;
     }
 
-    .footer-detalhes{
+    .footer-detalhes, .footer-editar{
         justify-content: center !important;
     }
 
@@ -451,6 +453,52 @@
 
     .modal-content{
         border-radius: 1.5rem !important;
+    }
+
+    .content-processando, .content-excluindo{
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        align-items: center !important;
+    }
+
+    .label-edit{
+        color: #316722 !important;
+        font-weight: bold !important;
+    }
+
+    .salvar-edit-btn{
+        background-color: #D5EDBB !important;
+        border-color: #316722 !important;
+        color: white !important;
+    }
+
+    .fechar-edit-btn{
+        background-color: #D5EDBB !important;
+        border-color: #316722 !important;
+        color: #316722 !important;
+    }
+
+    .fechar-edit-btn:hover{
+        background-color: #c4d9ac !important;
+    }
+
+    .salvar-edit-btn:hover{
+        background-color: #c1d7aa !important;
+    }
+
+    .salvar-edit-btn{
+        background-color: #316722 !important;
+        border: none !important;
+    }
+
+    .salvar-edit-btn:hover{
+        background-color: #26501b !important;
+    }
+
+    .salvar-edit-btn, .fechar-edit-btn {
+        width: 45% !important;
+        border-radius: 30px !important;
     }
 
 </style>
@@ -693,7 +741,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content delete-modal-content">
             <div class="modal-body text-center">
-                <h2 class="delete-modal-title">Excluir cultura</h2>
+                <h2 class="delete-modal-title" style="color: #2D3C29;">Excluir cultura</h2>
                 <p class="delete-modal-message">
                     O evento que criou está prestes a ser excluído, não haverá como recuperar.
                 </p>
@@ -734,7 +782,7 @@
 <!-- Modal "Excluindo cultura" -->
 <div id="deletingModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content content-excluindo">
             <div class="modal-body text-center">
                 <p>Excluindo cultura...</p>
             </div>
@@ -762,7 +810,7 @@
 <!-- Modal de Processamento -->
 <div id="processingModal" class="modal fade" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-sm modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content content-processando">
             <div class="modal-body text-center">
                 <p>Processando nova cultura...</p>
             </div>
@@ -835,7 +883,7 @@
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Editar Evento</h5>
+                <h5 class="modal-title">Editar Cultura</h5>
                 <button type="button" class="close" data-dismiss="modal">
                     <span>&times;</span>
                 </button>
@@ -845,38 +893,38 @@
                 <input type="hidden" id="edit_event_id" name="event_id">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="edit_title">Título do Evento:</label>
+                        <label for="edit_title" class="label-edit">Título do Evento:</label>
                         {{ edit_form.title }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_type">Tipo:</label>
+                        <label for="edit_type" class="label-edit">Tipo:</label>
                         {{ edit_form.type }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_cultura">Cultura:</label>
+                        <label for="edit_cultura" class="label-edit">Cultura:</label>
                         {{ edit_form.cultura }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_local">Local:</label>
+                        <label for="edit_local" class="label-edit">Local:</label>
                         {{ edit_form.local }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_description">Descrição:</label>
+                        <label for="edit_description" class="label-edit">Descrição:</label>
                         {{ edit_form.description }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_start_time">Data de Início:</label>
+                        <label for="edit_start_time" class="label-edit">Data de Início:</label>
                         {{ edit_form.start_time }}
                     </div>
                     <div class="form-group">
-                        <label for="edit_end_time">Data de Término:</label>
+                        <label for="edit_end_time" class="label-edit">Data de Término:</label>
                         {{ edit_form.end_time }}
                     </div>
                     
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
-                    <button type="submit" class="btn btn-primary" id="salvar_editar">Salvar Alterações</button>
+                <div class="modal-footer footer-editar">
+                    <button type="button" class="btn fechar-edit-btn" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn salvar-edit-btn" id="salvar_editar"><i class="bi bi-floppy-fill" style="margin-right: 0.5rem;"></i> Salvar</button>
                 </div>
             </form>
         </div>
