@@ -27,6 +27,9 @@ jobs:
           python -m venv venv
           source venv/bin/activate
       
+      - name: Collect static files
+        run: python manage.py collectstatic --noinput
+      
       - name: Install dependencies
         run: |
           set -ex
@@ -47,6 +50,15 @@ jobs:
           python manage.py runserver &
           sleep 10
           python manage.py test site_cc.tests.DashboardTest
+
+      - name: Upload artifacts
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-artifacts
+          path: |
+            page_source.html
+            screenshot.png
           
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
