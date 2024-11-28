@@ -773,6 +773,58 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="editEventModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Editar Evento</h5>
+                <button type="button" class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <form method="post" id="editEventForm">
+                {% csrf_token %}
+                <input type="hidden" id="edit_event_id" name="event_id">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>Evento:</label>
+                        {{ form.title }}
+                    </div>
+                    <div class="form-group">
+                        <label>Tipo:</label>
+                        {{ form.type }}
+                    </div>
+                    <div class="form-group">
+                        <label>Cultura:</label>
+                        {{ form.cultura }}
+                    </div>
+                    <div class="form-group">
+                        <label>Local:</label>
+                        {{ form.local }}
+                    </div>
+                    <div class="form-group">
+                        <label>Descriço:</label>
+                        {{ form.description }}
+                    </div>
+                    <div class="form-group">
+                        <label>Início:</label>
+                        {{ form.start_time }}
+                    </div>
+                    <div class="form-group">
+                        <label>Fim:</label>
+                        {{ form.end_time }}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Fechar</button>
+                    <button type="submit" class="btn btn-primary save-btn">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 {{ previsoes|json_script:"weatherData" }}
 {{ fases_lua|json_script:"moonPhaseData" }}
 {% endblock content %}
@@ -1436,13 +1488,13 @@
 
         document.getElementById('edit-event-button').addEventListener('click', function() {
             const eventId = this.getAttribute('data-event-id');
-            document.getElementById('id_event_id').value = eventId;
+            document.getElementById('edit_event_id').value = eventId;
 
-            document.getElementById('id_title').value = document.getElementById('title_event_detail').textContent;
-            document.getElementById('id_type').value = document.getElementById('type_event_detail').textContent;
-            document.getElementById('id_cultura').value = document.getElementById('cultura_event_detail').textContent;
-            document.getElementById('id_local').value = document.getElementById('local_event_detail').textContent;
-            document.getElementById('id_description').value = document.getElementById('description_event_detail').textContent;
+            document.querySelector('#editEventModal [name="title"]').value = document.getElementById('title_event_detail').textContent;
+            document.querySelector('#editEventModal [name="type"]').value = document.getElementById('type_event_detail').textContent;
+            document.querySelector('#editEventModal [name="cultura"]').value = document.getElementById('cultura_event_detail').textContent;
+            document.querySelector('#editEventModal [name="local"]').value = document.getElementById('local_event_detail').textContent;
+            document.querySelector('#editEventModal [name="description"]').value = document.getElementById('description_event_detail').textContent;
 
             let startDateStr = document.getElementById('start_event_detail').textContent.trim();
             let endDateStr = document.getElementById('end_event_detail').textContent.trim();
@@ -1451,20 +1503,53 @@
             let endDate = parseDateBR(endDateStr);
 
             if (startDate) {
-                document.getElementById('id_start_time').value = startDate.toISOString().slice(0, 19);
+                document.querySelector('#editEventModal [name="start_time"]').value = startDate.toISOString().slice(0, 19);
             } else {
                 console.error("Data de início inválida:", startDateStr);
             }
 
             if (endDate) {
-                document.getElementById('id_end_time').value = endDate.toISOString().slice(0, 19);
+                document.querySelector('#editEventModal [name="end_time"]').value = endDate.toISOString().slice(0, 19);
             } else {
                 console.error("Data de fim inválida:", endDateStr);
             }
 
+            // Fecha o modal de detalhes e abre o modal de edição
             $('#detailModal').modal('hide');
-            $('#eventModal').modal('show');
+            $('#editEventModal').modal('show');
         });
+
+        document.getElementById('editEventForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const eventId = document.getElementById('edit_event_id').value;
+            const formData = new FormData(this);
+
+            fetch("{% url 'site_cc:event_new' %}", {
+                method: 'POST',
+                headers: { 'X-CSRFToken': csrftoken },
+                body: formData
+    })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const event = calendar.getEventById(data.event_id);
+                        if (event) {
+                            event.setProp('title', data.title);
+                            event.setExtendedProp('description', data.description);
+                            event.setExtendedProp('type', data.type);
+                            event.setExtendedProp('cultura', data.cultura);
+                            event.setExtendedProp('local', data.local);
+                            event.setDates(data.start_time, data.end_time);
+                        }
+                        $('#editEventModal').modal('hide');
+                    } else {
+                        alert('Erro ao editar evento: ' + JSON.stringify(data.errors));
+                    }
+                })
+                .catch(error => console.error('Erro ao salvar alterações:', error));
+        });
+
 
         document.getElementById('delete-event-button').addEventListener('click', function () {
             eventIdToDelete = this.getAttribute('data-event-id');
