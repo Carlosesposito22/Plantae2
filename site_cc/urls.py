@@ -7,6 +7,13 @@ from .views import  salvar_selecao_modal
 from  Plantae.views import DashboardView
 
 
+app_name = 'accounts'  # Certifique-se de que está usando app_name aqui
+
+urlpatterns = [
+ 
+    # Adicione outras URLs conforme necessário
+]
+
 app_name = "site_cc"
 
 urlpatterns = [
@@ -35,6 +42,8 @@ urlpatterns = [
     path('url-salvar-selecao-modal/', salvar_selecao_modal, name='salvar_selecao_modal'),
     path('api/events/', views.api_events, name='api_events'),
     path('planta_detalhes/', views.planta_detalhes, name='planta_detalhes'),
+    path('preferences/', views.preferences_view, name='preferences'),
+    path('logout/', views.logout_view, name='logout'),
 
 
 
