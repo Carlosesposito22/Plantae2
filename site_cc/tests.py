@@ -1599,18 +1599,21 @@ class InformarPlantiosTest(LiveServerTestCase):
             btn_calendar.click()
             time.sleep(1)
         except TimeoutException:
-            with open('page_source2.html', 'w', encoding='utf-8') as f:
+            with open('page_source.html', 'w', encoding='utf-8') as f:
                 f.write(driver.page_source)
-            driver.save_screenshot('screenshot2.png')
+            driver.save_screenshot('screenshot.png')
             raise
         
         try:
+            driver.save_screenshot('screenshot.png')
+            with open('page_source.html', 'w', encoding='utf-8') as f:
+                f.write(driver.page_source)
             select_element = driver.find_element(By.ID, "planta2")
             time.sleep(1)
         except:
-            with open('page_source3.html', 'w', encoding='utf-8') as f:
+            with open('page_source.html', 'w', encoding='utf-8') as f:
                 f.write(driver.page_source)
-            driver.save_screenshot('screenshot3.png')
+            driver.save_screenshot('screenshot.png')
             raise
 
         # Cria um objeto Select para manipular o dropdown
