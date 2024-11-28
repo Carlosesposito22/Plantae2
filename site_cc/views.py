@@ -1088,3 +1088,21 @@ def salvar_selecao_modal(request):
 
     return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=405)
 
+
+from django.http import JsonResponse
+from .models import Event
+from datetime import datetime
+
+@login_required
+def api_events(request):
+    events = Event.objects.filter(user=request.user).order_by("start_time")
+    events_data = [
+        {
+            "id": event.id,
+            "title": event.title,
+            "start_time": event.start_time.isoformat(),
+            "end_time": event.end_time.isoformat(),
+        }
+        for event in events
+    ]
+    return JsonResponse(events_data, safe=False)
