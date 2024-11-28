@@ -150,6 +150,11 @@
         font-size: 1rem;
     }
 
+    .gerenciar-culturas:hover{
+        background-color: rgb(36, 48, 33);
+        color: white !important;
+    }
+
     .botoes-debaixo{
         display: flex;
         flex-direction: row;
@@ -171,6 +176,11 @@
         color: white;
         width: 100%;
         font-size: 1rem;
+    }
+
+    .reportar-pragas:hover{
+        background-color: rgb(211, 88, 18);
+        color: white !important;
     }
 
     .adicionar-cultura{
@@ -363,9 +373,9 @@
     </div>
 
     <div class="btns-holder">
-        <a class="gerenciar-culturas" href=""><i class="bi bi-pencil-square" style="margin-right: 1rem;"></i> Gerenciar Culturas</a>
+        <a class="gerenciar-culturas btn" href=""><i class="bi bi-pencil-square" style="margin-right: 1rem;"></i> Gerenciar Culturas</a>
         <div class="botoes-debaixo">
-            <a class="reportar-pragas" href="{% url 'site_cc:praga' %}" name="pragas"><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
+            <a class="reportar-pragas btn" href="{% url 'site_cc:praga' %}" name="pragas"><i class="bi bi-exclamation-triangle" style="margin-right: 0.5rem;"></i> Reportar Pragas</a>
             
         </div>
     </div>
