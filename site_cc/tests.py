@@ -105,7 +105,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         print("Passo 1: Tentando salvar sem preencher nenhum campo.")
         salvar_btn.click()
@@ -172,7 +172,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -239,7 +239,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Alface")
         time.sleep(1)
@@ -305,7 +305,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Tomate")
         time.sleep(1)
@@ -426,7 +426,7 @@ class EditarCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para editar cultura")
         time.sleep(1)
@@ -473,7 +473,7 @@ class EditarCulturaTest(LiveServerTestCase):
         btn_editarCultura.click()
 
         nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -512,7 +512,7 @@ class EditarCulturaTest(LiveServerTestCase):
         local_cultura = driver.find_element(By.ID, "id_local")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         cultura_cultura.select_by_visible_text("Tomate")
@@ -622,7 +622,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para excluir cultura")
         time.sleep(1)
@@ -1283,7 +1283,7 @@ class DashboardTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para DashBoard")
         time.sleep(1)
@@ -1394,7 +1394,7 @@ class DashboardTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Outra culura no DashBoard - Agora em andamento")
         time.sleep(1)
@@ -1762,7 +1762,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para excluir cultura")
         time.sleep(1)
