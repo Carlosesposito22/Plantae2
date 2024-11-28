@@ -1603,8 +1603,15 @@ class InformarPlantiosTest(LiveServerTestCase):
                 f.write(driver.page_source)
             driver.save_screenshot('screenshot2.png')
             raise
-
-        select_element = driver.find_element(By.ID, "planta2")
+        
+        try:
+            select_element = driver.find_element(By.ID, "planta2")
+            time.sleep(1)
+        except TimeoutException:
+            with open('page_source3.html', 'w', encoding='utf-8') as f:
+                f.write(driver.page_source)
+            driver.save_screenshot('screenshot3.png')
+            raise
 
         # Cria um objeto Select para manipular o dropdown
         dropdown = Select(select_element)
