@@ -1114,6 +1114,7 @@ def api_events(request):
             "title": event.title,
             "start_time": event.start_time.isoformat(),
             "end_time": event.end_time.isoformat(),
+            "cultura":event.cultura
         }
         for event in events
     ]

@@ -218,6 +218,19 @@
         color: rgb(254, 254, 255);
     }
 
+    .h1holder {
+        width: 300px;
+        overflow-x: hidden;
+        white-space: nowrap;
+        display: block;
+        cursor: grab;
+        user-select: none;
+    }
+
+    .h1holder:active {
+        cursor: grabbing;
+    }
+
 </style>
 
 <div class="container">
@@ -240,7 +253,11 @@
                 <div class="plantio-img"></div>
                 <div class="detalhes">
                     <p class="data">SEGUNDA-FEIRA</p>
-                    <h1 class="evento" id="event-title" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X</h1>
+                    <div class="h1holder">
+                        <h1 class="evento" id="event-title" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">
+                            EVENTO X - ESTE É UM TEXTO MUITO LONGO PARA TESTAR A ROLAGEM HORIZONTAL
+                        </h1>
+                    </div>
                     <p class="status-plantio"
                         style="background-color: grey; margin-top: -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; color: white; text-align: center; border-radius: 1rem; font-size: 0.8rem;">
                         STATUS DO PLANTIO
@@ -321,8 +338,7 @@
 
                 <div class="detalhes">
                     <p class="data">SEGUNDA-FEIRA</p>
-                    <h1 class="evento" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X
-                    </h1>
+                    <h1 class="evento" style="font-weight: bold; margin-left: -0.1rem; margin-top: -0.5rem;">EVENTO X</h1>
                     <p class="status-plantio"
                         style="background-color: grey; margin-top: -0.5rem; padding-left: 0.5rem; padding-right: 0.5rem; color: white; text-align: center; border-radius: 1rem; font-size: 0.8rem;">
                         STATUS DO PLANTIO</p>
@@ -422,7 +438,9 @@
             const events = eventsByDay[currentDay] || [];
             if (events.length > 0) {
                 const event = events[currentEventIndex];
-                eventTitle.textContent = event?.title || "Nenhum.";
+
+                // Atualizar o tipo de cultura no lugar do título do evento
+                eventTitle.textContent = event?.cultura || "Cultura não especificada";
 
                 // Atualizar o status do evento
                 const today = new Date().toISOString().split("T")[0];
@@ -450,11 +468,12 @@
                 // Atualizar o HTML do status com o ícone
                 statusElement.innerHTML = `${statusIcon} ${statusText}`;
             } else {
-                eventTitle.textContent = "Nenhum.";
+                eventTitle.textContent = "Cultura não especificada";
                 statusElement.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i> Sem eventos`;
                 statusElement.style.backgroundColor = "gray";
             }
         };
+
 
 
         const highlightDay = () => {
@@ -625,7 +644,36 @@
             });
     });
 
+    const h1holder = document.querySelector('.h1holder');
 
+    let isDragging = false;
+    let startX;
+    let scrollLeft;
+
+    h1holder.addEventListener('mousedown', (e) => {
+        isDragging = true;
+        h1holder.classList.add('active');
+        startX = e.pageX - h1holder.offsetLeft;
+        scrollLeft = h1holder.scrollLeft;
+    });
+
+    h1holder.addEventListener('mouseleave', () => {
+        isDragging = false;
+        h1holder.classList.remove('active');
+    });
+
+    h1holder.addEventListener('mouseup', () => {
+        isDragging = false;
+        h1holder.classList.remove('active');
+    });
+
+    h1holder.addEventListener('mousemove', (e) => {
+        if (!isDragging) return; // Ignora se não estiver arrastando
+        e.preventDefault();
+        const x = e.pageX - h1holder.offsetLeft;
+        const walk = (x - startX) * 2; // Multiplicador para maior sensibilidade
+        h1holder.scrollLeft = scrollLeft - walk;
+    });
 
 
         
