@@ -13,6 +13,10 @@
         font-family: 'Nunito Sans', sans-serif;
     }
 
+    .nav-item{
+        margin-bottom: 0;
+    }
+
     a {
         text-decoration: none;
         color: white;
@@ -84,6 +88,10 @@
     .btn:hover{
         background-color: rgb(31, 31, 31);
     }
+
+    .btnuser:hover, .btnuser:active, .btnuser:focus{
+        box-shadow: none !important;
+    }
 </style>
 
 <div class="container-nav text-center">
@@ -125,7 +133,7 @@
     <img src="{% static 'images/user-avatar.jpg' %}" alt="Imagem de Perfil" class="rounded-circle" style="width: 30px; height: 30px; margin: 0 10px;">
 
     <div class="dropdown">
-        <button class="btn" style="background: none; border: none; margin: 0; color: rgb(45, 60, 41);" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+        <button class="btn btnuser" style="background: none; border: none; margin: 0; color: rgb(45, 60, 41);" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
             Olá, Usuário
             <i class="bi bi-caret-down-fill" style="margin-left: 0.5rem;"></i>
         </button>

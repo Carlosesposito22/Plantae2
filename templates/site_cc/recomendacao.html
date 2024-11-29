@@ -4,8 +4,13 @@
 {% block extracss %}
     <link rel="stylesheet" href="{% static 'css/recomendacao.css' %}">
     <style>
+
+        main{
+            padding-bottom: 3rem;
+        }
+
         .superholder {
-            margin: 20px auto;
+            margin: auto;
             padding: 20px;
             max-width: 800px;
             background-color: #f9f9f9;
@@ -81,7 +86,7 @@
         }
 
         .result-container {
-            max-height: 520px; /* Ajuste a altura máxima do container de resultados */
+            max-height: 590px; /* Ajuste a altura máxima do container de resultados */
             overflow-y: auto;
             margin-bottom: 20px;
             padding-right: 10px;
@@ -148,15 +153,23 @@
             border-radius: 50%;
         }
 
+        .form-group{
+            margin-top: -30px;
+        }
+
+        .btn-addon{
+            background-color: #316722;
+        }
+
 
 
     </style>
 {% endblock extracss %}
 
 {% block content %}
+
+<h2 style="margin-left: 370px; margin-bottom: -70px; font-weight: bold; color: #316722;">Compatibilidade entre Plantas</h2>
 <div class="superholder">
-    <h2>Compatibilidade entre Plantas</h2>
-    
     <div class="form-section">
         <form method="GET" action="">
             <div class="form-group">
