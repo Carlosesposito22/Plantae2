@@ -258,7 +258,7 @@
         display: inline-block;
         width: 100%;
         text-align: right;
-        padding-right: 153px; 
+        padding-right: 80px; 
         font-family: 'Nunito Sans';
         font-style: normal;
         font-weight: 600;
@@ -270,7 +270,7 @@
     .temperatura-atual {
         display: block;
         text-align: right;
-        padding-right: 150px;
+        padding-right: 80px;
         font-size: 30px
         font-family: 'Nunito Sans';
         font-style: normal;
@@ -282,7 +282,7 @@
 
     .temperaturas-max-min {
         position: absolute;
-        left: 250px;
+        left: 320px;
         top: 240px;
         color: #316722;
         display: flex;
@@ -311,6 +311,14 @@
         font-size: 32px;
         line-height: 125%;
         color: #2D3C29;
+    }
+
+    .imagem-clima {
+        position: absolute;
+        right: 500px; 
+        top: 180px; 
+        width: 50px; /* Defina o tamanho da imagem */
+        height: 50px; /* Defina o tamanho da imagem */
     }
 
 </style>
@@ -519,6 +527,7 @@
                                         <strong>Índice UV:</strong> ${indiceUVMaximo} <br>
                                         <strong>Vento:</strong> ${ventoMaximo} km/h <br>
                                         <strong>Precipitação:</strong> ${precipitacaoMaxima.toFixed(2)} mm
+                                        <img class="imagem-clima" src="" alt="Ícone do clima">
                                     `;
                                 } else {
                                     document.getElementById('temperatura').innerText = 'Erro ao obter as informações climáticas.';
