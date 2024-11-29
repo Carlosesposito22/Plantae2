@@ -51,8 +51,8 @@ jobs:
           python manage.py makemigrations
           python manage.py migrate
           nohup xvfb-run python manage.py runserver 0.0.0.0:8000 &
-          sleep 10
-          python manage.py test site_cc.tests.InformarPlantiosTest
+          sleep 15
+          python manage.py test
 
       - name: Upload artifacts
         if: failure()

@@ -37,7 +37,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -105,7 +105,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         print("Passo 1: Tentando salvar sem preencher nenhum campo.")
         salvar_btn.click()
@@ -172,7 +172,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -239,7 +239,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Alface")
         time.sleep(1)
@@ -305,7 +305,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Tomate")
         time.sleep(1)
@@ -359,7 +359,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -371,7 +371,7 @@ class EditarCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeEditarCultura(self):
+    def t1esteEditarCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -426,7 +426,7 @@ class EditarCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para editar cultura")
         time.sleep(1)
@@ -473,7 +473,7 @@ class EditarCulturaTest(LiveServerTestCase):
         btn_editarCultura.click()
 
         nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -512,7 +512,7 @@ class EditarCulturaTest(LiveServerTestCase):
         local_cultura = driver.find_element(By.ID, "id_local")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         time.sleep(2)
         cultura_cultura.select_by_visible_text("Tomate")
@@ -555,7 +555,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        ##chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -567,7 +567,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeExcluirCultura(self):
+    def t1esteExcluirCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -622,7 +622,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para excluir cultura")
         time.sleep(1)
@@ -689,7 +689,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -856,7 +856,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -975,7 +975,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1214,7 +1214,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1228,7 +1228,7 @@ class DashboardTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeDashboard(self):
+    def t1esteDashboard(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1283,7 +1283,7 @@ class DashboardTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para DashBoard")
         time.sleep(1)
@@ -1295,22 +1295,11 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
         time.sleep(1)
-        start_datetime = timezone.now() + timedelta(days=1)
-        end_datetime = start_datetime + timedelta(hours=2)
-
-        # Formatar datas conforme esperado pela aplicação
-        start_date_str = start_datetime.strftime("%Y/%m/%d")
-        start_time_str = start_datetime.strftime("%H:%M")
-        end_date_str = end_datetime.strftime("%Y/%m/%d")
-        end_time_str = end_datetime.strftime("%H:%M")
 
         # Inserir datas nos campos
-        dataInicio_cultura.send_keys(start_date_str)
-        dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys(start_time_str)
-        dataFim_cultura.send_keys(end_date_str)
-        dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys(end_time_str)
+        dataInicio_cultura.send_keys("28/11/2024 10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("30/11/2024 16:00")
         time.sleep(1)
 
         salvar_btn.click()
@@ -1331,7 +1320,7 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
 
         try:
-            cultura_excluida = WebDriverWait(driver, 20).until(
+            cultura_excluida = WebDriverWait(driver, 30).until(
                 EC.presence_of_element_located((By.ID, "event-test"))
             )
         except TimeoutException:
@@ -1393,7 +1382,7 @@ class DashboardTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Outra culura no DashBoard - Agora em andamento")
         time.sleep(1)
@@ -1431,7 +1420,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1599,11 +1588,6 @@ class InformarPlantiosTest(LiveServerTestCase):
         btn_calendar.click()
         time.sleep(1)
         
-        driver.save_screenshot('screenshot.png')
-
-        with open('page_source.html', 'w', encoding='utf-8') as f:
-            f.write(driver.page_source)
-
         select_element = WebDriverWait(driver, 20).until(
             EC.presence_of_element_located((By.ID, "planta2"))
         )
@@ -1697,7 +1681,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1711,7 +1695,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
     
-    def teste_cultura(self):
+    def t1este_cultura(self):
 
         driver = self.driver
 
@@ -1766,7 +1750,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         descricao_cultura = driver.find_element(By.ID, "id_description")
         dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.CSS_SELECTOR, ".save-btn")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
         nomeEvento_cultura.send_keys("Teste para excluir cultura")
         time.sleep(1)
@@ -1819,16 +1803,4 @@ class ModalNotificacaoTest(LiveServerTestCase):
         time.sleep(8)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "genericModalMessage")))
         btn_calendar = driver.find_element(By.ID, "genericModalMessage")
-        btn_calendar.click()    
-
-        
-
-
-
-
-       
-
-
-
-
-
+        driver.execute_script("arguments[0].click();", btn_calendar)

@@ -8,13 +8,6 @@ from .views import api_weather
 from  Plantae.views import DashboardView
 
 
-app_name = 'accounts'  # Certifique-se de que está usando app_name aqui
-
-urlpatterns = [
- 
-    # Adicione outras URLs conforme necessário
-]
-
 app_name = "site_cc"
 
 urlpatterns = [

@@ -574,6 +574,11 @@ def preferences_view(request):
     # Retorne a página de preferências
     return render(request, 'preferences.html')
 
+def notificacoes_view(request):
+    # Aqui você pode adicionar lógica para buscar notificações do usuário
+    notificacoes = []  # Substitua por dados reais, como buscar notificações do banco de dados
+    return render(request, 'notificacoes.html', {'notificacoes': notificacoes})
+
 def logout_view(request):
     # Realiza o logout
     logout(request)  # Agora a função logout está sendo usada corretamente

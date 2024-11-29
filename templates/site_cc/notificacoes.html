@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notificações</title>
+</head>
+<body>
+    <h1>Suas Notificações</h1>
+    {% if notificacoes %}
+        <ul>
+            {% for notificacao in notificacoes %}
+                <li>{{ notificacao }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Você não tem notificações no momento.</p>
+    {% endif %}
+</body>
+</html>
