@@ -539,11 +539,27 @@
         border: none !important;
     }
 
+    .stronglua{
+        color: #316722;
+    }
+
+    .fecharlua{
+        background-color: #316722 !important;
+        color: #EFEFEF !important;
+        border-radius: 30px !important;
+        border: none !important;
+        width: 8rem !important;
+    }
+
+    .fecharlua:hover{
+        background-color: #2a581d !important;
+    }
+
 </style>
 {% endblock extracss %}
 
 {% block breadcrumb %}
-<div style="margin: 100px 0 40px 180px;">
+<div style="margin: 0px 0 40px 180px;">
     <a href="{% url 'site_cc:mainpage' %}" class="btn rounded-5 voltar" style="width: 110px;">
         <i class="fa-solid fa-chevron-left"></i> Voltar
     </a>
@@ -551,7 +567,7 @@
 
 <div style="width: 76%; max-width: 1200px; margin: 0 auto;">
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
-        <h1 style="font-size: 4.5rem; margin: 0; color: #316722;">Calendário</h1>
+        <h1 style="font-size: 4.5rem; margin: 0; color: #316722; font-weight: bold;">Calendário</h1>
         <div class="mode-buttons" style="display: flex; gap: 14px;">
             <button id="modeEventos" class="btn rounded-5">
                 <i class="fa-solid fa-seedling"></i><span class="separator" style="margin-bottom: 0.2rem;font-weight: 100;">|</span> Plantio
@@ -758,19 +774,19 @@
 <div class="modal fade" id="moonPhaseModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="moonModalDate" style="color: white;"></h5>
+            <div class="modal-header headerlua">
+                <h5 class="modal-title" id="moonModalDate" style="color: #316722;"></h5>
                 <button type="button" id="fecharmodalClima1" class="close" data-dismiss="modal" aria-label="Fechar">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body">
-                <p><strong>Fase da Lua:</strong> <span id="moonModalPhase"></span></p>
-                <p><strong>Iluminação:</strong> <span id="moonModalIllumination"></span>%</p>
-                <p><strong>Fluxo da Seiva:</strong> <span id="moonModalSapFlow"></span></p>
+                <p><strong class="stronglua">Fase da Lua:</strong><br><span id="moonModalPhase"></span></p>
+                <p><strong class="stronglua">Iluminação:</strong><br><span id="moonModalIllumination"></span>%</p>
+                <p><strong class="stronglua">Fluxo da Seiva:</strong><br><span id="moonModalSapFlow"></span></p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <button type="button" class="btn btn-secondary fecharlua" data-dismiss="modal"><i class="bi bi-x-circle" style="margin-right: 0.5rem;"></i> Fechar</button>
             </div>
         </div>
     </div>
@@ -851,7 +867,7 @@
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content content-processando">
             <div class="modal-body text-center">
-                <p style="margin-top: 0.7rem;">Processando nova cultura...</p>
+                <p style="margin-top: 0.9rem;">Processando nova cultura...</p>
             </div>
         </div>
     </div>
