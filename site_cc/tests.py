@@ -37,7 +37,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless=new")
+        #chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -172,7 +172,7 @@ class SugerirColheitaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -359,7 +359,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -371,7 +371,7 @@ class EditarCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def t1esteEditarCultura(self):
+    def testeEditarCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -472,8 +472,8 @@ class EditarCulturaTest(LiveServerTestCase):
         btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
         btn_editarCultura.click()
 
-        nomeEvento_culturaEditar = driver.find_element(By.ID, "id_title")
-        salvar_btn = driver.find_element(By.ID, "salvar_editar")
+        nomeEvento_culturaEditar = driver.find_element(By.ID, "edit_title")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar1")
 
         time.sleep(2)
         nomeEvento_culturaEditar.clear()
@@ -508,11 +508,11 @@ class EditarCulturaTest(LiveServerTestCase):
         btn_editarCultura = driver.find_element(By.ID, "edit-event-button")
         btn_editarCultura.click()
 
-        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
-        local_cultura = driver.find_element(By.ID, "id_local")
-        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
-        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.ID, "salvar_editar")
+        cultura_cultura = Select(driver.find_element(By.ID, "edit_cultura"))
+        local_cultura = driver.find_element(By.ID, "edit_local")
+        dataInicio_cultura = driver.find_element(By.ID, "edit_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "edit_end_time")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar1")
 
         time.sleep(2)
         cultura_cultura.select_by_visible_text("Tomate")
@@ -555,7 +555,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -567,7 +567,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def t1esteExcluirCultura(self):
+    def testeExcluirCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -689,7 +689,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -856,7 +856,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -975,7 +975,8 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--window-size=1920,1080")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1214,7 +1215,7 @@ class DashboardTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless=new")
+        #chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1228,7 +1229,7 @@ class DashboardTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def t1esteDashboard(self):
+    def testeDashboard(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1420,7 +1421,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1534,7 +1535,7 @@ class InformarPlantiosTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -1681,7 +1682,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        chrome_options.add_argument("--headless")
+        #chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1695,7 +1696,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
     
-    def t1este_cultura(self):
+    def teste_cultura(self):
 
         driver = self.driver
 
