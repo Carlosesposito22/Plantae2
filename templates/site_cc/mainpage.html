@@ -422,7 +422,9 @@
             const events = eventsByDay[currentDay] || [];
             if (events.length > 0) {
                 const event = events[currentEventIndex];
-                eventTitle.textContent = event?.title || "Nenhum.";
+
+                // Atualizar o tipo de cultura no lugar do título do evento
+                eventTitle.textContent = event?.cultura || "Cultura não especificada";
 
                 // Atualizar o status do evento
                 const today = new Date().toISOString().split("T")[0];
@@ -450,11 +452,12 @@
                 // Atualizar o HTML do status com o ícone
                 statusElement.innerHTML = `${statusIcon} ${statusText}`;
             } else {
-                eventTitle.textContent = "Nenhum.";
+                eventTitle.textContent = "Cultura não especificada";
                 statusElement.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i> Sem eventos`;
                 statusElement.style.backgroundColor = "gray";
             }
         };
+
 
 
         const highlightDay = () => {
