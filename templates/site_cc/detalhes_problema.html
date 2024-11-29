@@ -23,25 +23,14 @@
 
     .problem-form,
     .resultado-container {
-        background-color: #ffffff;
-        /* Cor de fundo */
-        border: 2px solid #28a745;
-        /* Borda verde */
+        background-color: #EEF8E3;
         border-radius: 15px;
-        /* Cantos arredondados */
         padding: 30px;
-        /* Espaçamento interno */
-        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
-        /* Sombra suave */
         display: flex;
         flex-direction: column;
-        /* Permite o alinhamento vertical */
         flex: 1;
-        /* Faz as duas áreas ocuparem a mesma altura */
         height: 640px;
-        /* Altura fixa para o contêiner */
         overflow: hidden;
-        /* Esconde qualquer conteúdo que ultrapasse a altura */
     }
 
     .form-textarea {
@@ -82,10 +71,8 @@
     }
 
     .plantio-info {
-        background-color: #e9f5e9;
-        /* Fundo leve para destacar */
-        border: 1px solid #28a745;
-        /* Borda verde */
+        background-color: #ffffff;
+
         border-radius: 10px;
         /* Cantos arredondados */
         padding: 15px;
@@ -294,7 +281,7 @@
     }
 
     .resolva-btn{
-        background-color: black !important;
+        background-color: #316722 !important;
         color: white !important;
         border-radius: 20px !important;
     }
@@ -306,8 +293,9 @@
     #confirmarDoencasPragas{
         width: 100%;
         color: white;
-        background-color: black;
+        background-color: #316722;
         border-radius: 20px;
+        margin-bottom: 0 !important;
     }
 
     .hold-header-search{
@@ -329,17 +317,26 @@
         color: #6A8463 !important;
         border: none !important;
     }
+
+    .botaosalvarpragas{
+        background-color: #316722 !important;
+        border-radius: 30px !important;
+        width: 40% !important;
+        color: white !important;
+        margin-top: 20px;
+        margin-left: 270px;
+    }
 </style>
 {% endblock extracss %}
 
 {% block content %}
-<div style="margin: 100px 0 40px 180px;">
+<div style="margin: 100px 0 40px 180px; margin-top: 1rem;">
     <a href="{% url 'site_cc:praga' %}" class="btn rounded-5 voltar" style="width: 110px;">
         <i class="fa-solid fa-chevron-left"></i> Voltar
     </a>
 </div>
 <div class="container-flex">
-    <div class="fieldsholder">
+    <div class="fieldsholder" style="margin-top: -50px;">
         <form id="detalheProblemaForm" class="problem-form" method="post"
             data-problema-id="{{ problema.id|default:'' }}">
             {% csrf_token %}
@@ -380,14 +377,14 @@
 </div>
 
 <div id="modalDoencasPragas" class="modal">
-    <div class="modal-content">
+    <div class="modal-content" style="border-radius: 1.5rem !important;">
         <span class="close" onclick="document.getElementById('modalDoencasPragas').style.display='none'">&times;</span>
-        <h3>Confirmar doenças e pragas</h3>
+        <h3 style="color: #316722;">Confirmar doenças e pragas</h3>
         <form id="modalForm">
             <div id="conteudoDoencasPragas">
                 <!-- As opções serão adicionadas dinamicamente -->
             </div>
-            <button type="button" id="salvarSelecoes" class="btn btn-submit">
+            <button type="button" id="salvarSelecoes" class="btn btn-submit botaosalvarpragas">
                 Salvar Seleções
             </button>
         </form>

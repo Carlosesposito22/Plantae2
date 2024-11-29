@@ -648,7 +648,9 @@
                     </div>
                 </div>
                 <div class="modal-footer footer-add">
-                    <button type="button" class="btn fechar-edit-btn" data-dismiss="modal">Fechar</button>
+                    <a href="{% url 'site_cc:calendar' %}" class="btn fechar-edit-btn">
+                        Fechar
+                    </a>
                     <button type="submit" class="btn salvar-edit-btn" id="salvar_editar"><i class="bi bi-floppy-fill" style="margin-right: 0.5rem;"></i> Salvar</button>
                 </div>
             </form>
