@@ -755,23 +755,33 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-cloudy.day-icon")
         icone_climaTeste.click()
 
-        time.sleep(4)
+        time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima")))
-        fechar_modal = driver.find_element(By.ID, "fecharmodalClima")
-        fechar_modal.click()
+        driver.refresh()
+        time.sleep(1)
 
+       
+
+        driver.execute_script("window.scrollTo(0, 0);")
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "modeTempo")))
+        btn_FasesLua = driver.find_element(By.ID, "modeTempo")
+        btn_FasesLua.click()
+
+        time.sleep(1)
+
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         time.sleep(2)
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".wi.wi-day-sprinkle.day-icon")))
         icone_climaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-day-sprinkle.day-icon")
         icone_climaTeste.click()
 
-        time.sleep(4)
+        time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima")))
-        fechar_modal = driver.find_element(By.ID, "fecharmodalClima")
-        fechar_modal.click()
+        driver.refresh()
 
     def testeMostrarFasesDaLua(self):
         driver = self.driver
@@ -827,11 +837,25 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         icone_LuaTeste = driver.find_element(By.CSS_SELECTOR, ".wi.wi-moon-new.moon-icon")
         icone_LuaTeste.click()
 
-        time.sleep(4)
+        time.sleep(2)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima1")))
-        fechar_modal = driver.find_element(By.ID, "fecharmodalClima1")
-        fechar_modal.click()
+        driver.refresh()
+
+        driver.execute_script("window.scrollTo(0, 0);")
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "modeFasesLua")))
+        btn_FasesLua = driver.find_element(By.ID, "modeFasesLua")
+        btn_FasesLua.click()
+        time.sleep(1)
+
+
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+
+
+        
+
+       
 
         time.sleep(2)
 
@@ -841,9 +865,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
 
         time.sleep(4)
 
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "fecharmodalClima1")))
-        fechar_modal = driver.find_element(By.ID, "fecharmodalClima1")
-        fechar_modal.click()
+        driver.refresh()
 
         time.sleep(2)
 
@@ -1282,7 +1304,7 @@ class DashboardTest(LiveServerTestCase):
         cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
         local_cultura = driver.find_element(By.ID, "id_local")
         descricao_cultura = driver.find_element(By.ID, "id_description")
-        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataInicio_cultura = driver.find_element(By.NAME, "start_time")
         dataFim_cultura = driver.find_element(By.ID, "id_end_time")
         salvar_btn = driver.find_element(By.ID, "salvar_editar")
 
@@ -1298,11 +1320,13 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
 
         # Inserir datas nos campos
-        dataInicio_cultura.send_keys("28/11/2024 10:00")
+        dataInicio_cultura.send_keys("29/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("10:00")
         time.sleep(1)
-        dataFim_cultura.send_keys("30/11/2024 16:00")
-        time.sleep(1)
-
+        dataFim_cultura.send_keys("30/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("12:00")
         salvar_btn.click()
         time.sleep(6)
 
