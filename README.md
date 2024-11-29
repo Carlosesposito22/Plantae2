@@ -122,7 +122,7 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
       >Screencast - Azure</a>
   </li>
       <li>
-    <a href=""
+    <a href="https://youtu.be/CYNMxnWjUow?si=xN-VBOSQ9Cl_yown"
       >Screencast - Testes Automatizados</a>
   </li>
             <li>
