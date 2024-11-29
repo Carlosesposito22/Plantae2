@@ -37,6 +37,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -164,193 +165,6 @@ class AdicionarCulturaTest(LiveServerTestCase):
         time.sleep(3)
 
 
-class SugerirColheitaTest(LiveServerTestCase):
-
-    @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
-        chrome_options = webdriver.ChromeOptions()
-        chrome_options.add_argument("--disable-dev-shm-usage")
-        chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
-        cls.driver = webdriver.Chrome(options=chrome_options)
-
-    @classmethod
-    def tearDownClass(cls):
-        cls.driver.quit()
-        super().tearDownClass()
-
-    def tearDown(self):
-        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
-        super().tearDown()
-
-    def teste_sugerirColheita(self):
-        driver = self.driver
-
-        driver.get("http://localhost:8000/")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
-        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
-        time.sleep(1)
-        btn_junta_se.click()
-        time.sleep(1)
-
-        driver.get("http://localhost:8000/accounts/signup/")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
-        email_registro = driver.find_element(By.ID, "email-usuario")
-        senha1 = driver.find_element(By.NAME, "password1")
-        senha2 = driver.find_element(By.NAME, "password2")
-        btn_registrar = driver.find_element(By.NAME, "btn_registar")
-
-        email_registro.send_keys("userteste@gmail.com")
-        senha1.send_keys("@MinhasenhaForte1234")
-        senha2.send_keys("@MinhasenhaForte1234")
-        time.sleep(2)
-        btn_registrar.send_keys(Keys.ENTER)
-        time.sleep(1)
-
-        driver.get("http://localhost:8000/accounts/signin/")
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
-        email_login = driver.find_element(By.ID, "id_email")
-        senhalogin = driver.find_element(By.ID, "id_password")
-        btn_logar = driver.find_element(By.NAME, "btn_logar")
-
-        email_login.send_keys("userteste@gmail.com")
-        senhalogin.send_keys("@MinhasenhaForte1234")
-        time.sleep(1)
-        btn_logar.send_keys(Keys.ENTER)
-        time.sleep(1)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
-        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
-
-        time.sleep(3)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
-        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
-        btn_addEvento.click()
-
-        time.sleep(3)
-
-        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
-        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
-        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
-        local_cultura = driver.find_element(By.ID, "id_local")
-        descricao_cultura = driver.find_element(By.ID, "id_description")
-        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
-        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.ID, "salvar_editar")
-
-        nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Alface")
-        time.sleep(1)
-        tipo_cultura.select_by_visible_text("Plantio")
-        time.sleep(1)
-        cultura_cultura.select_by_visible_text("Alface")
-        time.sleep(1)
-        local_cultura.send_keys("Lote 0001 - linha 44")
-        time.sleep(1)
-        descricao_cultura.send_keys("Descrição teste para o plantil de alface")
-        time.sleep(1)
-        dataInicio_cultura.send_keys("28/11/2024")
-        dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys("10:00")
-        time.sleep(1)
-        dataFim_cultura.send_keys("30/11/2024")
-        dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys("16:00")
-        time.sleep(1)
-
-        salvar_btn.click()
-        time.sleep(2)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
-        btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
-        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
-        time.sleep(5)  
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
-        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
-        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
-        time.sleep(3)
-
-        time.sleep(5)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
-        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-next-button")))
-        btn_proxMes = driver.find_element(By.CSS_SELECTOR, ".fc-next-button")
-        for i in range(2):
-            driver.execute_script("arguments[0].click();", btn_proxMes)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
-        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
-
-        time.sleep(3)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
-        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
-        btn_addEvento.click()
-
-        time.sleep(3)
-
-        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
-        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
-        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
-        local_cultura = driver.find_element(By.ID, "id_local")
-        descricao_cultura = driver.find_element(By.ID, "id_description")
-        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
-        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
-        salvar_btn = driver.find_element(By.ID, "salvar_editar")
-
-        nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Tomate")
-        time.sleep(1)
-        tipo_cultura.select_by_visible_text("Plantio")
-        time.sleep(1)
-        cultura_cultura.select_by_visible_text("Tomate")
-        time.sleep(1)
-        local_cultura.send_keys("Lote 0002 - linha 20")
-        time.sleep(1)
-        descricao_cultura.send_keys("Descrição teste para o plantil de Tomate")
-        time.sleep(1)
-        dataInicio_cultura.send_keys("26/11/2024")
-        dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys("08:00")
-        time.sleep(1)
-        dataFim_cultura.send_keys("29/11/2024")
-        dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys("10:00")
-        time.sleep(1)
-    
-        salvar_btn.click()
-        time.sleep(2)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
-        btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
-        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
-        time.sleep(5)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
-        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
-        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
-        time.sleep(3)
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
-        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
-        btn_calendar.click()
-
-        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-next-button")))
-        btn_proxMes = driver.find_element(By.CSS_SELECTOR, ".fc-next-button")
-        for i in range(4):
-            driver.execute_script("arguments[0].click();", btn_proxMes)
-        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        time.sleep(5)
-
-
 class EditarCulturaTest(LiveServerTestCase):
 
     @classmethod
@@ -359,6 +173,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -555,6 +370,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -689,6 +505,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -870,6 +687,194 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         time.sleep(2)
 
 
+class SugerirColheitaTest(LiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        chrome_options = webdriver.ChromeOptions()
+        chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
+        #chrome_options.add_argument("--headless")
+        cls.driver = webdriver.Chrome(options=chrome_options)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.driver.quit()
+        super().tearDownClass()
+
+    def tearDown(self):
+        subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
+        super().tearDown()
+
+    def t1este_sugerirColheita(self):
+        driver = self.driver
+
+        driver.get("http://localhost:8000/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_junta_se")))
+        btn_junta_se = driver.find_element(By.NAME, "btn_junta_se")
+        time.sleep(1)
+        btn_junta_se.click()
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signup/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "email-usuario")))
+        email_registro = driver.find_element(By.ID, "email-usuario")
+        senha1 = driver.find_element(By.NAME, "password1")
+        senha2 = driver.find_element(By.NAME, "password2")
+        btn_registrar = driver.find_element(By.NAME, "btn_registar")
+
+        email_registro.send_keys("userteste@gmail.com")
+        senha1.send_keys("@MinhasenhaForte1234")
+        senha2.send_keys("@MinhasenhaForte1234")
+        time.sleep(2)
+        btn_registrar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        driver.get("http://localhost:8000/accounts/signin/")
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "id_email")))
+        email_login = driver.find_element(By.ID, "id_email")
+        senhalogin = driver.find_element(By.ID, "id_password")
+        btn_logar = driver.find_element(By.NAME, "btn_logar")
+
+        email_login.send_keys("userteste@gmail.com")
+        senhalogin.send_keys("@MinhasenhaForte1234")
+        time.sleep(1)
+        btn_logar.send_keys(Keys.ENTER)
+        time.sleep(1)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
+        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
+        btn_addEvento.click()
+
+        time.sleep(3)
+
+        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
+        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
+        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
+        local_cultura = driver.find_element(By.ID, "id_local")
+        descricao_cultura = driver.find_element(By.ID, "id_description")
+        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
+
+        nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Alface")
+        time.sleep(1)
+        tipo_cultura.select_by_visible_text("Plantio")
+        time.sleep(1)
+        cultura_cultura.select_by_visible_text("Alface")
+        time.sleep(1)
+        local_cultura.send_keys("Lote 0001 - linha 44")
+        time.sleep(1)
+        descricao_cultura.send_keys("Descrição teste para o plantil de alface")
+        time.sleep(1)
+        dataInicio_cultura.send_keys("28/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("10:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("30/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("16:00")
+        time.sleep(1)
+
+        salvar_btn.click()
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
+        btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
+        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
+        time.sleep(5)  
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
+        time.sleep(3)
+
+        time.sleep(5)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-next-button")))
+        btn_proxMes = driver.find_element(By.CSS_SELECTOR, ".fc-next-button")
+        for i in range(2):
+            driver.execute_script("arguments[0].click();", btn_proxMes)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_addEvento")))
+        btn_addEvento = driver.find_element(By.NAME, "btn_addEvento")
+        btn_addEvento.click()
+
+        time.sleep(3)
+
+        nomeEvento_cultura = driver.find_element(By.ID, "id_title")
+        tipo_cultura = Select(driver.find_element(By.ID, "id_type"))
+        cultura_cultura = Select(driver.find_element(By.ID, "id_cultura"))
+        local_cultura = driver.find_element(By.ID, "id_local")
+        descricao_cultura = driver.find_element(By.ID, "id_description")
+        dataInicio_cultura = driver.find_element(By.ID, "id_start_time")
+        dataFim_cultura = driver.find_element(By.ID, "id_end_time")
+        salvar_btn = driver.find_element(By.ID, "salvar_editar")
+
+        nomeEvento_cultura.send_keys("Teste para sugestão de colheita - Tomate")
+        time.sleep(1)
+        tipo_cultura.select_by_visible_text("Plantio")
+        time.sleep(1)
+        cultura_cultura.select_by_visible_text("Tomate")
+        time.sleep(1)
+        local_cultura.send_keys("Lote 0002 - linha 20")
+        time.sleep(1)
+        descricao_cultura.send_keys("Descrição teste para o plantil de Tomate")
+        time.sleep(1)
+        dataInicio_cultura.send_keys("26/11/2024")
+        dataInicio_cultura.send_keys(Keys.TAB)
+        dataInicio_cultura.send_keys("08:00")
+        time.sleep(1)
+        dataFim_cultura.send_keys("29/11/2024")
+        dataFim_cultura.send_keys(Keys.TAB)
+        dataFim_cultura.send_keys("10:00")
+        time.sleep(1)
+    
+        salvar_btn.click()
+        time.sleep(2)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "acceptSuggestion")))
+        btn_aceitarsugest = driver.find_element(By.ID, "acceptSuggestion")
+        driver.execute_script("arguments[0].click();", btn_aceitarsugest)
+        time.sleep(5)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_gerenciarCultura")))
+        btn_gerenciarCultura = driver.find_element(By.NAME, "btn_gerenciarCultura")
+        driver.execute_script("arguments[0].click();", btn_gerenciarCultura)
+        time.sleep(3)
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.NAME, "btn_calendario")))
+        btn_calendar = driver.find_element(By.NAME, "btn_calendario")
+        btn_calendar.click()
+
+        WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-next-button")))
+        btn_proxMes = driver.find_element(By.CSS_SELECTOR, ".fc-next-button")
+        for i in range(4):
+            driver.execute_script("arguments[0].click();", btn_proxMes)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        time.sleep(5)
+
+
 class AdicionarPragasTest(LiveServerTestCase):
     
     @classmethod
@@ -878,6 +883,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -1445,6 +1451,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--window-size=1920,1080")
         #chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
