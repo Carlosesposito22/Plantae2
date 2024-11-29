@@ -125,11 +125,7 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
     <a href=""
       >Screencast - Testes Automatizados</a>
   </li>
-          <li>
-    <a href=""
-      > CI/CD </a>
-  </li>
-              <li>
+            <li>
     <a href="https://github.com/user-attachments/assets/67d4081b-2f48-4b78-9ac8-31318d7bb308"
       >BugTracker </a>
   </li>
