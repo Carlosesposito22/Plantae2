@@ -38,14 +38,6 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
   </li>
 </ul>
 
-***Deployment das histórias produzidas:***
-<ul>
-  <li>
-    <a href="https://plantae.azurewebsites.net/accounts/signin/?next=/"
-      >Deployment na Azure</a>
-  </li>
-</ul>
-
 ### Histórias
 
 - No total temos 12 histórias definidas e 2 implementadas. As implementadas são:
