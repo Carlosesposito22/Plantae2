@@ -252,17 +252,17 @@
         margin-top: 0;
     }
 
-    #temperatura strong:first-child {
+    .data-formatada {
         display: inline-block;
         width: 100%;
         text-align: right;
-        padding-right: 100px; 
-    }
-
-    #temperatura strong:nth-child(3) {
-        display: block;
-        text-align: right;
-        padding-right: 20px; 
+        padding-right: 153px; 
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 125%;
+        color: #316722;
     }
 
     .temperatura-atual {
@@ -270,17 +270,23 @@
         text-align: right;
         padding-right: 150px;
         font-size: 30px
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 125%;
+        color: #F46718;
     }
 
     .temperaturas-max-min {
-        padding-right: -51px; 
-        gap: 0px; 
-        width: 100%; 
-    }
-    
-    
-    .max-min {
-        font-weight: bold;
+        position: absolute;
+        left: 320px;
+        top: 240px;
+        color: #316722;
+        display: flex;
+        align-items: center; 
+        gap: 10px; 
+        font-size: 16px; 
     }
     
     .h1holder {
@@ -294,6 +300,15 @@
 
     .h1holder:active {
         cursor: grabbing;
+    }
+    
+    .titulo-modal-clima{
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 125%;
+        color: #2D3C29;
     }
 
 </style>
@@ -454,7 +469,7 @@
                 <div id="modal" class="modal">
                     <div class="modal-content">
                         <span onclick="fecharModal()" style="cursor: pointer; float: right;">&times;</span>
-                        <h2>Detalhes do clima</h2>
+                        <h2 class="titulo-modal-clima">Detalhes do clima</h2>
                         <br>
                         <p id="temperatura" class="informacoes-climaticas"></p>
                     </div>
@@ -491,12 +506,13 @@
                         
                                     // Exibe as informações climáticas
                                     document.getElementById('temperatura').innerHTML = `
-                                        <strong>${formatarData()}</strong><br><br>
-                                        <strong class="temperatura-atual"> ${temperaturaAtual}°C</strong><br>
+                                        <strong class="data-formatada">${formatarData()}</strong><br>
+                                        <strong class="temperatura-atual"> ${temperaturaAtual}°C</strong>
                                         <div class="temperaturas-max-min">
-                                           <strong class="max-min">Máx: ${temperaturaMaximaHoje}°C / Mín: ${temperaturaMinimaHoje}°C</strong>
+                                           <strong> 
+                                           Máx:${temperaturaMaximaHoje}°C/Mín:${temperaturaMinimaHoje}°C</strong>
                                         </div><br><br>
-                                        <strong class="umidade">Umidade:</strong> ${umidadeMinimaHoje}%<br>
+                                        <strong class="umidade">Umidade:</strong> <br> <strong class=valor-umidade">${umidadeMinimaHoje}%<br></strong>
                                         <strong>Índice UV:</strong> ${indiceUVMaximo} <br>
                                         <strong>Vento:</strong> ${ventoMaximo} km/h <br>
                                         <strong>Precipitação:</strong> ${precipitacaoMaxima.toFixed(2)} mm
