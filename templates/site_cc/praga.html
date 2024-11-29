@@ -91,10 +91,23 @@
         box-shadow: 0 6px 15px rgba(77, 147, 62, 0.4);
         transform: scale(1.05);
     }
+    .voltar{
+        background-color: #E9F3DD !important;
+        color: #6A8463 !important;
+        border: none !important;
+    }
 </style>
 {% endblock extracss %}
 
 {% block content %}
+
+<div style="margin: 100px 0 40px 180px;">
+    <a href="{% url 'site_cc:mainpage' %}" class="btn rounded-5 voltar" style="width: 110px;">
+        <i class="fa-solid fa-chevron-left"></i> Voltar
+    </a>
+</div>
+
+
 <div class="hold-evr">
 
     <div class="info-box">
