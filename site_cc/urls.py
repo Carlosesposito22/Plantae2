@@ -38,8 +38,9 @@ urlpatterns = [
     path('planta_detalhes/', views.planta_detalhes, name='planta_detalhes'),
     path('preferences/', views.preferences_view, name='preferences'),
     path('logout/', views.logout_view, name='logout'),
-    path('api/weather/', api_weather, name='api_weather')
-
+    path('api/weather/', api_weather, name='api_weather'),
+    path('preferences/', views.preferences_view, name='preferences'),
+    
 
 
 
