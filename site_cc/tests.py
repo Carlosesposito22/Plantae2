@@ -1789,7 +1789,8 @@ class ModalNotificacaoTest(LiveServerTestCase):
 
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.CSS_SELECTOR, ".fc-daygrid-event")))
         cultura_excluida = driver.find_element(By.CSS_SELECTOR, ".fc-daygrid-event")
-        cultura_excluida.click()
+        driver.execute_script("arguments[0].click();", cultura_excluida)
+
 
         time.sleep(3)
 
