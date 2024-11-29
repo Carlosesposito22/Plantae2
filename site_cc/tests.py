@@ -37,7 +37,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -359,7 +359,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -371,7 +371,7 @@ class EditarCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeEditarCultura(self):
+    def t1esteEditarCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -555,7 +555,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        ##chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -567,7 +567,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeExcluirCultura(self):
+    def t1esteExcluirCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -689,7 +689,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -856,7 +856,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -975,7 +975,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1228,7 +1228,7 @@ class DashboardTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeDashboard(self):
+    def t1esteDashboard(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1420,7 +1420,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1695,7 +1695,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
     
-    def teste_cultura(self):
+    def t1este_cultura(self):
 
         driver = self.driver
 
