@@ -571,7 +571,6 @@ def add_eventmember(request, event_id):
     return render(request, "add_member.html", context)
 
 def preferences_view(request):
-    # Retorne a página de preferências
     return render(request, 'preferences.html')
 
 def notificacoes_view(request):
