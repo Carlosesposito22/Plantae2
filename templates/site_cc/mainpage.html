@@ -438,29 +438,43 @@
             const events = eventsByDay[currentDay] || [];
             if (events.length > 0) {
                 const event = events[currentEventIndex];
-                eventTitle.textContent = event?.title || "Nenhum.";
+
+                // Atualizar o tipo de cultura no lugar do título do evento
+                eventTitle.textContent = event?.cultura || "Cultura não especificada";
 
                 // Atualizar o status do evento
                 const today = new Date().toISOString().split("T")[0];
+                let statusText = "";
+                let statusIcon = "";
+
                 if (today > event.end_time.split("T")[0]) {
-                    statusElement.textContent = "Concluído";
+                    statusText = "Concluído";
+                    statusIcon = `<i class="bi bi-check-circle-fill" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i>`;
                     statusElement.style.backgroundColor = "green";
                 } else if (today === event.end_time.split("T")[0]) {
-                    statusElement.textContent = "Pronto para colher";
+                    statusText = "Pronto para colher";
+                    statusIcon = `<i class="bi bi-arrow-up-circle" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i>`;
                     statusElement.style.backgroundColor = "blue";
                 } else if (today >= event.start_time.split("T")[0] && today < event.end_time.split("T")[0]) {
-                    statusElement.textContent = "Em Andamento";
+                    statusText = "Em Andamento";
+                    statusIcon = `<i class="bi bi-clock-history" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i>`;
                     statusElement.style.backgroundColor = "orange";
                 } else if (today < event.start_time.split("T")[0]) {
-                    statusElement.textContent = "Agendado";
+                    statusText = "Agendado";
+                    statusIcon = `<i class="bi bi-calendar-week" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i>`;
                     statusElement.style.backgroundColor = "purple";
                 }
+
+                // Atualizar o HTML do status com o ícone
+                statusElement.innerHTML = `${statusIcon} ${statusText}`;
             } else {
-                eventTitle.textContent = "Nenhum.";
-                statusElement.textContent = "Sem eventos";
+                eventTitle.textContent = "Cultura não especificada";
+                statusElement.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i> Sem eventos`;
                 statusElement.style.backgroundColor = "gray";
             }
         };
+
+
 
         const highlightDay = () => {
             dayElements.forEach((el, index) => {

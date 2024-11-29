@@ -324,10 +324,20 @@
     #sampleTable_wrapper-13{
         margin-top: 6rem !important;
     }
+    .voltar{
+        background-color: #E9F3DD !important;
+        color: #6A8463 !important;
+        border: none !important;
+    }
 </style>
 {% endblock extracss %}
 
 {% block content %}
+<div style="margin: 100px 0 40px 180px;">
+    <a href="{% url 'site_cc:praga' %}" class="btn rounded-5 voltar" style="width: 110px;">
+        <i class="fa-solid fa-chevron-left"></i> Voltar
+    </a>
+</div>
 <div class="container-flex">
     <div class="fieldsholder">
         <form id="detalheProblemaForm" class="problem-form" method="post"
