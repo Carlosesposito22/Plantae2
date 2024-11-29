@@ -514,6 +514,108 @@
             }
         });
     });
+    document.addEventListener("DOMContentLoaded", function () {
+        const prevWeatherButton = document.querySelector("#clima-card .fa-angle-left");
+        const nextWeatherButton = document.querySelector("#clima-card .fa-angle-right");
+        const weatherTitle = document.querySelector("#clima-card .evento");
+        const weatherStatus = document.querySelector("#clima-card .status-plantio");
+        const weatherDataElement = document.querySelector("#clima-card .data");
+
+        // Criação do ícone dinâmico (usando <i>)
+        const weatherIcon = document.createElement("i");
+        weatherIcon.style.marginLeft = "10px";
+        weatherIcon.style.fontSize = "1.5rem";
+        weatherTitle.parentNode.insertBefore(weatherIcon, weatherTitle.nextSibling);
+
+        // Dias da semana
+        const daysOfWeek = ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"];
+        const dayAbbreviations = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SAB"];
+        let selectedDayIndex = 0;
+        let weatherData = [];
+
+        // Reorganizar dias para começar no dia atual
+        const todayIndex = new Date().getDay();
+        const reorderedDays = [...daysOfWeek.slice(todayIndex), ...daysOfWeek.slice(0, todayIndex)];
+        const reorderedAbbreviations = [...dayAbbreviations.slice(todayIndex), ...dayAbbreviations.slice(0, todayIndex)];
+
+        // Função para determinar a classe do ícone baseado na descrição do clima
+        const getWeatherIconClass = (descricao) => {
+            if (!descricao) return "bi bi-question-circle"; // Ícone padrão para dados desconhecidos
+
+            const description = descricao.toLowerCase();
+            if (description.includes("sol") || description.includes("ensolarado")) {
+                return "bi bi-sun"; // Ícone de sol
+            } else if (description.includes("Possibilidade de chuva irregular") && description.includes("irregular")) {
+                return "bi bi-cloud-sun-rain"; // Ícone de sol com nuvem e chuva
+            } else if (description.includes("Encoberto") || description.includes("Nublado")) {
+                return "bi bi-cloud"; // Ícone de nuvem
+            } else if (description.includes("Névoa")) {
+                return "bi bi-cloud"; // Ícone de nuvem
+            } else if (description.includes("chuva")) {
+                return "bi bi-cloud-rain"; // Ícone de chuva
+            } else if (description.includes("Possibilidade de neve irregular")|| description.includes("Possibilidade de garoa congelante irregular")) {
+                return "bi bi-snow"; // Ícone de neve
+            } else if (description.includes("Possibilidade de trovoadas")) {
+                return "bi bi-cloud-lightning-rain"; // Ícone de tempestade
+            } else if (description.includes("Possibilidade de chuva congelante irregular")){
+                return "bi bi-snow";
+            }
+
+            return "bi bi-question-circle"; // Ícone padrão para descrições desconhecidas
+        };
+
+        // Atualizar os detalhes do clima exibidos no card
+        const updateWeatherDetails = () => {
+            const currentWeather = weatherData[selectedDayIndex] || {};
+            
+            // Atualizar o título com a temperatura
+            weatherTitle.textContent = currentWeather.temperatura_max
+                ? `${currentWeather.temperatura_max}°C`
+                : "--°C";
+
+            // Atualizar o ícone com a classe correta
+            weatherIcon.className = getWeatherIconClass(currentWeather.descricao);
+
+            // Atualizar o modal azul com a descrição do clima
+            weatherStatus.textContent = currentWeather.descricao || "Sem dados disponíveis";
+            weatherStatus.style.backgroundColor = currentWeather.is_critical ? "red" : "blue";
+
+            // Atualizar o campo de data (exibido acima do card)
+            weatherDataElement.textContent = reorderedAbbreviations[selectedDayIndex];
+        };
+
+        // Navegar para o dia anterior
+        prevWeatherButton.addEventListener("click", () => {
+            selectedDayIndex = (selectedDayIndex - 1 + reorderedDays.length) % reorderedDays.length;
+            updateWeatherDetails();
+        });
+
+        // Navegar para o próximo dia
+        nextWeatherButton.addEventListener("click", () => {
+            selectedDayIndex = (selectedDayIndex + 1) % reorderedDays.length;
+            updateWeatherDetails();
+        });
+
+        // Buscar os dados de clima da API
+        fetch("/api/weather/")
+            .then(response => response.json())
+            .then(data => {
+                // Organizar os dados para os dias da semana
+                weatherData = reorderedDays.map(day => data.find(item => item.day === day) || {});
+                updateWeatherDetails();
+            })
+            .catch(error => {
+                console.error("Erro ao carregar dados de clima:", error);
+                weatherTitle.textContent = "Erro ao carregar dados";
+                weatherStatus.textContent = "Verifique sua conexão ou tente novamente mais tarde.";
+                weatherStatus.style.backgroundColor = "gray";
+            });
+    });
+
+
+
+
+        
 
 
     </script>

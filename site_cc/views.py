@@ -1147,3 +1147,49 @@ def planta_detalhes(request, planta_selecionada=None):
 
     # Retorna um JSON para o fetch
     return JsonResponse(context)
+
+
+from django.http import JsonResponse
+import requests
+
+def api_weather(request):
+    API_KEY = "6d3d2107fd1048258f901644241611"
+    cidade = "Carpina"
+    
+    link_forecast = f"http://api.weatherapi.com/v1/forecast.json?key={API_KEY}&q={cidade}&days=7&lang=pt"
+    
+    try:
+        # Faz a requisição à API de clima
+        requisicao_forecast = requests.get(link_forecast)
+        requisicao_forecast.raise_for_status()
+        requisicao_forecast_dic = requisicao_forecast.json()
+
+        if "forecast" not in requisicao_forecast_dic:
+            return JsonResponse({"erro": "Não foi possível obter a previsão do tempo."}, status=400)
+
+        # Extrai previsões para os próximos 7 dias
+        previsao = [
+            {
+                "day": datetime.strptime(item["date"], "%Y-%m-%d").strftime("%A").lower(),  # Dia da semana
+                "data": item["date"],
+                "descricao": item["day"]["condition"]["text"],
+                "temperatura_max": item["day"]["maxtemp_c"],
+                "temperatura_min": item["day"]["mintemp_c"],
+                "umidade": item["day"]["avghumidity"],
+                "precipitacao": item["day"]["totalprecip_mm"],
+                "vento_velocidade": item["day"]["maxwind_kph"],
+                "is_critical": (
+                    item["day"]["maxtemp_c"] > 35
+                    or item["day"]["mintemp_c"] < 5
+                    or item["day"]["maxwind_kph"] > 50
+                    or item["day"]["totalprecip_mm"] > 50
+                ),
+            }
+            for item in requisicao_forecast_dic["forecast"]["forecastday"]
+        ]
+
+        # Retorna a previsão como JSON
+        return JsonResponse(previsao, safe=False)
+
+    except requests.exceptions.RequestException as e:
+        return JsonResponse({"erro": f"Erro ao fazer a requisição: {e}"}, status=500)
