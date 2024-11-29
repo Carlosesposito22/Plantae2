@@ -3,6 +3,7 @@
 {% include 'navbar.html' %}
 
 <style>
+    
     p {
         margin: 0;
     }
@@ -252,17 +253,17 @@
         margin-top: 0;
     }
 
-    #temperatura strong:first-child {
+    .data-formatada {
         display: inline-block;
         width: 100%;
         text-align: right;
-        padding-right: 100px; 
-    }
-
-    #temperatura strong:nth-child(3) {
-        display: block;
-        text-align: right;
-        padding-right: 20px; 
+        padding-right: 153px; 
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 125%;
+        color: #316722;
     }
 
     .temperatura-atual {
@@ -270,17 +271,23 @@
         text-align: right;
         padding-right: 150px;
         font-size: 30px
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 125%;
+        color: #F46718;
     }
 
     .temperaturas-max-min {
-        padding-right: -51px; 
-        gap: 0px; 
-        width: 100%; 
-    }
-    
-    
-    .max-min {
-        font-weight: bold;
+        position: absolute;
+        left: 320px;
+        top: 240px;
+        color: #316722;
+        display: flex;
+        align-items: center; 
+        gap: 10px; 
+        font-size: 16px; 
     }
     
     .h1holder {
@@ -295,8 +302,18 @@
     .h1holder:active {
         cursor: grabbing;
     }
+    
+    .titulo-modal-clima{
+        font-family: 'Nunito Sans';
+        font-style: normal;
+        font-weight: 700;
+        font-size: 32px;
+        line-height: 125%;
+        color: #2D3C29;
+    }
 
 </style>
+
 
 <div class="container">
 
@@ -454,7 +471,7 @@
                 <div id="modal" class="modal">
                     <div class="modal-content">
                         <span onclick="fecharModal()" style="cursor: pointer; float: right;">&times;</span>
-                        <h2>Detalhes do clima</h2>
+                        <h2 class="titulo-modal-clima">Detalhes do clima</h2>
                         <br>
                         <p id="temperatura" class="informacoes-climaticas"></p>
                     </div>
@@ -491,12 +508,13 @@
                         
                                     // Exibe as informações climáticas
                                     document.getElementById('temperatura').innerHTML = `
-                                        <strong>${formatarData()}</strong><br><br>
-                                        <strong class="temperatura-atual"> ${temperaturaAtual}°C</strong><br>
+                                        <strong class="data-formatada">${formatarData()}</strong><br>
+                                        <strong class="temperatura-atual"> ${temperaturaAtual}°C</strong>
                                         <div class="temperaturas-max-min">
-                                           <strong class="max-min">Máx: ${temperaturaMaximaHoje}°C / Mín: ${temperaturaMinimaHoje}°C</strong>
+                                           <strong> 
+                                           Máx:${temperaturaMaximaHoje}°C/Mín:${temperaturaMinimaHoje}°C</strong>
                                         </div><br><br>
-                                        <strong class="umidade">Umidade:</strong> ${umidadeMinimaHoje}%<br>
+                                        <strong class="umidade">Umidade:</strong> <br> <strong class=valor-umidade">${umidadeMinimaHoje}%<br></strong>
                                         <strong>Índice UV:</strong> ${indiceUVMaximo} <br>
                                         <strong>Vento:</strong> ${ventoMaximo} km/h <br>
                                         <strong>Precipitação:</strong> ${precipitacaoMaxima.toFixed(2)} mm
@@ -571,13 +589,38 @@
         const updateEventTitleAndStatus = () => {
             const currentDay = reorderedDays[selectedDay];
             const events = eventsByDay[currentDay] || [];
+            const bigCircle = document.querySelector("#plantio-card .plantio-img"); // Círculo vermelho maior
+
             if (events.length > 0) {
                 const event = events[currentEventIndex];
 
                 // Atualizar o tipo de cultura no lugar do título do evento
                 eventTitle.textContent = event?.cultura || "Cultura não especificada";
 
-                // Atualizar o status do evento
+                // Definir cor baseada no tipo de cultura
+                let cultureColor = "";
+                switch (event.cultura.toLowerCase()) {
+                    case "tomate":
+                        cultureColor = "red"; // Vermelho para Tomate
+                        break;
+                    case "alface":
+                        cultureColor = "green"; // Verde para Alface
+                        break;
+                    case "cenoura":
+                        cultureColor = "orange"; // Laranja para Cenoura
+                        break;
+                    case "milho":
+                        cultureColor = "yellow"; // Amarelo para Milho
+                        break;
+                    default:
+                        cultureColor = "gray"; // Cor padrão
+                }
+
+                // Atualizar o ícone no grande círculo vermelho
+                bigCircle.innerHTML = `<i class="bi bi-leaf" style="color: white; font-size: 3rem;"></i>`;
+                bigCircle.style.backgroundColor = cultureColor;
+
+                // Atualizar o status do evento (mantendo a lógica existente)
                 const today = new Date().toISOString().split("T")[0];
                 let statusText = "";
                 let statusIcon = "";
@@ -606,8 +649,14 @@
                 eventTitle.textContent = "Cultura não especificada";
                 statusElement.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; margin-right: 0.3rem; font-weight: bold;"></i> Sem eventos`;
                 statusElement.style.backgroundColor = "gray";
+
+                // Ícone e cor padrão para o grande círculo quando não há eventos
+                bigCircle.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; font-size: 3rem;"></i>`;
+                bigCircle.style.backgroundColor = "gray"; // Cinza para "Sem eventos"
             }
         };
+
+
 
 
 
@@ -734,20 +783,53 @@
         // Atualizar os detalhes do clima exibidos no card
         const updateWeatherDetails = () => {
             const currentWeather = weatherData[selectedDayIndex] || {};
-            
-            // Atualizar o título com a temperatura
+            const weatherCircle = document.querySelector("#clima-card .plantio-img"); // Círculo vermelho maior
+            const weatherIcon = document.querySelector("#clima-card .evento + i"); // Ícone ao lado da temperatura
+
+            // Limpar o ícone existente no círculo
+            weatherCircle.innerHTML = "";
+
+            // Determinar o ícone e a cor com base na descrição do clima
+            if (currentWeather.descricao) {
+                const weatherIconClass = getWeatherIconClass(currentWeather.descricao); // Obtém a classe do ícone
+                const description = currentWeather.descricao.toLowerCase();
+                let circleColor = "";
+
+                // Define a cor do círculo com base na descrição
+                if (description.includes("sol") || description.includes("ensolarado")) {
+                    circleColor = "yellow";
+                } else if (description.includes("chuva") || description.includes("garoa")) {
+                    circleColor = "blue";
+                } else if (description.includes("nublado") || description.includes("encoberto")) {
+                    circleColor = "gray";
+                } else if (description.includes("trovoada") || description.includes("tempestade")) {
+                    circleColor = "purple";
+                } else if (description.includes("neve")) {
+                    circleColor = "white";
+                } else {
+                    circleColor = "gray"; // Cor padrão para casos desconhecidos
+                }
+
+                // Atualiza o ícone e a cor no círculo maior
+                weatherCircle.style.backgroundColor = circleColor;
+                weatherCircle.innerHTML = `<i class="${weatherIconClass}" style="color: black; font-size: 3rem;"></i>`;
+
+                // Atualiza o ícone ao lado da temperatura
+                weatherIcon.className = weatherIconClass;
+            } else {
+                // Caso não haja dados do clima
+                weatherCircle.style.backgroundColor = "gray";
+                weatherCircle.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: white; font-size: 3rem;"></i>`;
+                weatherIcon.className = "bi bi-question-circle"; // Ícone padrão
+            }
+
+            // Atualizar os outros detalhes do clima
             weatherTitle.textContent = currentWeather.temperatura_max
                 ? `${currentWeather.temperatura_max}°C`
                 : "--°C";
 
-            // Atualizar o ícone com a classe correta
-            weatherIcon.className = getWeatherIconClass(currentWeather.descricao);
-
-            // Atualizar o modal azul com a descrição do clima
             weatherStatus.textContent = currentWeather.descricao || "Sem dados disponíveis";
             weatherStatus.style.backgroundColor = currentWeather.is_critical ? "red" : "blue";
-
-            // Atualizar o campo de data (exibido acima do card)
             weatherDataElement.textContent = reorderedAbbreviations[selectedDayIndex];
         };
 
@@ -778,6 +860,55 @@
                 weatherStatus.style.backgroundColor = "gray";
             });
     });
+        const updateCalendarIcons = () => {
+            dayElements.forEach((el, index) => {
+                const dayName = reorderedDays[index]; // Nome do dia
+                const events = eventsByDay[dayName] || [];
+                const plantioImg = el.parentElement.querySelector(".plantio-img-lista");
+
+                console.log(`Dia: ${dayName}, Eventos:`, events); // Exibe os eventos do dia
+                console.log("Elemento .plantio-img-lista encontrado:", plantioImg); // Verifica o elemento
+
+                // Limpar conteúdo anterior
+                plantioImg.innerHTML = "";
+
+                if (events.length > 0) {
+                    const today = new Date().toISOString().split("T")[0];
+                    let hasConcluded = false;
+                    let hasOngoing = false;
+                    let hasScheduled = false;
+
+                    events.forEach((event) => {
+                        const eventStart = event.start_time.split("T")[0];
+                        const eventEnd = event.end_time.split("T")[0];
+
+                        if (today > eventEnd) {
+                            hasConcluded = true;
+                        } else if (today === eventEnd) {
+                            hasOngoing = true;
+                        } else if (today >= eventStart && today < eventEnd) {
+                            hasOngoing = true;
+                        } else if (today < eventStart) {
+                            hasScheduled = true;
+                        }
+                    });
+
+                    // Adicionar ícones correspondentes
+                    if (hasConcluded) {
+                        plantioImg.innerHTML += `<i class="bi bi-check-circle-fill" style="color: green; font-size: 1.5rem;"></i>`;
+                    }
+                    if (hasOngoing) {
+                        plantioImg.innerHTML += `<i class="bi bi-clock-history" style="color: orange; font-size: 1.5rem;"></i>`;
+                    }
+                    if (hasScheduled) {
+                        plantioImg.innerHTML += `<i class="bi bi-calendar-week" style="color: purple; font-size: 1.5rem;"></i>`;
+                    }
+                } else {
+                    // Sem eventos no dia
+                    plantioImg.innerHTML = `<i class="bi bi-exclamation-triangle" style="color: gray; font-size: 1.5rem;"></i>`;
+                }
+            });
+        };
 
     const h1holder = document.querySelector('.h1holder');
 
@@ -811,7 +942,47 @@
     });
 
 
-        
+            // Chamar a função após carregar os eventos
+        fetch("/api/events/")
+        .then((response) => response.json())
+        .then((data) => {
+            console.log("Dados da API (Raw):", data);
+
+            eventsByDay = data.reduce((acc, event) => {
+                const startDate = new Date(event.start_time);
+                const endDate = new Date(event.end_time);
+
+                let currentDate = new Date(startDate.setHours(0, 0, 0, 0));
+                const normalizedEndDate = new Date(endDate.setHours(0, 0, 0, 0));
+
+                while (currentDate <= normalizedEndDate) {
+                    const dayOfWeek = currentDate.getDay(); // Índice do dia da semana (0-6)
+                    const dayName = daysOfWeek[dayOfWeek]; // Nome do dia
+
+                    if (!acc[dayName]) acc[dayName] = [];
+                    if (!acc[dayName].some((e) => e.id === event.id)) {
+                        acc[dayName].push(event);
+                    }
+
+                    currentDate = new Date(currentDate.setDate(currentDate.getDate() + 1));
+                }
+
+                return acc;
+            }, {});
+
+            console.log("Eventos organizados por dia:", eventsByDay);
+
+            highlightDay();
+            updateEventTitleAndStatus();
+            updateSelectedDayText();
+            updateCalendarIcons();
+        })
+        .catch((error) => console.error("Erro ao carregar eventos:", error));
+
+
+
+
+            
 
 
     </script>
