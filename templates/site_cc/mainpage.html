@@ -218,6 +218,71 @@
         color: rgb(254, 254, 255);
     }
 
+    .modal {
+        display: none; 
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5); 
+    }
+
+   
+    .modal-content {
+        background-color: white;
+        color: black;
+        margin: 10% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        width: 40%; 
+        height: 70%;
+        max-height: 90%; 
+        overflow-y: auto;
+    }
+
+    .modal-content span {
+        font-size: 28px;
+        background-color: white;
+    }
+
+    .modal-content h2 {
+        margin-top: 0;
+    }
+
+    #temperatura strong:first-child {
+        display: inline-block;
+        width: 100%;
+        text-align: right;
+        padding-right: 100px; 
+    }
+
+    #temperatura strong:nth-child(3) {
+        display: block;
+        text-align: right;
+        padding-right: 20px; 
+    }
+
+    .temperatura-atual {
+        display: block;
+        text-align: right;
+        padding-right: 150px;
+        font-size: 30px
+    }
+
+    .temperaturas-max-min {
+        padding-right: -51px; 
+        gap: 0px; 
+        width: 100%; 
+    }
+    
+    
+    .max-min {
+        font-weight: bold;
+    }
+    
 </style>
 
 <div class="container">
@@ -365,8 +430,78 @@
                         </li>
                     </ul>
                 </div>
-                <a href="" class="seta-btn" style="transform: rotate(225deg);"><i class="fa-solid fa-arrow-down" style="font-size: 2rem; color: white;"></i>
+                <a href="#" class="seta-btn" style="transform: rotate(225deg);" onclick="mostrarModal()">
+                    <i class="fa-solid fa-arrow-down" style="font-size: 1.6rem; color: white;"></i>
                 </a>
+            
+                <!-- Modal -->
+                <div id="modal" class="modal">
+                    <div class="modal-content">
+                        <span onclick="fecharModal()" style="cursor: pointer; float: right;">&times;</span>
+                        <h2>Detalhes do clima</h2>
+                        <br>
+                        <p id="temperatura" class="informacoes-climaticas"></p>
+                    </div>
+                </div>
+            
+                <script>
+                    const API_KEY = "6d3d2107fd1048258f901644241611";
+                    const cidade = "Carpina";
+                    const link_forecast = `http://api.weatherapi.com/v1/forecast.json?key=${API_KEY}&q=${cidade}&days=1&lang=pt`; // Apenas hoje
+                
+                    function formatarData() {
+                        const dataAtual = new Date();
+                        const opcoes = { year: 'numeric', month: 'long', day: 'numeric' };
+                        return dataAtual.toLocaleDateString('pt-BR', opcoes);
+                    }                    
+                                
+                    // Função para mostrar o modal
+                    function mostrarModal() {
+                        // Exibe o modal
+                        document.getElementById('modal').style.display = 'block';
+                    
+                        // Faz a requisição para pegar a temperatura
+                        fetch(link_forecast)
+                            .then(response => response.json())
+                            .then(requisicao_forecast_dic => {
+                                if (requisicao_forecast_dic && requisicao_forecast_dic.current && requisicao_forecast_dic.forecast.forecastday) {
+                                    const temperaturaAtual = requisicao_forecast_dic.forecast.forecastday[0].day.maxtemp_c;
+                                    const temperaturaMaximaHoje = requisicao_forecast_dic.forecast.forecastday[0].day.maxtemp_c;
+                                    const temperaturaMinimaHoje = requisicao_forecast_dic.forecast.forecastday[0].day.mintemp_c; 
+                                    const umidadeMinimaHoje = requisicao_forecast_dic.forecast.forecastday[0].day.avghumidity; // Média de umidade para o dia
+                                    const indiceUVMaximo = requisicao_forecast_dic.forecast.forecastday[0].day.uv; // Índice UV máximo para o dia
+                                    const ventoMaximo = requisicao_forecast_dic.forecast.forecastday[0].day.maxwind_kph; // Máxima velocidade do vento (km/h)
+                                    const precipitacaoMaxima = requisicao_forecast_dic.forecast.forecastday[0].day.totalprecip_mm;
+                        
+                                    // Exibe as informações climáticas
+                                    document.getElementById('temperatura').innerHTML = `
+                                        <strong>${formatarData()}</strong><br><br>
+                                        <strong class="temperatura-atual"> ${temperaturaAtual}°C</strong><br>
+                                        <div class="temperaturas-max-min">
+                                           <strong class="max-min">Máx: ${temperaturaMaximaHoje}°C / Mín: ${temperaturaMinimaHoje}°C</strong>
+                                        </div><br><br>
+                                        <strong class="umidade">Umidade:</strong> ${umidadeMinimaHoje}%<br>
+                                        <strong>Índice UV:</strong> ${indiceUVMaximo} <br>
+                                        <strong>Vento:</strong> ${ventoMaximo} km/h <br>
+                                        <strong>Precipitação:</strong> ${precipitacaoMaxima.toFixed(2)} mm
+                                    `;
+                                } else {
+                                    document.getElementById('temperatura').innerText = 'Erro ao obter as informações climáticas.';
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Erro ao buscar os dados do tempo:', error);
+                                document.getElementById('temperatura').innerText = 'Erro ao carregar as informações climáticas.';
+                            });
+                    }
+                                
+                    // Função para fechar o modal
+                    function fecharModal() {
+                        document.getElementById('modal').style.display = 'none';
+                    }
+                </script>
+                
+                
             </div>
 
         </div>
