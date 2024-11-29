@@ -37,6 +37,14 @@ Bem-vindo ao repositório do nosso projeto Plantaê. Nossa plataforma está send
       >Screencast - Azure</a>
   </li>
 </ul>
+***Deployment das histórias produzidas:***
+<ul>
+  <li>
+    <a href="https://plantae.azurewebsites.net/accounts/signin/?next=/"
+      >Deployment na Azure</a>
+  </li>
+</ul>
+
 
 ### Histórias
 
@@ -120,14 +128,6 @@ As sessões de pair programming proporcionaram uma oportunidade valiosa de colab
             <li>
     <a href="https://github.com/user-attachments/assets/67d4081b-2f48-4b78-9ac8-31318d7bb308"
       >BugTracker </a>
-  </li>
-</ul>
-
-***Deployment das histórias produzidas:***
-<ul>
-  <li>
-    <a href=""
-      >Deployment na Azure</a>
   </li>
 </ul>
 
