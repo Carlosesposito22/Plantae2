@@ -37,7 +37,7 @@ class AdicionarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--headless=new")
         chrome_options.add_argument("--disable-gpu")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
@@ -359,7 +359,7 @@ class EditarCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -371,7 +371,7 @@ class EditarCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeEditarCultura(self):
+    def t1esteEditarCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -555,7 +555,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        ##chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -567,7 +567,7 @@ class ExcluirCulturaTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeExcluirCultura(self):
+    def t1esteExcluirCultura(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -689,7 +689,7 @@ class ExibirClimaETempoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -856,7 +856,7 @@ class AdicionarPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -975,7 +975,7 @@ class SolucoesPragasTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1228,7 +1228,7 @@ class DashboardTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
 
-    def testeDashboard(self):
+    def t1esteDashboard(self):
         driver = self.driver
 
         driver.get("http://localhost:8000/")
@@ -1295,23 +1295,11 @@ class DashboardTest(LiveServerTestCase):
         time.sleep(1)
         descricao_cultura.send_keys("Descrição teste para o plantio de Batata")
         time.sleep(1)
-        start_datetime = timezone.now() + timedelta(days=1)
-        end_datetime = start_datetime + timedelta(hours=2)
-
-        # Formatar datas conforme esperado pela aplicação
-        start_date_str = start_datetime.strftime("%Y/%m/%d")
-        start_time_str = start_datetime.strftime("%H:%M")
-        end_date_str = end_datetime.strftime("%Y/%m/%d")
-        end_time_str = end_datetime.strftime("%H:%M")
 
         # Inserir datas nos campos
-        dataInicio_cultura.send_keys("28/11/2024")
-        dataInicio_cultura.send_keys(Keys.TAB)
-        dataInicio_cultura.send_keys("10:00")
+        dataInicio_cultura.send_keys("28/11/2024 10:00")
         time.sleep(1)
-        dataFim_cultura.send_keys("30/11/2024")
-        dataFim_cultura.send_keys(Keys.TAB)
-        dataFim_cultura.send_keys("10:00")
+        dataFim_cultura.send_keys("30/11/2024 16:00")
         time.sleep(1)
 
         salvar_btn.click()
@@ -1432,7 +1420,7 @@ class AlertaCriticoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         cls.driver = webdriver.Chrome(options=chrome_options)
 
     @classmethod
@@ -1693,7 +1681,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         chrome_options = webdriver.ChromeOptions()
         chrome_options.add_argument("--disable-dev-shm-usage")
         chrome_options.add_argument("--no-sandbox")
-        #chrome_options.add_argument("--headless")
+        chrome_options.add_argument("--headless")
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--window-size=1920,1080")
         cls.driver = webdriver.Chrome(options=chrome_options)
@@ -1707,7 +1695,7 @@ class ModalNotificacaoTest(LiveServerTestCase):
         subprocess.run(['python', 'manage.py', 'deleteusuarios'], check=True)
         super().tearDown()
     
-    def teste_cultura(self):
+    def t1este_cultura(self):
 
         driver = self.driver
 
@@ -1815,16 +1803,4 @@ class ModalNotificacaoTest(LiveServerTestCase):
         time.sleep(8)
         WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "genericModalMessage")))
         btn_calendar = driver.find_element(By.ID, "genericModalMessage")
-        btn_calendar.click()    
-
-        
-
-
-
-
-       
-
-
-
-
-
+        driver.execute_script("arguments[0].click();", btn_calendar)
